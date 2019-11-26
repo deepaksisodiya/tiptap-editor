@@ -1,45 +1,150 @@
 <template>
-  <div>
-    <editor-menu-bar :editor="editor" v-slot="{ commands, isActive }">
-      <button :class="{ 'is-active': isActive.bold() }" @click="commands.bold">
-        Bold
-      </button>
-    </editor-menu-bar>
-    <editor-content :editor="editor" />
+  <div class="editor">
+    <editor-floating-menu
+      :editor="editor"
+      v-slot="{ commands, isActive, menu }"
+    >
+      <div
+        class="editor__floating-menu"
+        :class="{ 'is-active': menu.isActive }"
+        :style="`top: ${menu.top}px`"
+      >
+        <button
+          class="menubar__button"
+          :class="{ 'is-active': isActive.heading({ level: 1 }) }"
+          @click="commands.heading({ level: 1 })"
+        >
+          H1
+        </button>
+
+        <button
+          class="menubar__button"
+          :class="{ 'is-active': isActive.heading({ level: 2 }) }"
+          @click="commands.heading({ level: 2 })"
+        >
+          H2
+        </button>
+
+        <button
+          class="menubar__button"
+          :class="{ 'is-active': isActive.heading({ level: 3 }) }"
+          @click="commands.heading({ level: 3 })"
+        >
+          H3
+        </button>
+
+        <button
+          class="menubar__button"
+          :class="{ 'is-active': isActive.bullet_list() }"
+          @click="commands.bullet_list"
+        >
+          bullet_list
+        </button>
+
+        <button
+          class="menubar__button"
+          :class="{ 'is-active': isActive.ordered_list() }"
+          @click="commands.ordered_list"
+        >
+          ordered_list
+        </button>
+
+        <button
+          class="menubar__button"
+          :class="{ 'is-active': isActive.blockquote() }"
+          @click="commands.blockquote"
+        >
+          blockquote
+        </button>
+
+        <button
+          class="menubar__button"
+          :class="{ 'is-active': isActive.code_block() }"
+          @click="commands.code_block"
+        >
+          code_block
+        </button>
+      </div>
+    </editor-floating-menu>
+
+    <editor-content class="editor__content" :editor="editor" />
   </div>
 </template>
 
 <script>
-// Import the basic building blocks
-import { Editor, EditorContent, EditorMenuBar } from "tiptap";
-import { Bold } from "tiptap-extensions";
+import "./assets/sass/main.scss";
+import { Editor, EditorContent, EditorFloatingMenu } from "tiptap";
+import {
+  Blockquote,
+  BulletList,
+  CodeBlock,
+  HardBreak,
+  Heading,
+  ListItem,
+  OrderedList,
+  TodoItem,
+  TodoList,
+  Bold,
+  Code,
+  Italic,
+  Link,
+  History
+} from "tiptap-extensions";
 
 export default {
   components: {
-    EditorMenuBar,
-    EditorContent
+    EditorContent,
+    EditorFloatingMenu
   },
   data() {
     return {
-      // Create an `Editor` instance with some default content. The editor is
-      // then passed to the `EditorContent` component as a `prop`
       editor: new Editor({
         extensions: [
-          // The editor will accept paragraphs and headline elements as part of its document schema.
-          new Bold()
-        ]
+          new Blockquote(),
+          new BulletList(),
+          new CodeBlock(),
+          new HardBreak(),
+          new Heading({ levels: [1, 2, 3] }),
+          new ListItem(),
+          new OrderedList(),
+          new TodoItem(),
+          new TodoList(),
+          new Link(),
+          new Bold(),
+          new Code(),
+          new Italic(),
+          new History()
+        ],
+        content: `
+          <h2>
+            Floating Menu
+          </h2>
+          <p>
+            This is an example of a medium-like editor. Enter a new line and some buttons will appear.
+          </p>
+        `
       })
     };
-  },
-  beforeDestroy() {
-    // Always destroy your editor instance when it's no longer needed
-    this.editor.destroy();
   }
 };
 </script>
 
-<style scoped>
-.is-active {
-  font-weight: bold;
+<style lang="scss">
+.editor {
+  position: relative;
+
+  &__floating-menu {
+    position: absolute;
+    z-index: 1;
+    margin-top: -0.25rem;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.2s, visibility 0.2s;
+
+    &.is-active {
+      opacity: 1;
+      visibility: visible;
+    }
+  }
 }
 </style>
