@@ -134,7 +134,8 @@ import {
   Table,
   TableHeader,
   TableCell,
-  TableRow
+  TableRow,
+  TrailingNode
 } from "tiptap-extensions";
 
 export default {
@@ -165,7 +166,11 @@ export default {
           }),
           new TableHeader(),
           new TableCell(),
-          new TableRow()
+          new TableRow(),
+          new TrailingNode({
+            node: "paragraph",
+            notAfter: ["paragraph"]
+          })
         ],
         content: `
           <h2>
