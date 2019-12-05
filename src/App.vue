@@ -105,6 +105,14 @@
           >
             Table
           </button>
+
+          <button
+            class="menubar__button"
+            :class="{ 'is-active': isActive.todo_list() }"
+            @click="commands.todo_list"
+          >
+            checklist
+          </button>
         </div>
       </div>
     </editor-floating-menu>
@@ -154,7 +162,9 @@ export default {
           new Heading({ levels: [1, 2, 3] }),
           new ListItem(),
           new OrderedList(),
-          new TodoItem(),
+          new TodoItem({
+            nested: true
+          }),
           new TodoList(),
           new Link(),
           new Bold(),
@@ -204,5 +214,48 @@ export default {
       visibility: visible;
     }
   }
+}
+ul[data-type="todo_list"] {
+  padding-left: 0;
+}
+li[data-type="todo_item"] {
+  display: flex;
+  flex-direction: row;
+}
+.todo-checkbox {
+  border: 2px solid black;
+  height: 0.9em;
+  width: 0.9em;
+  box-sizing: border-box;
+  margin-right: 10px;
+  margin-top: 0.3rem;
+  user-select: none;
+  -webkit-user-select: none;
+  cursor: pointer;
+  border-radius: 0.2em;
+  background-color: transparent;
+  transition: 0.4s background;
+}
+.todo-content {
+  flex: 1;
+  > p:last-of-type {
+    margin-bottom: 0;
+  }
+  > ul[data-type="todo_list"] {
+    margin: 0.5rem 0;
+  }
+}
+li[data-done="true"] {
+  > .todo-content {
+    > p {
+      text-decoration: line-through;
+    }
+  }
+  > .todo-checkbox {
+    background-color: black;
+  }
+}
+li[data-done="false"] {
+  text-decoration: none;
 }
 </style>

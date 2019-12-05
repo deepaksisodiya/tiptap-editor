@@ -1,3 +1,4 @@
 module.exports = {
-  publicPath: "/tiptap-editor/"
+  publicPath: "/tiptap-editor/",
+  runtimeCompiler: true
 };
