@@ -117,13 +117,54 @@
       </div>
     </editor-floating-menu>
 
+    <editor-menu-bubble
+      :editor="editor"
+      :keep-in-bounds="keepInBounds"
+      v-slot="{ commands, isActive, menu }"
+    >
+      <div
+        class="menububble"
+        :class="{ 'is-active': menu.isActive }"
+        :style="`left: ${menu.left}px; bottom: ${menu.bottom}px;`"
+      >
+        <button
+          class="menububble__button"
+          :class="{ 'is-active': isActive.bold() }"
+          @click="commands.bold"
+        >
+          bold
+        </button>
+
+        <button
+          class="menububble__button"
+          :class="{ 'is-active': isActive.italic() }"
+          @click="commands.italic"
+        >
+          italic
+        </button>
+
+        <button
+          class="menububble__button"
+          :class="{ 'is-active': isActive.code() }"
+          @click="commands.code"
+        >
+          code
+        </button>
+      </div>
+    </editor-menu-bubble>
+
     <editor-content class="editor__content" :editor="editor" />
   </div>
 </template>
 
 <script>
 import "./assets/sass/main.scss";
-import { Editor, EditorContent, EditorFloatingMenu } from "tiptap";
+import {
+  Editor,
+  EditorContent,
+  EditorFloatingMenu,
+  EditorMenuBubble
+} from "tiptap";
 import {
   Blockquote,
   BulletList,
@@ -149,7 +190,8 @@ import {
 export default {
   components: {
     EditorContent,
-    EditorFloatingMenu
+    EditorFloatingMenu,
+    EditorMenuBubble
   },
   data() {
     return {
