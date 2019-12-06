@@ -120,7 +120,7 @@
     <editor-menu-bubble
       :editor="editor"
       :keep-in-bounds="keepInBounds"
-      v-slot="{ commands, isActive, menu }"
+      v-slot="{ commands, isActive, menu, getMarkAttrs }"
     >
       <div
         class="menububble"
@@ -149,6 +149,36 @@
           @click="commands.code"
         >
           code
+        </button>
+
+        <form
+          class="menububble__form"
+          v-if="linkMenuIsActive"
+          @submit.prevent="setLinkUrl(commands.link, linkUrl)"
+        >
+          <input
+            class="menububble__input"
+            type="text"
+            v-model="linkUrl"
+            placeholder="https://"
+            ref="linkInput"
+            @keydown.esc="hideLinkMenu"
+          />
+          <button
+            class="menububble__button"
+            @click="setLinkUrl(commands.link, null)"
+            type="button"
+          >
+            remove
+          </button>
+        </form>
+        <button
+          v-else
+          class="menububble__button"
+          @click="showLinkMenu(getMarkAttrs('link'))"
+          :class="{ 'is-active': isActive.link() }"
+        >
+          <span>{{ isActive.link() ? "Update Link" : "Add Link" }}</span>
         </button>
       </div>
     </editor-menu-bubble>
@@ -195,6 +225,8 @@ export default {
   },
   data() {
     return {
+      linkUrl: null,
+      linkMenuIsActive: false,
       editor: new Editor({
         extensions: [
           new Blockquote(),
@@ -235,6 +267,23 @@ export default {
         `
       })
     };
+  },
+  methods: {
+    showLinkMenu(attrs) {
+      this.linkUrl = attrs.href;
+      this.linkMenuIsActive = true;
+      this.$nextTick(() => {
+        this.$refs.linkInput.focus();
+      });
+    },
+    hideLinkMenu() {
+      this.linkUrl = null;
+      this.linkMenuIsActive = false;
+    },
+    setLinkUrl(command, url) {
+      command({ href: url });
+      this.hideLinkMenu();
+    }
   }
 };
 </script>
