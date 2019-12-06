@@ -1,5 +1,9 @@
 <template>
   <div class="editor">
+    <div class="checkbox">
+      <input type="checkbox" id="editable" v-model="editable" />
+      <label for="editable">editable</label>
+    </div>
     <editor-floating-menu
       :editor="editor"
       v-slot="{ commands, isActive, menu }"
@@ -225,9 +229,11 @@ export default {
   },
   data() {
     return {
+      editable: true,
       linkUrl: null,
       linkMenuIsActive: false,
       editor: new Editor({
+        editable: true,
         extensions: [
           new Blockquote(),
           new BulletList(),
@@ -283,6 +289,13 @@ export default {
     setLinkUrl(command, url) {
       command({ href: url });
       this.hideLinkMenu();
+    }
+  },
+  watch: {
+    editable() {
+      this.editor.setOptions({
+        editable: this.editable
+      });
     }
   }
 };
