@@ -41,98 +41,104 @@
           :class="{ 'is-active': menu.isActive }"
           :style="`top: ${menu.top}px`"
         >
-          <button
-            class="menubar__button"
-            :class="{ 'is-active': isActive.heading({ level: 1 }) }"
-            @click="commands.heading({ level: 1 })"
-          >
-            H1
+          <button @click="toggleFloatingMenu">
+            Plus_icon
           </button>
+          <div v-if="shouldShowFloatingMenu">
+            <button
+              class="menubar__button"
+              :class="{ 'is-active': isActive.heading({ level: 1 }) }"
+              @click="onClickMenuItem(commands.heading, { level: 1 })"
+            >
+              H1
+            </button>
 
-          <button
-            class="menubar__button"
-            :class="{ 'is-active': isActive.heading({ level: 2 }) }"
-            @click="commands.heading({ level: 2 })"
-          >
-            H2
-          </button>
+            <button
+              class="menubar__button"
+              :class="{ 'is-active': isActive.heading({ level: 2 }) }"
+              @click="onClickMenuItem(commands.heading, { level: 2 })"
+            >
+              H2
+            </button>
 
-          <button
-            class="menubar__button"
-            :class="{ 'is-active': isActive.heading({ level: 3 }) }"
-            @click="commands.heading({ level: 3 })"
-          >
-            H3
-          </button>
+            <button
+              class="menubar__button"
+              :class="{ 'is-active': isActive.heading({ level: 3 }) }"
+              @click="onClickMenuItem(commands.heading, { level: 3 })"
+            >
+              H3
+            </button>
 
-          <button
-            class="menubar__button"
-            :class="{ 'is-active': isActive.bullet_list() }"
-            @click="commands.bullet_list"
-          >
-            bullet_list
-          </button>
+            <button
+              class="menubar__button"
+              :class="{ 'is-active': isActive.bullet_list() }"
+              @click="onClickMenuItem(commands.bullet_list)"
+            >
+              bullet_list
+            </button>
 
-          <button
-            class="menubar__button"
-            :class="{ 'is-active': isActive.ordered_list() }"
-            @click="commands.ordered_list"
-          >
-            ordered_list
-          </button>
+            <button
+              class="menubar__button"
+              :class="{ 'is-active': isActive.ordered_list() }"
+              @click="onClickMenuItem(commands.ordered_list)"
+            >
+              ordered_list
+            </button>
 
-          <button
-            class="menubar__button"
-            :class="{ 'is-active': isActive.blockquote() }"
-            @click="commands.blockquote"
-          >
-            blockquote
-          </button>
+            <button
+              class="menubar__button"
+              :class="{ 'is-active': isActive.blockquote() }"
+              @click="onClickMenuItem(commands.blockquote)"
+            >
+              blockquote
+            </button>
 
-          <button
-            class="menubar__button"
-            :class="{ 'is-active': isActive.code_block() }"
-            @click="commands.code_block"
-          >
-            code_block
-          </button>
+            <button
+              class="menubar__button"
+              :class="{ 'is-active': isActive.code_block() }"
+              @click="onClickMenuItem(commands.code_block)"
+            >
+              code_block
+            </button>
 
-          <button
-            class="menubar__button"
-            @click="
-              commands.createTable({
-                rowsCount: 3,
-                colsCount: 3,
-                withHeaderRow: false
-              })
-            "
-          >
-            Table
-          </button>
+            <button
+              class="menubar__button"
+              @click="
+                onClickMenuItem(commands.createTable, {
+                  rowsCount: 3,
+                  colsCount: 3,
+                  withHeaderRow: false
+                })
+              "
+            >
+              Table
+            </button>
 
-          <button
-            class="menubar__button"
-            :class="{ 'is-active': isActive.todo_list() }"
-            @click="commands.todo_list"
-          >
-            checklist
-          </button>
+            <button
+              class="menubar__button"
+              :class="{ 'is-active': isActive.todo_list() }"
+              @click="onClickMenuItem(commands.todo_list)"
+            >
+              checklist
+            </button>
 
-          <button
-            class="menubar__button"
-            :class="{ 'is-active': isActive.image() }"
-            @click="showImagePrompt(commands.image)"
-          >
-            Image
-          </button>
+            <button
+              class="menubar__button"
+              :class="{ 'is-active': isActive.image() }"
+              @click="showImagePrompt(commands.image)"
+            >
+              Image
+            </button>
 
-          <button class="menubar__button">
-            Embeds
-          </button>
+            <button class="menubar__button">
+              Embeds
+            </button>
+          </div>
         </div>
       </div>
     </editor-floating-menu>
 
+    <!-- on hover it will show bold, italic and code -->
     <editor-menu-bubble
       :editor="editor"
       :keep-in-bounds="keepInBounds"
@@ -243,6 +249,7 @@ export default {
   },
   data() {
     return {
+      shouldShowFloatingMenu: false,
       editable: true,
       linkUrl: null,
       linkMenuIsActive: false,
@@ -317,6 +324,13 @@ export default {
       if (src !== null) {
         command({ src });
       }
+    },
+    toggleFloatingMenu() {
+      this.shouldShowFloatingMenu = !this.shouldShowFloatingMenu;
+    },
+    onClickMenuItem(command, obj) {
+      command(obj);
+      this.shouldShowFloatingMenu = false;
     }
   },
   watch: {
