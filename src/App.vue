@@ -220,6 +220,7 @@ import {
   TableRow,
   TrailingNode
 } from "tiptap-extensions";
+import Iframe from "./Iframe.js";
 
 export default {
   components: {
@@ -260,7 +261,8 @@ export default {
           new TrailingNode({
             node: "paragraph",
             notAfter: ["paragraph"]
-          })
+          }),
+          new Iframe()
         ],
         content: `
           <h2>
@@ -270,6 +272,8 @@ export default {
             This is an example of a medium-like editor. Enter a new line and some buttons will appear.
           </p>
           <p> Try to change some content here. With the <code>History</code> extension you are able to undo and redo your changes. You can also use keyboard shortcuts for this (<code>cmd+z</code> and <code>cmd+shift+z</code>).</p>
+          <p>This iframe is rendered as a vue component. This makes it possible to render the input below to change its source.</p>
+          <iframe src="https://www.youtube.com/embed/XIMLoLxmTDw" frameborder="0" allowfullscreen></iframe>
         `
       })
     };
@@ -361,5 +365,21 @@ li[data-done="true"] {
 }
 li[data-done="false"] {
   text-decoration: none;
+}
+.iframe {
+  &__embed {
+    width: 100%;
+    height: 15rem;
+    border: 0;
+  }
+  &__input {
+    display: block;
+    width: 100%;
+    font: inherit;
+    border: 0;
+    border-radius: 5px;
+    background-color: rgba(black, 0.1);
+    padding: 0.3rem 0.5rem;
+  }
 }
 </style>
