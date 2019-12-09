@@ -117,6 +117,18 @@
           >
             checklist
           </button>
+
+          <button
+            class="menubar__button"
+            :class="{ 'is-active': isActive.image() }"
+            @click="showImagePrompt(commands.image)"
+          >
+            Image
+          </button>
+
+          <button class="menubar__button">
+            Embeds
+          </button>
         </div>
       </div>
     </editor-floating-menu>
@@ -187,7 +199,7 @@
       </div>
     </editor-menu-bubble>
 
-    <editor-content class="editor__content" :editor="editor" />
+    <editor-content id="editor" class="editor__content" :editor="editor" />
   </div>
 </template>
 
@@ -218,7 +230,8 @@ import {
   TableHeader,
   TableCell,
   TableRow,
-  TrailingNode
+  TrailingNode,
+  Image
 } from "tiptap-extensions";
 import Iframe from "./Iframe.js";
 
@@ -262,8 +275,13 @@ export default {
             node: "paragraph",
             notAfter: ["paragraph"]
           }),
-          new Iframe()
+          new Iframe(),
+          new Image()
         ],
+        onUpdate() {
+          var objDiv = document.getElementById("editor");
+          objDiv.scrollTop = objDiv.scrollHeight;
+        },
         content: `
           <h2>
             Floating Menu
@@ -293,6 +311,12 @@ export default {
     setLinkUrl(command, url) {
       command({ href: url });
       this.hideLinkMenu();
+    },
+    showImagePrompt(command) {
+      const src = prompt("Enter the url of your image here");
+      if (src !== null) {
+        command({ src });
+      }
     }
   },
   watch: {
