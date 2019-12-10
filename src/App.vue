@@ -210,7 +210,6 @@
 </template>
 
 <script>
-import "./assets/sass/main.scss";
 import {
   Editor,
   EditorContent,
@@ -342,82 +341,3 @@ export default {
   }
 };
 </script>
-
-<style lang="scss">
-.editor {
-  position: relative;
-
-  &__floating-menu {
-    position: absolute;
-    z-index: 1;
-    margin-top: -0.25rem;
-    visibility: hidden;
-    opacity: 0;
-    transition: opacity 0.2s, visibility 0.2s;
-
-    &.is-active {
-      opacity: 1;
-      visibility: visible;
-    }
-  }
-}
-ul[data-type="todo_list"] {
-  padding-left: 0;
-}
-li[data-type="todo_item"] {
-  display: flex;
-  flex-direction: row;
-}
-.todo-checkbox {
-  border: 2px solid black;
-  height: 0.9em;
-  width: 0.9em;
-  box-sizing: border-box;
-  margin-right: 10px;
-  margin-top: 0.3rem;
-  user-select: none;
-  -webkit-user-select: none;
-  cursor: pointer;
-  border-radius: 0.2em;
-  background-color: transparent;
-  transition: 0.4s background;
-}
-.todo-content {
-  flex: 1;
-  > p:last-of-type {
-    margin-bottom: 0;
-  }
-  > ul[data-type="todo_list"] {
-    margin: 0.5rem 0;
-  }
-}
-li[data-done="true"] {
-  > .todo-content {
-    > p {
-      text-decoration: line-through;
-    }
-  }
-  > .todo-checkbox {
-    background-color: black;
-  }
-}
-li[data-done="false"] {
-  text-decoration: none;
-}
-.iframe {
-  &__embed {
-    width: 100%;
-    height: 15rem;
-    border: 0;
-  }
-  &__input {
-    display: block;
-    width: 100%;
-    font: inherit;
-    border: 0;
-    border-radius: 5px;
-    background-color: rgba(black, 0.1);
-    padding: 0.3rem 0.5rem;
-  }
-}
-</style>
