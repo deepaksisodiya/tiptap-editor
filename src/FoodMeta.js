@@ -75,10 +75,10 @@ export default class FoodMetaNode extends Node {
       template: `
         <div>
           <label>Cook Time</label>
-          <input type="number" v-model="cooktime" />
+          <input type="number" v-model="cooktime" :disabled="!view.editable" />
           <br>
           <label>Serves</label>
-          <input type="number" v-model="serves" />
+          <input type="number" v-model="serves" :disabled="!view.editable" />
         </div>
       `
     };
