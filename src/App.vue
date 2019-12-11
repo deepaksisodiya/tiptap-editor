@@ -124,6 +124,14 @@
 
             <button
               class="menubar__button"
+              :class="{ 'is-active': isActive.foodMeta() }"
+              @click="onClickMenuItem(commands.foodMeta)"
+            >
+              FoodMeta
+            </button>
+
+            <button
+              class="menubar__button"
               :class="{ 'is-active': isActive.image() }"
               @click="showImagePrompt(commands.image)"
             >
@@ -239,6 +247,7 @@ import {
   Image
 } from "tiptap-extensions";
 import Iframe from "./Iframe.js";
+import FoodMeta from "./FoodMeta";
 
 export default {
   components: {
@@ -282,11 +291,11 @@ export default {
             notAfter: ["paragraph"]
           }),
           new Iframe(),
-          new Image()
+          new Image(),
+          new FoodMeta()
         ],
-        onUpdate() {
-          var objDiv = document.getElementById("editor");
-          objDiv.scrollTop = objDiv.scrollHeight;
+        onUpdate({ getJSON }) {
+          console.log(getJSON());
         },
         content: `
           <h2>
@@ -298,6 +307,7 @@ export default {
           <p> Try to change some content here. With the <code>History</code> extension you are able to undo and redo your changes. You can also use keyboard shortcuts for this (<code>cmd+z</code> and <code>cmd+shift+z</code>).</p>
           <p>This iframe is rendered as a vue component. This makes it possible to render the input below to change its source.</p>
           <iframe src="https://www.youtube.com/embed/XIMLoLxmTDw" frameborder="0" allowfullscreen></iframe>
+          
         `
       })
     };
@@ -338,6 +348,17 @@ export default {
         editable: this.editable
       });
     }
+  },
+  mounted() {
+    const doc = this.editor.getJSON();
+    doc.content.push({
+      type: "foodMeta",
+      attrs: {
+        cooktime: "48",
+        serves: "40"
+      }
+    });
+    this.editor.setContent(doc);
   }
 };
 </script>

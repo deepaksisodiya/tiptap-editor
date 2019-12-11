@@ -10,6 +10,7 @@
   "dependencies": {
     "core-js": "^3.3.2",
     "tiptap": "^1.26.4",
+    "tiptap-commands": "^1.12.4",
     "tiptap-extensions": "^1.28.4",
     "vue": "^2.6.10"
   },
