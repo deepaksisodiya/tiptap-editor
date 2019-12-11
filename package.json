@@ -12,7 +12,8 @@
     "tiptap": "^1.26.4",
     "tiptap-commands": "^1.12.4",
     "tiptap-extensions": "^1.28.4",
-    "vue": "^2.6.10"
+    "vue": "^2.6.10",
+    "vue-json-viewer": "^2.2.8"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^4.0.0",

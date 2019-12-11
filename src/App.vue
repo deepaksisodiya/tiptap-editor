@@ -214,6 +214,8 @@
     </editor-menu-bubble>
 
     <editor-content id="editor" class="editor__content" :editor="editor" />
+
+    <json-viewer :value="data" expand-depth="10"></json-viewer>
   </div>
 </template>
 
@@ -248,15 +250,18 @@ import {
 } from "tiptap-extensions";
 import Iframe from "./Iframe.js";
 import FoodMeta from "./FoodMeta";
+import JsonViewer from "vue-json-viewer";
 
 export default {
   components: {
     EditorContent,
     EditorFloatingMenu,
-    EditorMenuBubble
+    EditorMenuBubble,
+    JsonViewer
   },
   data() {
     return {
+      data: null,
       shouldShowFloatingMenu: false,
       editable: true,
       linkUrl: null,
@@ -294,8 +299,9 @@ export default {
           new Image(),
           new FoodMeta()
         ],
-        onUpdate({ getJSON }) {
+        onUpdate: ({ getJSON }) => {
           console.log(getJSON());
+          this.data = getJSON();
         },
         content: `
           <h2>
