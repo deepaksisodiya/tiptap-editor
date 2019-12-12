@@ -215,7 +215,7 @@
 
     <editor-content id="editor" class="editor__content" :editor="editor" />
 
-    <json-viewer :value="data" expand-depth="10"></json-viewer>
+    <vue-json-pretty :path="'res'" :data="data"> </vue-json-pretty>
   </div>
 </template>
 
@@ -250,14 +250,14 @@ import {
 } from "tiptap-extensions";
 import Iframe from "./Iframe.js";
 import FoodMeta from "./FoodMeta";
-import JsonViewer from "vue-json-viewer";
+import VueJsonPretty from "vue-json-pretty";
 
 export default {
   components: {
     EditorContent,
     EditorFloatingMenu,
     EditorMenuBubble,
-    JsonViewer
+    VueJsonPretty
   },
   data() {
     return {

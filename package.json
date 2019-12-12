@@ -13,6 +13,7 @@
     "tiptap-commands": "^1.12.4",
     "tiptap-extensions": "^1.28.4",
     "vue": "^2.6.10",
+    "vue-json-pretty": "^1.6.2",
     "vue-json-viewer": "^2.2.8"
   },
   "devDependencies": {
