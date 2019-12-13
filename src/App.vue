@@ -138,7 +138,10 @@
               Image
             </button>
 
-            <button class="menubar__button">
+            <button
+              :class="{ 'is-active': isActive.embeds() }"
+              @click="onClickMenuItem(commands.embeds)"
+            >
               Embeds
             </button>
           </div>
@@ -248,8 +251,8 @@ import {
   TrailingNode,
   Image
 } from "tiptap-extensions";
-import Iframe from "./Iframe.js";
 import FoodMeta from "./FoodMeta";
+import Embeds from "./embeds";
 import VueJsonPretty from "vue-json-pretty";
 
 export default {
@@ -295,12 +298,11 @@ export default {
             node: "paragraph",
             notAfter: ["paragraph"]
           }),
-          new Iframe(),
           new Image(),
-          new FoodMeta()
+          new FoodMeta(),
+          new Embeds()
         ],
         onUpdate: ({ getJSON }) => {
-          console.log(getJSON());
           this.data = getJSON();
         },
         content: `
