@@ -144,6 +144,13 @@
             >
               Embeds
             </button>
+
+            <button
+              :class="{ 'is-active': isActive.seperator() }"
+              @click="onClickMenuItem(commands.seperator)"
+            >
+              Seperator
+            </button>
           </div>
         </div>
       </div>
@@ -253,6 +260,7 @@ import {
 } from "tiptap-extensions";
 import FoodMeta from "./FoodMeta";
 import Embeds from "./embeds";
+import Seperator from "./Seperator";
 import VueJsonPretty from "vue-json-pretty";
 
 export default {
@@ -300,7 +308,8 @@ export default {
           }),
           new Image(),
           new FoodMeta(),
-          new Embeds()
+          new Embeds(),
+          new Seperator()
         ],
         onUpdate: ({ getJSON }) => {
           this.data = getJSON();
