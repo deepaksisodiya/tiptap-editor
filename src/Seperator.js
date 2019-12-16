@@ -36,7 +36,14 @@ export default class SeperatorNode extends Node {
   get view() {
     return {
       props: ["node", "updateAttrs", "view"],
-      template: `<span>...</span>`
+      template: `
+        <div style="text-align:center">
+          <span class="dot"></span>
+          <span class="dot"></span>
+          <span class="dot"></span>
+          <span class="dot"></span>
+        </div>
+      `
     };
   }
 }

@@ -379,3 +379,13 @@ export default {
   }
 };
 </script>
+
+<style>
+.dot {
+  height: 15px;
+  width: 15px;
+  background-color: black;
+  border-radius: 50%;
+  display: inline-block;
+}
+</style>
