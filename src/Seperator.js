@@ -1,4 +1,5 @@
 import { Node } from "tiptap";
+import { chainCommands, exitCode } from "tiptap-commands";
 
 export default class SeperatorNode extends Node {
   // name of the component
@@ -10,13 +11,12 @@ export default class SeperatorNode extends Node {
     return {
       // here you have to specify all values that can be stored in this node
       group: "block",
-      selectable: false,
+      selectable: true,
       draggable: true,
       // parseDOM and toDOM is still required to make copy and paste work
       parseDOM: [
         {
-          tag: this.name,
-          getAttrs: () => {}
+          tag: this.name
         }
       ],
       toDOM: () => [
@@ -32,6 +32,16 @@ export default class SeperatorNode extends Node {
   commands({ type }) {
     return () => (state, dispatch) =>
       dispatch(state.tr.replaceSelectionWith(type.create()));
+  }
+
+  keys({ type }) {
+    const command = chainCommands(exitCode, (state, dispatch) => {
+      dispatch(state.tr.replaceSelectionWith(type.create()).scrollIntoView());
+      return true;
+    });
+    return {
+      "Shift-s": command
+    };
   }
 
   get view() {
