@@ -15,7 +15,9 @@ export default class SeperatorNode extends Node {
 
       draggable: false,
       // parseDOM and toDOM is still required to make copy and paste work
-      parseDOM: [{ tag: this.name, preserveWhitespace: "full" }],
+      parseDOM: [
+        { tag: `[data-type="${this.name}"]`, preserveWhitespace: "full" }
+      ],
       toDOM: mark => {
         console.log(mark);
         return ["div"];

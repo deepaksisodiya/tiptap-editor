@@ -4,6 +4,7 @@
       <input type="checkbox" id="editable" v-model="editable" />
       <label for="editable">editable</label>
     </div>
+    <button @click="setContent">Set Content</button>
     <editor-floating-menu
       :editor="editor"
       v-slot="{ commands, isActive, menu }"
@@ -360,9 +361,41 @@ export default {
       this.shouldShowFloatingMenu = !this.shouldShowFloatingMenu;
     },
     onClickMenuItem(command, obj) {
-      console.log(command, obj);
       command(obj);
       this.shouldShowFloatingMenu = false;
+    },
+    setContent() {
+      const content = {
+        type: "doc",
+        content: [
+          {
+            type: "heading",
+            attrs: {
+              level: 2
+            },
+            content: [
+              {
+                type: "text",
+                text: "Set Content from button"
+              }
+            ]
+          },
+          {
+            type: "foodMeta",
+            attrs: {
+              cooktime: "48",
+              serves: "40"
+            }
+          },
+          {
+            type: "seperator"
+          },
+          {
+            type: "paragraph"
+          }
+        ]
+      };
+      this.editor.setContent(content, true);
     }
   },
   watch: {
@@ -374,6 +407,7 @@ export default {
   },
   mounted() {
     const doc = this.editor.getJSON();
+    console.log(doc);
     doc.content.push({
       type: "foodMeta",
       attrs: {
