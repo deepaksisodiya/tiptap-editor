@@ -1,10 +1,10 @@
 import { Node } from "tiptap";
 import { chainCommands, exitCode } from "tiptap-commands";
 
-export default class SeperatorNode extends Node {
+export default class LockNode extends Node {
   // name of the component
   get name() {
-    return "seperator";
+    return "lock";
   }
 
   get schema() {
@@ -12,12 +12,10 @@ export default class SeperatorNode extends Node {
       // here you have to specify all values that can be stored in this node
       group: "block",
       selectable: true,
-
-      draggable: false,
+      draggable: true,
       // parseDOM and toDOM is still required to make copy and paste work
-      parseDOM: [{ tag: this.name, preserveWhitespace: "full" }],
+      parseDOM: [{ tag: this.name }],
       toDOM: mark => {
-        console.log(mark);
         return ["div"];
       }
     };
@@ -34,7 +32,7 @@ export default class SeperatorNode extends Node {
       return true;
     });
     return {
-      "Shift-s": command
+      "Shift-l": command
     };
   }
 
@@ -43,10 +41,7 @@ export default class SeperatorNode extends Node {
       props: ["node", "updateAttrs", "view"],
       template: `
         <div @paste.stop style="text-align:center" contenteditable="true">
-          <span class="dot"></span>
-          <span class="dot"></span>
-          <span class="dot"></span>
-          <span class="dot"></span>
+          Only paid subscribers can see content below
         </div>
       `
     };

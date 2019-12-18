@@ -151,6 +151,13 @@
             >
               Seperator
             </button>
+
+            <button
+              :class="{ 'is-active': isActive.lock() }"
+              @click="onClickMenuItem(commands.lock)"
+            >
+              Lock
+            </button>
           </div>
         </div>
       </div>
@@ -261,6 +268,7 @@ import {
 import FoodMeta from "./FoodMeta";
 import Embeds from "./embeds";
 import Seperator from "./Seperator";
+import Lock from "./Lock";
 import VueJsonPretty from "vue-json-pretty";
 
 export default {
@@ -309,7 +317,8 @@ export default {
           new Image(),
           new FoodMeta(),
           new Embeds(),
-          new Seperator()
+          new Seperator(),
+          new Lock()
         ],
         onUpdate: ({ getJSON }) => {
           this.data = getJSON();
@@ -355,6 +364,7 @@ export default {
       this.shouldShowFloatingMenu = !this.shouldShowFloatingMenu;
     },
     onClickMenuItem(command, obj) {
+      console.log(command, obj);
       command(obj);
       this.shouldShowFloatingMenu = false;
     }
