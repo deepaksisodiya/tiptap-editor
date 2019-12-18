@@ -18,13 +18,12 @@ export default class FoodMetaNode extends Node {
         }
       },
       group: "block",
-      selectable: false,
+      selectable: true,
       // parseDOM and toDOM is still required to make copy and paste work
       parseDOM: [
         {
-          tag: `[data-type="${this.name}"]`,
+          tag: this.name,
           getAttrs: dom => {
-            console.log("Dom", dom);
             return {
               cooktime: parseInt(dom.getAttribute("data-cooktime"), 10),
               serves: parseInt(dom.getAttribute("data-serves"), 10)
@@ -33,10 +32,10 @@ export default class FoodMetaNode extends Node {
         }
       ],
       toDOM: () => [
-        "div",
+        "foodMeta",
         {
-          allowfullscreen: "true",
-          class: "abcd"
+          frameborder: 0,
+          allowfullscreen: "true"
         }
       ]
     };
