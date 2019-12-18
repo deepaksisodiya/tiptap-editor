@@ -169,11 +169,7 @@
       :keep-in-bounds="keepInBounds"
       v-slot="{ commands, isActive, menu, getMarkAttrs }"
     >
-      <div
-        class="menububble"
-        :class="{ 'is-active': menu.isActive }"
-        :style="`left: ${menu.left}px; bottom: ${menu.bottom}px;`"
-      >
+      <div :class="[menu.isActive ? 'is-active' : 'is-not-active']">
         <button
           class="menububble__button"
           :class="{ 'is-active': isActive.bold() }"
@@ -397,5 +393,14 @@ export default {
   background-color: black;
   border-radius: 50%;
   display: inline-block;
+}
+.is-not-active {
+  visibility: hidden;
+  opacity: 0;
+}
+.is-active {
+  visibility: visible;
+  opacity: 1;
+  transition: visibility 0.2s, opacity 0.2s;
 }
 </style>
