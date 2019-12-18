@@ -407,7 +407,6 @@ export default {
   },
   mounted() {
     const doc = this.editor.getJSON();
-    console.log(doc);
     doc.content.push({
       type: "foodMeta",
       attrs: {
