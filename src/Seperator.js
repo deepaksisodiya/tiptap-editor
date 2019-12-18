@@ -1,5 +1,5 @@
 import { Node } from "tiptap";
-import { chainCommands, exitCode } from "tiptap-commands";
+import { chainCommands, exitCode, pasteRule } from "tiptap-commands";
 
 export default class SeperatorNode extends Node {
   // name of the component
@@ -15,19 +15,30 @@ export default class SeperatorNode extends Node {
 
       draggable: false,
       // parseDOM and toDOM is still required to make copy and paste work
-      parseDOM: [
-        { tag: `[data-type="${this.name}"]`, preserveWhitespace: "full" }
-      ],
-      toDOM: mark => {
-        console.log(mark);
-        return ["div"];
-      }
+      parseDOM: [{ tag: this.name }],
+      toDOM: () => [
+        "seperator",
+        {
+          frameborder: 0,
+          allowfullscreen: "true"
+        }
+      ]
     };
   }
 
   commands({ type }) {
     return () => (state, dispatch) =>
       dispatch(state.tr.replaceSelectionWith(type.create()));
+  }
+
+  inputRules({ type }) {
+    console.log(type);
+    return [pasteRule(type)];
+  }
+
+  pasteRules({ type }) {
+    console.log(type);
+    return [pasteRule(type)];
   }
 
   keys({ type }) {
