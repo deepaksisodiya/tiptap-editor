@@ -269,11 +269,11 @@ import {
   TableCell,
   TableRow,
   TrailingNode,
-  Image
 } from "tiptap-extensions";
 import FoodMeta from "./FoodMeta";
 import Embeds from "./embeds";
 import Seperator from "./Seperator";
+import Image from "./Image";
 import Lock from "./Lock";
 import VueJsonPretty from "vue-json-pretty";
 
@@ -340,7 +340,7 @@ export default {
           <p> Try to change some content here. With the <code>History</code> extension you are able to undo and redo your changes. You can also use keyboard shortcuts for this (<code>cmd+z</code> and <code>cmd+shift+z</code>).</p>
           <p>This iframe is rendered as a vue component. This makes it possible to render the input below to change its source.</p>
           <iframe src="https://www.youtube.com/embed/XIMLoLxmTDw" frameborder="0" allowfullscreen></iframe>
-          
+
         `
       })
     };
