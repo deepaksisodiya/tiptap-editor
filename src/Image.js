@@ -1,69 +1,68 @@
 import { Image as TiptapImage } from "tiptap-extensions";
 
-class Image extends TiptapImage {
-
+export default class Image extends TiptapImage {
   get schema() {
     return {
       attrs: {
         src: {},
         alt: {
-          default: null,
+          default: null
         },
         title: {
-          default: null,
+          default: null
         },
         caption: {
-          default: null,
+          default: null
         }
       },
-      group: 'block',
+      group: "block",
       draggable: true,
       parseDOM: [
         {
-          tag: 'img[src]',
+          tag: "img[src]",
           getAttrs: dom => ({
-            src: dom.getAttribute('src'),
-            title: dom.getAttribute('title'),
-            alt: dom.getAttribute('alt'),
-            caption: dom.getAttribute('caption')
-          }),
-        },
+            src: dom.getAttribute("src"),
+            title: dom.getAttribute("title"),
+            alt: dom.getAttribute("alt"),
+            caption: dom.getAttribute("caption")
+          })
+        }
       ],
-      toDOM: node => ['img', node.attrs],
-    }
-   }
+      toDOM: node => ["img", node.attrs]
+    };
+  }
 
-    get view() {
-      return {
-        props: ["node", "updateAttrs", "view"],
-        computed: {
-          src: {
-            get() {
-              return this.node.attrs.src;
-            },
-            set(src) {
-              this.updateAttrs({
-                src
-              });
-            }
+  get view() {
+    return {
+      props: ["node", "updateAttrs", "view"],
+      computed: {
+        src: {
+          get() {
+            return this.node.attrs.src;
           },
-          caption: {
-            get() {
-              return this.node.attrs.caption;
-            },
-            set(caption) {
-              this.updateAttrs({
-                caption
-              });
-            }
+          set(src) {
+            this.updateAttrs({
+              src
+            });
           }
         },
-        template: `
+        caption: {
+          get() {
+            return this.node.attrs.caption;
+          },
+          set(caption) {
+            this.updateAttrs({
+              caption
+            });
+          }
+        }
+      },
+      template: `
           <div>
             <img :src="src"></img>
             <input type="text" v-model="caption" :disabled="!view.editable" placeholder="write caption (optional)" />
           </div>
         `
-      };
-    }
+    };
+  }
 }

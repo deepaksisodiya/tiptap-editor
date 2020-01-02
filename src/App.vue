@@ -268,7 +268,7 @@ import {
   TableHeader,
   TableCell,
   TableRow,
-  TrailingNode,
+  TrailingNode
 } from "tiptap-extensions";
 import FoodMeta from "./FoodMeta";
 import Embeds from "./embeds";
