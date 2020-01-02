@@ -24,20 +24,18 @@ export default class FoodMetaNode extends Node {
         {
           tag: this.name,
           getAttrs: dom => {
-            return {
-              cooktime: parseInt(dom.getAttribute("data-cooktime"), 10),
-              serves: parseInt(dom.getAttribute("data-serves"), 10)
-            };
+            return JSON.parse(dom.getAttribute("data-attrs"));
           }
         }
       ],
-      toDOM: () => [
-        "foodMeta",
-        {
-          frameborder: 0,
-          allowfullscreen: "true"
-        }
-      ]
+      toDOM: node => {
+        return [
+          "foodMeta",
+          {
+            "data-attrs": JSON.stringify(node.attrs)
+          }
+        ];
+      }
     };
   }
 
@@ -72,7 +70,7 @@ export default class FoodMetaNode extends Node {
         }
       },
       template: `
-        <div>
+        <div contenteditable="false">
           <label>Cook Time</label>
           <input type="number" v-model="cooktime" :disabled="!view.editable" />
           <br>
