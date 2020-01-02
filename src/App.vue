@@ -46,6 +46,15 @@
             Plus_icon
           </button>
           <div v-if="shouldShowFloatingMenu">
+            <input
+              type="file"
+              ref="fileInput"
+              style="display:none"
+              @change="previewFiles(commands.image)"
+            />
+            <button class="menubar__button" @click="onClickImage()">
+              Image
+            </button>
             <button
               class="menubar__button"
               :class="{ 'is-active': isActive.heading({ level: 1 }) }"
@@ -277,6 +286,7 @@ export default {
   },
   data() {
     return {
+      imageSrc: "",
       data: null,
       shouldShowFloatingMenu: false,
       editable: true,
@@ -396,6 +406,16 @@ export default {
         ]
       };
       this.editor.setContent(content, true);
+    },
+    onClickImage() {
+      this.$refs.fileInput.click();
+    },
+    previewFiles(command) {
+      console.log("event on change event");
+      this.editor.focus();
+      const imageURL = URL.createObjectURL(this.$refs.fileInput.files[0]);
+      command({ src: imageURL });
+      this.$refs.fileInput.value = "";
     }
   },
   watch: {
