@@ -411,7 +411,6 @@ export default {
       this.$refs.fileInput.click();
     },
     previewFiles(command) {
-      console.log("event on change event");
       this.editor.focus();
       const imageURL = URL.createObjectURL(this.$refs.fileInput.files[0]);
       command({ src: imageURL });
