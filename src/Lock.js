@@ -15,7 +15,7 @@ export default class LockNode extends Node {
       draggable: true,
       // parseDOM and toDOM is still required to make copy and paste work
       parseDOM: [{ tag: this.name }],
-      toDOM: mark => {
+      toDOM: () => {
         return ["div"];
       }
     };
