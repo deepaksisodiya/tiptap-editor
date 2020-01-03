@@ -59,7 +59,7 @@ export default class Image extends TiptapImage {
       },
       template: `
           <div>
-            <img :src="src"></img>
+            <img :src="src" />
             <input type="text" v-model="caption" :disabled="!view.editable" placeholder="write caption (optional)" />
           </div>
         `

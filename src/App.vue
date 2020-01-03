@@ -412,8 +412,19 @@ export default {
     },
     previewFiles(command) {
       this.editor.focus();
-      const imageURL = URL.createObjectURL(this.$refs.fileInput.files[0]);
-      command({ src: imageURL });
+      const file = this.$refs.fileInput.files[0];
+      const imageType = /image.*/;
+      if (file.type.match(imageType)) {
+        const reader = new FileReader();
+        reader.onload = function() {
+          const img = new Image();
+          img.src = reader.result;
+          command({ src: img.src });
+        };
+        reader.readAsDataURL(file);
+      } else {
+        // console.log("File not supported!");
+      }
       this.$refs.fileInput.value = "";
     }
   },
