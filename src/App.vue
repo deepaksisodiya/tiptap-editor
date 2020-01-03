@@ -4,7 +4,7 @@
       <input type="checkbox" id="editable" v-model="editable" />
       <label for="editable">editable</label>
     </div>
-    <button @click="setContent">Set Content</button>
+    <button @click="setContentImage">Set Content</button>
     <editor-floating-menu
       :editor="editor"
       v-slot="{ commands, isActive, menu }"
@@ -407,6 +407,23 @@ export default {
       };
       this.editor.setContent(content, true);
     },
+    setContentImage() {
+      const content = {
+        type: "doc",
+        content: [
+          {
+            type: "image",
+            attrs: {
+              src:
+                "https://s01.sgp1.cdn.digitaloceanspaces.com/article/82781-cakfrpcito-1577809242.jpeg",
+              alt: null,
+              caption: "some caption"
+            }
+          }
+        ]
+      };
+      this.editor.setContent(content, true);
+    },
     onClickImage() {
       this.$refs.fileInput.click();
     },
@@ -416,9 +433,10 @@ export default {
       const imageType = /image.*/;
       if (file.type.match(imageType)) {
         const reader = new FileReader();
-        reader.onload = function() {
+        reader.onload = () => {
           const img = new Image();
           img.src = reader.result;
+          this.imageSrc = img.src;
           command({ src: img.src });
         };
         reader.readAsDataURL(file);
