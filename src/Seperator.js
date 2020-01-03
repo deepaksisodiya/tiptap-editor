@@ -15,14 +15,8 @@ export default class SeperatorNode extends Node {
 
       draggable: false,
       // parseDOM and toDOM is still required to make copy and paste work
-      parseDOM: [{ tag: this.name }],
-      toDOM: () => [
-        "seperator",
-        {
-          frameborder: 0,
-          allowfullscreen: "true"
-        }
-      ]
+      parseDOM: [{ tag: "hr" }],
+      toDOM: () => ["hr"]
     };
   }
 
@@ -38,20 +32,6 @@ export default class SeperatorNode extends Node {
     });
     return {
       "Shift-s": command
-    };
-  }
-
-  get view() {
-    return {
-      props: ["node", "updateAttrs", "view"],
-      template: `
-        <div @paste.stop style="text-align:center" contenteditable="true">
-          <span class="dot"></span>
-          <span class="dot"></span>
-          <span class="dot"></span>
-          <span class="dot"></span>
-        </div>
-      `
     };
   }
 }
