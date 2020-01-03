@@ -57,6 +57,13 @@
             </button>
             <button
               class="menubar__button"
+              :class="{ 'is-active': isActive.horizontal_rule() }"
+              @click="onClickMenuItem(commands.horizontal_rule)"
+            >
+              HorizontalRule
+            </button>
+            <button
+              class="menubar__button"
               :class="{ 'is-active': isActive.heading({ level: 1 }) }"
               @click="onClickMenuItem(commands.heading, { level: 1 })"
             >
@@ -268,7 +275,8 @@ import {
   TableHeader,
   TableCell,
   TableRow,
-  TrailingNode
+  TrailingNode,
+  HorizontalRule
 } from "tiptap-extensions";
 import FoodMeta from "./FoodMeta";
 import Embeds from "./embeds";
@@ -324,6 +332,7 @@ export default {
           new Image(),
           new FoodMeta(),
           new Embeds(),
+          new HorizontalRule(),
           new Seperator(),
           new Lock()
         ],
