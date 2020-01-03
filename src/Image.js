@@ -8,9 +8,6 @@ export default class Image extends TiptapImage {
         alt: {
           default: null
         },
-        title: {
-          default: null
-        },
         caption: {
           default: null
         }
@@ -22,7 +19,6 @@ export default class Image extends TiptapImage {
           tag: "img[src]",
           getAttrs: dom => ({
             src: dom.getAttribute("src"),
-            title: dom.getAttribute("title"),
             alt: dom.getAttribute("alt"),
             caption: dom.getAttribute("caption")
           })
