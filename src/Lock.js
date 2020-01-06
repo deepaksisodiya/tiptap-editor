@@ -18,12 +18,8 @@ export default class LockNode extends Node {
       // here you have to specify all values that can be stored in this node
       group: "block",
       selectable: true,
-      draggable: true,
       // parseDOM and toDOM is still required to make copy and paste work
-      parseDOM: [{ tag: this.name }],
-      toDOM: () => {
-        return ["div"];
-      }
+      parseDOM: [{ tag: this.name }]
     };
   }
 
@@ -52,7 +48,7 @@ export default class LockNode extends Node {
       },
       props: ["node", "updateAttrs", "view"],
       template: `
-        <div @paste.stop style="text-align:center" contenteditable="true">
+        <div @paste.stop style="text-align:center" contenteditable="false">
           {{text}}
         </div>
       `
