@@ -156,10 +156,10 @@
             </button>
 
             <button
-              :class="{ 'is-active': isActive.embeds() }"
-              @click="onClickMenuItem(commands.embeds)"
+              :class="{ 'is-active': isActive.embed() }"
+              @click="onClickMenuItem(commands.embed)"
             >
-              Embeds
+              Embed
             </button>
 
             <button
@@ -280,7 +280,7 @@ import {
   HorizontalRule
 } from "tiptap-extensions";
 import FoodMeta from "./FoodMeta";
-import Embeds from "./embeds";
+import Embed from "./Embed";
 import Seperator from "./Seperator";
 import Image from "./Image";
 import Lock from "./Lock";
@@ -333,7 +333,7 @@ export default {
           }),
           new Image(),
           new FoodMeta(),
-          new Embeds(),
+          new Embed(),
           new HorizontalRule(),
           new Seperator(),
           new Lock()
