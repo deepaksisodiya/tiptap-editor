@@ -336,9 +336,7 @@ export default {
           new Embeds(),
           new HorizontalRule(),
           new Seperator(),
-          new Lock({
-            text: "new text"
-          })
+          new Lock()
         ],
         onUpdate: ({ getJSON }) => {
           this.data = getJSON();
