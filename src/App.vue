@@ -163,6 +163,7 @@
             </button>
 
             <button
+              :style="`display: ${hasLock ? 'none' : 'block'}`"
               :class="{ 'is-active': isActive.lock() }"
               @click="onClickMenuItem(commands.lock)"
             >
@@ -276,6 +277,7 @@ import Seperator from "./Seperator";
 import Image from "./Image";
 import Lock from "./Lock";
 import VueJsonPretty from "vue-json-pretty";
+import { contains } from "prosemirror-utils";
 
 export default {
   components: {
@@ -325,7 +327,9 @@ export default {
           new FoodMeta(),
           new Embeds(),
           new Seperator(),
-          new Lock()
+          new Lock({
+            text: "new text"
+          })
         ],
         onUpdate: ({ getJSON }) => {
           this.data = getJSON();
@@ -433,6 +437,14 @@ export default {
       this.editor.setOptions({
         editable: this.editable
       });
+    }
+  },
+  computed: {
+    hasLock() {
+      return contains(
+        this.editor.view.state.doc,
+        this.editor.schema.nodes.lock
+      );
     }
   },
   mounted() {

@@ -7,6 +7,12 @@ export default class LockNode extends Node {
     return "lock";
   }
 
+  get defaultOptions() {
+    return {
+      text: `Only paid subscribers can see content below`
+    };
+  }
+
   get schema() {
     return {
       // here you have to specify all values that can be stored in this node
@@ -37,11 +43,17 @@ export default class LockNode extends Node {
   }
 
   get view() {
+    const options = this.options;
     return {
+      data() {
+        return {
+          text: options.text
+        };
+      },
       props: ["node", "updateAttrs", "view"],
       template: `
         <div @paste.stop style="text-align:center" contenteditable="true">
-          Only paid subscribers can see content below
+          {{text}}
         </div>
       `
     };
