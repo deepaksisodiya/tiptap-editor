@@ -1,4 +1,5 @@
 import { Node } from "tiptap";
+import axios from "axios";
 
 export default class EmbedNode extends Node {
   get name() {
@@ -43,16 +44,12 @@ export default class EmbedNode extends Node {
       props: ["node", "updateAttrs", "view"],
       data() {
         return {
-          isIframeLoaded: false
+          embeds: {
+            isLoading: false,
+            isError: false,
+            data: null
+          }
         };
-      },
-      mounted() {
-        if (this.src) this.isIframeLoaded = true;
-        else {
-          this.$nextTick(() => {
-            this.$refs.embedInput.focus();
-          });
-        }
       },
       computed: {
         src: {
@@ -77,35 +74,30 @@ export default class EmbedNode extends Node {
         }
       },
       methods: {
-        onClickButton() {
+        async onClick() {
           if (!this.src) return;
-          let provider = null;
-
-          this.src.match(
-            /(http:|https:|)\/\/(player.|www.)?(vimeo\.com|youtu(be\.com|\.be|be\.googleapis\.com))\/(video\/|embed\/|watch\?v=|v\/)?([A-Za-z0-9._%-]*)(&\S+)?/
-          );
-
-          if (RegExp.$3.indexOf("youtu") > -1) {
-            provider = "youtube";
-            this.src = this.getYTEmbedUrl();
+          this.embeds.isLoading = true;
+          this.embeds.isError = false;
+          try {
+            const response = await axios("http://localhost:3000/embeds");
+            this.embeds.data = response.data;
+          } catch (error) {
+            this.embeds.isError = true;
+          } finally {
+            this.embeds.isLoading = false;
           }
-
-          if (provider) this.isIframeLoaded = true;
-        },
-        getYTEmbedUrl() {
-          const urlArr = this.src.split("=");
-          return "https://www.youtube.com/embed/" + urlArr[1];
         }
       },
       template: `
         <div>
-          <div v-if="isIframeLoaded">
-            <iframe :src="src"></iframe>
+          <div v-if="embeds.data">
+            <iframe :src="embeds.data.iframeUrl"></iframe>
             <input type="text" v-model="caption" :disabled="!view.editable" placeholder="write caption (optional)" />
           </div>
           <div v-else>
+            <div v-if="embeds.isLoading">Loading...</div>
             <input ref="embedInput" @paste.stop type="text" v-model="src" :disabled="!view.editable" />
-            <button @click="onClickButton">Embeds</button>
+            <button @click="onClick">Embeds</button>
           </div>
         </div>
       `
