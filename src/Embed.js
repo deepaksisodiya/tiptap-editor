@@ -51,6 +51,15 @@ export default class EmbedNode extends Node {
           }
         };
       },
+      mounted() {
+        if (this.src) {
+          this.embeds.data = { iframeUrl: this.src };
+        } else {
+          this.$nextTick(() => {
+            this.$refs.embedInput.focus();
+          });
+        }
+      },
       computed: {
         src: {
           get() {
@@ -81,6 +90,7 @@ export default class EmbedNode extends Node {
           try {
             const response = await axios("http://localhost:3000/embeds");
             this.embeds.data = response.data;
+            this.src = response.data.iframeUrl;
           } catch (error) {
             this.embeds.isError = true;
           } finally {
