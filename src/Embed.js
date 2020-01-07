@@ -79,23 +79,22 @@ export default class EmbedNode extends Node {
       methods: {
         onClickButton() {
           if (!this.src) return;
-          const isLinkSouported = Boolean(this.parseVideo(this.src).type);
-          if (isLinkSouported) this.isIframeLoaded = true;
-        },
-        parseVideo(url) {
-          let type = null;
-          url.match(
+          let provider = null;
+
+          this.src.match(
             /(http:|https:|)\/\/(player.|www.)?(vimeo\.com|youtu(be\.com|\.be|be\.googleapis\.com))\/(video\/|embed\/|watch\?v=|v\/)?([A-Za-z0-9._%-]*)(&\S+)?/
           );
+
           if (RegExp.$3.indexOf("youtu") > -1) {
-            type = "youtube";
-          } else if (RegExp.$3.indexOf("vimeo") > -1) {
-            type = "vimeo";
+            provider = "youtube";
+            this.src = this.getYTEmbedUrl();
           }
-          return {
-            type: type,
-            id: RegExp.$6
-          };
+
+          if (provider) this.isIframeLoaded = true;
+        },
+        getYTEmbedUrl() {
+          const urlArr = this.src.split("=");
+          return "https://www.youtube.com/embed/" + urlArr[1];
         }
       },
       template: `
