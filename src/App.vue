@@ -244,8 +244,9 @@
       </div>
     </editor-menu-bubble>
 
-    <editor-content id="editor" class="editor__content" :editor="editor" />
-
+    <div class="editor">
+      <editor-content id="editor" class="editor__content" :editor="editor" />
+    </div>
     <vue-json-pretty :path="'res'" :data="data"> </vue-json-pretty>
   </div>
 </template>
@@ -277,7 +278,8 @@ import {
   TableCell,
   TableRow,
   TrailingNode,
-  HorizontalRule
+  HorizontalRule,
+  Placeholder
 } from "tiptap-extensions";
 import FoodMeta from "./FoodMeta";
 import Embed from "./Embed";
@@ -286,6 +288,8 @@ import Image from "./Image";
 import Lock from "./Lock";
 import VueJsonPretty from "vue-json-pretty";
 import { contains } from "prosemirror-utils";
+import Doc from "./Doc";
+import Title from "./Title";
 
 export default {
   components: {
@@ -305,6 +309,17 @@ export default {
       editor: new Editor({
         editable: true,
         extensions: [
+          new Doc(),
+          new Title(),
+          new Placeholder({
+            showOnlyCurrent: false,
+            emptyNodeText: node => {
+              if (node.type.name === "title") {
+                return "Title";
+              }
+              return "Tell us your story";
+            }
+          }),
           new Blockquote(),
           new BulletList(),
           new CodeBlock(),
@@ -486,7 +501,15 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss">
+.editor *.is-empty:nth-child(1)::before,
+.editor *.is-empty:nth-child(2)::before {
+  content: attr(data-empty-text);
+  float: left;
+  color: #aaa;
+  pointer-events: none;
+  height: 0;
+}
 .dot {
   height: 15px;
   width: 15px;
