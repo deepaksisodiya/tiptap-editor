@@ -53,7 +53,7 @@ export default class EmbedNode extends Node {
         };
       },
       mounted() {
-        if (this.src) {
+        if (this.validURL(this.src)) {
           this.embeds.data = { iframeUrl: this.src };
         } else {
           this.$nextTick(() => {
@@ -88,7 +88,6 @@ export default class EmbedNode extends Node {
           if (!this.src) return;
 
           const isUrl = this.validURL(this.src);
-          console.log(isUrl);
 
           if (!isUrl) {
             options.changeToLink(this.src);
@@ -122,7 +121,7 @@ export default class EmbedNode extends Node {
       },
       template: `
         <div>
-          <div v-if="embeds.data">
+          <div v-if="embeds.data && embeds.data.iframeUrl">
             <iframe :src="embeds.data.iframeUrl"></iframe>
             <input type="text" v-model="caption" :disabled="!view.editable" placeholder="write caption (optional)" />
           </div>
