@@ -291,6 +291,8 @@ import { contains } from "prosemirror-utils";
 import Doc from "./Doc";
 import Title from "./Title";
 
+// import "./editor/editor.scss";
+
 export default {
   components: {
     EditorContent,
