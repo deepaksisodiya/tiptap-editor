@@ -349,7 +349,8 @@ export default {
           new Image(),
           new FoodMeta(),
           new Embed({
-            changeToLink: this.changeToLink
+            changeToLink: this.changeToLink,
+            type: ["video"]
           }),
           new HorizontalRule(),
           new Seperator(),

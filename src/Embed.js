@@ -84,9 +84,17 @@ export default class EmbedNode extends Node {
         }
       },
       methods: {
-        async onClick() {
-          options.changeToLink(this.src);
+        async onClickEmbeds() {
           if (!this.src) return;
+
+          const isUrl = this.validURL(this.src);
+          console.log(isUrl);
+
+          if (!isUrl) {
+            options.changeToLink(this.src);
+            return;
+          }
+
           this.embeds.isLoading = true;
           this.embeds.isError = false;
           try {
@@ -98,6 +106,18 @@ export default class EmbedNode extends Node {
           } finally {
             this.embeds.isLoading = false;
           }
+        },
+        validURL(str) {
+          var pattern = new RegExp(
+            "^(https?:\\/\\/)?" + // protocol
+            "((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|" + // domain name
+            "((\\d{1,3}\\.){3}\\d{1,3}))" + // OR ip (v4) address
+            "(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*" + // port and path
+            "(\\?[;&a-z\\d%_.~+=-]*)?" + // query string
+              "(\\#[-a-z\\d_]*)?$",
+            "i"
+          ); // fragment locator
+          return !!pattern.test(str);
         }
       },
       template: `
@@ -109,7 +129,7 @@ export default class EmbedNode extends Node {
           <div v-else>
             <div v-if="embeds.isLoading">Loading...</div>
             <input ref="embedInput" @paste.stop type="text" v-model="src" :disabled="!view.editable" />
-            <button @click="onClick">Embeds</button>
+            <button @click="onClickEmbeds">Embeds</button>
           </div>
         </div>
       `
