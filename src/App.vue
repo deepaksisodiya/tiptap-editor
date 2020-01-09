@@ -348,7 +348,9 @@ export default {
           }),
           new Image(),
           new FoodMeta(),
-          new Embed(),
+          new Embed({
+            changeToLink: this.changeToLink
+          }),
           new HorizontalRule(),
           new Seperator(),
           new Lock()
@@ -372,6 +374,27 @@ export default {
     };
   },
   methods: {
+    changeToLink(text) {
+      const arr = this.data.content.map(el => {
+        if (el.type === "embed" && el.attrs.src === text) {
+          return {
+            type: "paragraph",
+            content: [
+              {
+                type: "text",
+                text
+              }
+            ]
+          };
+        }
+        return el;
+      });
+      const content = {
+        type: "doc",
+        content: arr
+      };
+      this.editor.setContent(content, true);
+    },
     showLinkMenu(attrs) {
       this.linkUrl = attrs.href;
       this.linkMenuIsActive = true;

@@ -40,6 +40,7 @@ export default class EmbedNode extends Node {
   }
 
   get view() {
+    const options = this.options;
     return {
       props: ["node", "updateAttrs", "view"],
       data() {
@@ -84,6 +85,7 @@ export default class EmbedNode extends Node {
       },
       methods: {
         async onClick() {
+          options.changeToLink(this.src);
           if (!this.src) return;
           this.embeds.isLoading = true;
           this.embeds.isError = false;
