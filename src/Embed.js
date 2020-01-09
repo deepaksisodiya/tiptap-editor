@@ -84,13 +84,13 @@ export default class EmbedNode extends Node {
         }
       },
       methods: {
-        async onClickEmbeds() {
+        async onClickAdd() {
           if (!this.src) return;
 
           const isUrl = this.validURL(this.src);
 
           if (!isUrl) {
-            options.changeToLink(this.src);
+            options.changeToParagraph(this.src);
             return;
           }
 
@@ -99,6 +99,7 @@ export default class EmbedNode extends Node {
           try {
             const response = await axios("http://localhost:3000/embeds");
             this.embeds.data = response.data;
+            // for copy pasting to work
             this.src = response.data.iframeUrl;
           } catch (error) {
             this.embeds.isError = true;
@@ -121,14 +122,19 @@ export default class EmbedNode extends Node {
       },
       template: `
         <div>
-          <div v-if="embeds.data && embeds.data.iframeUrl">
+          <div v-if="embeds.data && embeds.data.type === 'video'">
             <iframe :src="embeds.data.iframeUrl"></iframe>
             <input type="text" v-model="caption" :disabled="!view.editable" placeholder="write caption (optional)" />
           </div>
+          <div v-else-if="embeds.data && embeds.data.type === 'link'">
+            <div>{{ embeds.data.title }}</div>
+            <div>{{ embeds.data.description }}</div>
+            <img :src="embeds.data.thumnailUrl" />
+          </div>
           <div v-else>
-            <div v-if="embeds.isLoading">Loading...</div>
+            <div v-if="embeds.isLoading">Embeding...</div>
             <input ref="embedInput" @paste.stop type="text" v-model="src" :disabled="!view.editable" />
-            <button @click="onClickEmbeds">Embeds</button>
+            <button @click="onClickAdd">Add</button>
           </div>
         </div>
       `

@@ -349,8 +349,8 @@ export default {
           new Image(),
           new FoodMeta(),
           new Embed({
-            changeToLink: this.changeToLink,
-            type: ["video"]
+            changeToParagraph: this.changeToParagraph,
+            type: ["video", "link"]
           }),
           new HorizontalRule(),
           new Seperator(),
@@ -375,7 +375,7 @@ export default {
     };
   },
   methods: {
-    changeToLink(text) {
+    changeToParagraph(text) {
       const arr = this.data.content.map(el => {
         if (el.type === "embed" && el.attrs.src === text) {
           return {
