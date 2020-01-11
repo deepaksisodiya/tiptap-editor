@@ -1,4 +1,4 @@
-import { Node } from "tiptap";
+import { Node, TextSelection } from "tiptap";
 import axios from "axios";
 
 export default class EmbedNode extends Node {
@@ -35,14 +35,14 @@ export default class EmbedNode extends Node {
   }
 
   commands({ type }) {
-    return () => (state, dispatch) =>
-      dispatch(state.tr.replaceSelectionWith(type.create()));
+    return () => (state, dispatch) => {
+      return dispatch(state.tr.replaceSelectionWith(type.create()));
+    };
   }
 
   get view() {
-    const options = this.options;
     return {
-      props: ["node", "updateAttrs", "view"],
+      props: ["node", "updateAttrs", "view", "state", "getPos"],
       data() {
         return {
           embeds: {
@@ -56,9 +56,11 @@ export default class EmbedNode extends Node {
         if (this.validURL(this.src)) {
           this.embeds.data = { iframeUrl: this.src };
         } else {
-          this.$nextTick(() => {
-            this.$refs.embedInput.focus();
-          });
+          if (!this.src) {
+            this.$nextTick(() => {
+              this.$refs.embedInput.focus();
+            });
+          }
         }
       },
       computed: {
@@ -85,26 +87,54 @@ export default class EmbedNode extends Node {
       },
       methods: {
         async onClickAdd() {
+          let {
+            state: { tr }
+          } = this.view;
+
           if (!this.src) return;
 
           const isUrl = this.validURL(this.src);
 
           if (!isUrl) {
-            options.changeToParagraph(this.src);
-            return;
-          }
+            // set cursor near node
+            let textSelection = TextSelection.create(
+              tr.doc,
+              this.getPos(),
+              this.getPos() + 1
+            );
+            tr = tr.setSelection(textSelection).insertText(this.src);
 
-          this.embeds.isLoading = true;
-          this.embeds.isError = false;
-          try {
-            const response = await axios("http://localhost:3000/embeds");
-            this.embeds.data = response.data;
-            // for copy pasting to work
-            this.src = response.data.iframeUrl;
-          } catch (error) {
-            this.embeds.isError = true;
-          } finally {
-            this.embeds.isLoading = false;
+            // set again after inserting text
+            textSelection = TextSelection.create(
+              tr.doc,
+              this.getPos() + this.src.length + 2,
+              this.getPos() + this.src.length + 2
+            );
+            tr = tr.setSelection(textSelection);
+            this.view.dispatch(tr);
+            this.view.focus();
+          } else {
+            this.embeds.isLoading = true;
+            this.embeds.isError = false;
+            try {
+              const response = await axios("http://localhost:3000/embeds");
+              this.embeds.data = response.data;
+              // for copy pasting to work
+              this.src = response.data.iframeUrl;
+            } catch (error) {
+              this.embeds.isError = true;
+            } finally {
+              this.embeds.isLoading = false;
+              tr = this.view.state.tr;
+              let textSelection = TextSelection.create(
+                tr.doc,
+                this.getPos() + 1,
+                this.getPos() + 1
+              );
+              tr = tr.setSelection(textSelection);
+              this.view.dispatch(tr);
+              this.view.focus();
+            }
           }
         },
         validURL(str) {
@@ -122,7 +152,7 @@ export default class EmbedNode extends Node {
       },
       template: `
         <div>
-          <div v-if="embeds.data && embeds.data.type === 'video'">
+          <div v-if="embeds.data">
             <iframe :src="embeds.data.iframeUrl"></iframe>
             <input type="text" v-model="caption" :disabled="!view.editable" placeholder="write caption (optional)" />
           </div>
