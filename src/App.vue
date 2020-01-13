@@ -4,179 +4,120 @@
       <input type="checkbox" id="editable" v-model="editable" />
       <label for="editable">editable</label>
     </div>
-    <button @click="setContentImage">Set Content</button>
     <editor-floating-menu
       :editor="editor"
       v-slot="{ commands, isActive, menu }"
     >
-      <div>
-        <span v-if="isActive.table()">
-          <button class="menubar__button" @click="commands.deleteTable">
-            delete_table
+      <div
+        class="editor__floating-menu"
+        :class="{ 'is-active': menu.isActive }"
+        :style="`top: ${menu.top}px`"
+      >
+        <button @click="toggleFloatingMenu">
+          Plus_icon
+        </button>
+        <div v-if="shouldShowFloatingMenu">
+          <input
+            type="file"
+            ref="fileInput"
+            style="display:none"
+            @change="previewFiles(commands.image)"
+          />
+          <button class="menubar__button" @click="onClickImage()">
+            Image
           </button>
-          <button class="menubar__button" @click="commands.addColumnBefore">
-            add_col_before
+          <button
+            class="menubar__button"
+            :class="{ 'is-active': isActive.horizontal_rule() }"
+            @click="onClickMenuItem(commands.horizontal_rule)"
+          >
+            HorizontalRule
           </button>
-          <button class="menubar__button" @click="commands.addColumnAfter">
-            add_col_after
+          <button
+            class="menubar__button"
+            :class="{ 'is-active': isActive.heading({ level: 1 }) }"
+            @click="onClickMenuItem(commands.heading, { level: 1 })"
+          >
+            H1
           </button>
-          <button class="menubar__button" @click="commands.deleteColumn">
-            delete_col
+
+          <button
+            class="menubar__button"
+            :class="{ 'is-active': isActive.heading({ level: 2 }) }"
+            @click="onClickMenuItem(commands.heading, { level: 2 })"
+          >
+            H2
           </button>
-          <button class="menubar__button" @click="commands.addRowBefore">
-            add_row_before
+
+          <button
+            class="menubar__button"
+            :class="{ 'is-active': isActive.heading({ level: 3 }) }"
+            @click="onClickMenuItem(commands.heading, { level: 3 })"
+          >
+            H3
           </button>
-          <button class="menubar__button" @click="commands.addRowAfter">
-            add_row_after
+
+          <button
+            class="menubar__button"
+            :class="{ 'is-active': isActive.bullet_list() }"
+            @click="onClickMenuItem(commands.bullet_list)"
+          >
+            bullet_list
           </button>
-          <button class="menubar__button" @click="commands.deleteRow">
-            delete_row
+
+          <button
+            class="menubar__button"
+            :class="{ 'is-active': isActive.ordered_list() }"
+            @click="onClickMenuItem(commands.ordered_list)"
+          >
+            ordered_list
           </button>
-          <button class="menubar__button" @click="commands.toggleCellMerge">
-            combine_cells
+
+          <button
+            class="menubar__button"
+            :class="{ 'is-active': isActive.blockquote() }"
+            @click="onClickMenuItem(commands.blockquote)"
+          >
+            blockquote
           </button>
-        </span>
 
-        <div
-          class="editor__floating-menu"
-          :class="{ 'is-active': menu.isActive }"
-          :style="`top: ${menu.top}px`"
-        >
-          <button @click="toggleFloatingMenu">
-            Plus_icon
+          <button
+            class="menubar__button"
+            :class="{ 'is-active': isActive.code_block() }"
+            @click="onClickMenuItem(commands.code_block)"
+          >
+            code_block
           </button>
-          <div v-if="shouldShowFloatingMenu">
-            <input
-              type="file"
-              ref="fileInput"
-              style="display:none"
-              @change="previewFiles(commands.image)"
-            />
-            <button class="menubar__button" @click="onClickImage()">
-              Image
-            </button>
-            <button
-              class="menubar__button"
-              :class="{ 'is-active': isActive.horizontal_rule() }"
-              @click="onClickMenuItem(commands.horizontal_rule)"
-            >
-              HorizontalRule
-            </button>
-            <button
-              class="menubar__button"
-              :class="{ 'is-active': isActive.heading({ level: 1 }) }"
-              @click="onClickMenuItem(commands.heading, { level: 1 })"
-            >
-              H1
-            </button>
 
-            <button
-              class="menubar__button"
-              :class="{ 'is-active': isActive.heading({ level: 2 }) }"
-              @click="onClickMenuItem(commands.heading, { level: 2 })"
-            >
-              H2
-            </button>
+          <button
+            class="menubar__button"
+            :class="{ 'is-active': isActive.todo_list() }"
+            @click="onClickMenuItem(commands.todo_list)"
+          >
+            checklist
+          </button>
 
-            <button
-              class="menubar__button"
-              :class="{ 'is-active': isActive.heading({ level: 3 }) }"
-              @click="onClickMenuItem(commands.heading, { level: 3 })"
-            >
-              H3
-            </button>
+          <button
+            :class="{ 'is-active': isActive.embed() }"
+            @click="onClickMenuItem(commands.embed)"
+          >
+            Embed
+          </button>
 
-            <button
-              class="menubar__button"
-              :class="{ 'is-active': isActive.bullet_list() }"
-              @click="onClickMenuItem(commands.bullet_list)"
-            >
-              bullet_list
-            </button>
+          <button
+            :class="{ 'is-active': isActive.seperator() }"
+            @click="onClickMenuItem(commands.seperator)"
+          >
+            Seperator
+          </button>
 
-            <button
-              class="menubar__button"
-              :class="{ 'is-active': isActive.ordered_list() }"
-              @click="onClickMenuItem(commands.ordered_list)"
-            >
-              ordered_list
-            </button>
-
-            <button
-              class="menubar__button"
-              :class="{ 'is-active': isActive.blockquote() }"
-              @click="onClickMenuItem(commands.blockquote)"
-            >
-              blockquote
-            </button>
-
-            <button
-              class="menubar__button"
-              :class="{ 'is-active': isActive.code_block() }"
-              @click="onClickMenuItem(commands.code_block)"
-            >
-              code_block
-            </button>
-
-            <button
-              class="menubar__button"
-              @click="
-                onClickMenuItem(commands.createTable, {
-                  rowsCount: 3,
-                  colsCount: 3,
-                  withHeaderRow: false
-                })
-              "
-            >
-              Table
-            </button>
-
-            <button
-              class="menubar__button"
-              :class="{ 'is-active': isActive.todo_list() }"
-              @click="onClickMenuItem(commands.todo_list)"
-            >
-              checklist
-            </button>
-
-            <button
-              class="menubar__button"
-              :class="{ 'is-active': isActive.foodMeta() }"
-              @click="onClickMenuItem(commands.foodMeta)"
-            >
-              FoodMeta
-            </button>
-
-            <button
-              class="menubar__button"
-              :class="{ 'is-active': isActive.image() }"
-              @click="showImagePrompt(commands.image)"
-            >
-              Image
-            </button>
-
-            <button
-              :class="{ 'is-active': isActive.embed() }"
-              @click="onClickMenuItem(commands.embed)"
-            >
-              Embed
-            </button>
-
-            <button
-              :class="{ 'is-active': isActive.seperator() }"
-              @click="onClickMenuItem(commands.seperator)"
-            >
-              Seperator
-            </button>
-
-            <button
-              :style="`display: ${hasLock ? 'none' : 'block'}`"
-              :class="{ 'is-active': isActive.lock() }"
-              @click="onClickMenuItem(commands.lock)"
-            >
-              Lock
-            </button>
-          </div>
+          <button
+            :style="`display: ${hasLock ? 'none' : 'block'}`"
+            :class="{ 'is-active': isActive.lock() }"
+            @click="onClickMenuItem(commands.lock)"
+          >
+            Lock
+          </button>
         </div>
       </div>
     </editor-floating-menu>
@@ -273,7 +214,6 @@ import {
   Italic,
   Link,
   History,
-  Table,
   TableHeader,
   TableCell,
   TableRow,
@@ -281,7 +221,6 @@ import {
   HorizontalRule,
   Placeholder
 } from "tiptap-extensions";
-import FoodMeta from "./FoodMeta";
 import Embed from "./Embed";
 import Seperator from "./Seperator";
 import Image from "./Image";
@@ -338,9 +277,6 @@ export default {
           new Code(),
           new Italic(),
           new History(),
-          new Table({
-            resizable: true
-          }),
           new TableHeader(),
           new TableCell(),
           new TableRow(),
@@ -349,9 +285,7 @@ export default {
             notAfter: ["paragraph"]
           }),
           new Image(),
-          new FoodMeta(),
           new Embed({
-            changeToParagraph: this.changeToParagraph,
             type: ["video", "link"]
           }),
           new HorizontalRule(),
@@ -377,27 +311,6 @@ export default {
     };
   },
   methods: {
-    changeToParagraph(text) {
-      const arr = this.data.content.map(el => {
-        if (el.type === "embed" && el.attrs.src === text) {
-          return {
-            type: "paragraph",
-            content: [
-              {
-                type: "text",
-                text
-              }
-            ]
-          };
-        }
-        return el;
-      });
-      const content = {
-        type: "doc",
-        content: arr
-      };
-      this.editor.setContent(content, true);
-    },
     showLinkMenu(attrs) {
       this.linkUrl = attrs.href;
       this.linkMenuIsActive = true;
@@ -413,68 +326,12 @@ export default {
       command({ href: url });
       this.hideLinkMenu();
     },
-    showImagePrompt(command) {
-      const src = prompt("Enter the url of your image here");
-      if (src !== null) {
-        command({ src });
-      }
-    },
     toggleFloatingMenu() {
       this.shouldShowFloatingMenu = !this.shouldShowFloatingMenu;
     },
     onClickMenuItem(command, obj) {
       command(obj);
       this.shouldShowFloatingMenu = false;
-    },
-    setContent() {
-      const content = {
-        type: "doc",
-        content: [
-          {
-            type: "heading",
-            attrs: {
-              level: 2
-            },
-            content: [
-              {
-                type: "text",
-                text: "Set Content from button"
-              }
-            ]
-          },
-          {
-            type: "foodMeta",
-            attrs: {
-              cooktime: "48",
-              serves: "40"
-            }
-          },
-          {
-            type: "seperator"
-          },
-          {
-            type: "paragraph"
-          }
-        ]
-      };
-      this.editor.setContent(content, true);
-    },
-    setContentImage() {
-      const content = {
-        type: "doc",
-        content: [
-          {
-            type: "image",
-            attrs: {
-              src:
-                "https://s01.sgp1.cdn.digitaloceanspaces.com/article/82781-cakfrpcito-1577809242.jpeg",
-              alt: null,
-              caption: "some caption"
-            }
-          }
-        ]
-      };
-      this.editor.setContent(content, true);
     },
     onClickImage() {
       this.$refs.fileInput.click();
@@ -512,17 +369,6 @@ export default {
         this.editor.schema.nodes.lock
       );
     }
-  },
-  mounted() {
-    const doc = this.editor.getJSON();
-    doc.content.push({
-      type: "foodMeta",
-      attrs: {
-        cooktime: "48",
-        serves: "40"
-      }
-    });
-    this.editor.setContent(doc);
   }
 };
 </script>
