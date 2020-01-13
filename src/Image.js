@@ -58,6 +58,7 @@ export default class Image extends TiptapImage {
                 }
               })
             ],
+            content: this.node.attrs.caption,
             onUpdate: ({ getJSON }) => {
               if (getJSON().content[0].content) {
                 this.caption = getJSON().content[0].content[0].text;
@@ -67,6 +68,13 @@ export default class Image extends TiptapImage {
             }
           })
         };
+      },
+      watch: {
+        "view.editable"() {
+          this.editor.setOptions({
+            editable: this.view.editable
+          });
+        }
       },
       computed: {
         src: {
