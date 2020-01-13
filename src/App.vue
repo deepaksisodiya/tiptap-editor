@@ -33,86 +33,31 @@
           >
             HorizontalRule
           </button>
-          <button
-            class="menubar__button"
-            :class="{ 'is-active': isActive.heading({ level: 1 }) }"
-            @click="onClickMenuItem(commands.heading, { level: 1 })"
-          >
-            H1
-          </button>
-
-          <button
-            class="menubar__button"
-            :class="{ 'is-active': isActive.heading({ level: 2 }) }"
-            @click="onClickMenuItem(commands.heading, { level: 2 })"
-          >
-            H2
-          </button>
-
-          <button
-            class="menubar__button"
-            :class="{ 'is-active': isActive.heading({ level: 3 }) }"
-            @click="onClickMenuItem(commands.heading, { level: 3 })"
-          >
-            H3
-          </button>
-
-          <button
-            class="menubar__button"
-            :class="{ 'is-active': isActive.bullet_list() }"
-            @click="onClickMenuItem(commands.bullet_list)"
-          >
-            bullet_list
-          </button>
 
           <button
             class="menubar__button"
             :class="{ 'is-active': isActive.ordered_list() }"
             @click="onClickMenuItem(commands.ordered_list)"
           >
-            ordered_list
-          </button>
-
-          <button
-            class="menubar__button"
-            :class="{ 'is-active': isActive.blockquote() }"
-            @click="onClickMenuItem(commands.blockquote)"
-          >
-            blockquote
-          </button>
-
-          <button
-            class="menubar__button"
-            :class="{ 'is-active': isActive.code_block() }"
-            @click="onClickMenuItem(commands.code_block)"
-          >
-            code_block
-          </button>
-
-          <button
-            class="menubar__button"
-            :class="{ 'is-active': isActive.todo_list() }"
-            @click="onClickMenuItem(commands.todo_list)"
-          >
-            checklist
+            List
           </button>
 
           <button
             :class="{ 'is-active': isActive.embed() }"
             @click="onClickMenuItem(commands.embed)"
           >
-            Embed
+            Video
           </button>
 
           <button
-            :class="{ 'is-active': isActive.seperator() }"
-            @click="onClickMenuItem(commands.seperator)"
+            :class="{ 'is-active': isActive.embed() }"
+            @click="onClickMenuItem(commands.embed)"
           >
-            Seperator
+            Link
           </button>
 
           <button
-            :style="`display: ${hasLock ? 'none' : 'block'}`"
+            :style="`display: ${hasLock ? 'none' : 'inline'}`"
             :class="{ 'is-active': isActive.lock() }"
             @click="onClickMenuItem(commands.lock)"
           >
@@ -129,6 +74,22 @@
       v-slot="{ commands, isActive, menu, getMarkAttrs }"
     >
       <div :class="[menu.isActive ? 'is-active' : 'is-not-active']">
+        <button
+          class="menubar__button"
+          :class="{ 'is-active': isActive.heading({ level: 1 }) }"
+          @click="onClickMenuItem(commands.heading, { level: 1 })"
+        >
+          H1
+        </button>
+
+        <button
+          class="menubar__button"
+          :class="{ 'is-active': isActive.heading({ level: 2 }) }"
+          @click="onClickMenuItem(commands.heading, { level: 2 })"
+        >
+          H2
+        </button>
+
         <button
           class="menububble__button"
           :class="{ 'is-active': isActive.bold() }"
@@ -200,33 +161,25 @@ import {
   EditorMenuBubble
 } from "tiptap";
 import {
-  Blockquote,
-  BulletList,
-  CodeBlock,
   HardBreak,
   Heading,
   ListItem,
   OrderedList,
-  TodoItem,
-  TodoList,
   Bold,
   Code,
   Italic,
   Link,
   History,
-  TableHeader,
-  TableCell,
-  TableRow,
   TrailingNode,
   HorizontalRule,
   Placeholder
 } from "tiptap-extensions";
+import { contains } from "prosemirror-utils";
+import VueJsonPretty from "vue-json-pretty";
+
 import Embed from "./Embed";
-import Seperator from "./Seperator";
 import Image from "./Image";
 import Lock from "./Lock";
-import VueJsonPretty from "vue-json-pretty";
-import { contains } from "prosemirror-utils";
 import Doc from "./Doc";
 import Title from "./Title";
 
@@ -261,25 +214,15 @@ export default {
               return "Tell us your story";
             }
           }),
-          new Blockquote(),
-          new BulletList(),
-          new CodeBlock(),
           new HardBreak(),
-          new Heading({ levels: [1, 2, 3] }),
+          new Heading({ levels: [1, 2] }),
           new ListItem(),
           new OrderedList(),
-          new TodoItem({
-            nested: true
-          }),
-          new TodoList(),
           new Link(),
           new Bold(),
           new Code(),
           new Italic(),
           new History(),
-          new TableHeader(),
-          new TableCell(),
-          new TableRow(),
           new TrailingNode({
             node: "paragraph",
             notAfter: ["paragraph"]
@@ -289,7 +232,6 @@ export default {
             type: ["video", "link"]
           }),
           new HorizontalRule(),
-          new Seperator(),
           new Lock()
         ],
         onUpdate: ({ getJSON }) => {
