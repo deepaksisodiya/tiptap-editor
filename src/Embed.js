@@ -17,7 +17,7 @@ export default class EmbedNode extends Node {
         }
       },
       group: "block",
-      selectable: false,
+      selectable: true,
       // parseDOM and toDOM is still required to make copy and paste work
       parseDOM: [
         {
@@ -42,7 +42,7 @@ export default class EmbedNode extends Node {
 
   get view() {
     return {
-      props: ["node", "updateAttrs", "view", "state", "getPos"],
+      props: ["node", "updateAttrs", "view", "getPos"],
       data() {
         return {
           embeds: {
@@ -87,32 +87,11 @@ export default class EmbedNode extends Node {
       },
       methods: {
         async onClickAdd() {
-          let {
-            state: { tr }
-          } = this.view;
-
           if (!this.src) return;
-
           const isUrl = this.validURL(this.src);
 
           if (!isUrl) {
-            // set cursor near node
-            let textSelection = TextSelection.create(
-              tr.doc,
-              this.getPos(),
-              this.getPos() + 1
-            );
-            tr = tr.setSelection(textSelection).insertText(this.src);
-
-            // set again after inserting text
-            textSelection = TextSelection.create(
-              tr.doc,
-              this.getPos() + this.src.length + 2,
-              this.getPos() + this.src.length + 2
-            );
-            tr = tr.setSelection(textSelection);
-            this.view.dispatch(tr);
-            this.view.focus();
+            this.createAndMovetoNextParagraph();
           } else {
             this.embeds.isLoading = true;
             this.embeds.isError = false;
@@ -124,18 +103,44 @@ export default class EmbedNode extends Node {
             } catch (error) {
               this.embeds.isError = true;
             } finally {
+              // move cursor to new paragraph
+              const pos = this.getPos();
               this.embeds.isLoading = false;
-              tr = this.view.state.tr;
+              let tr = this.view.state.tr;
               let textSelection = TextSelection.create(
                 tr.doc,
-                this.getPos() + 1,
-                this.getPos() + 1
+                pos + 1,
+                pos + 1
               );
               tr = tr.setSelection(textSelection);
               this.view.dispatch(tr);
+              // focus the editor
               this.view.focus();
             }
           }
+        },
+        createAndMovetoNextParagraph() {
+          let {
+            state: { tr, schema }
+          } = this.view;
+          const pos = this.getPos();
+          // replce embeds with paragraph
+          let textSelection = TextSelection.create(tr.doc, pos, pos + 1);
+          tr = tr.setSelection(textSelection).insertText(this.src);
+
+          // create new paragraph
+          const type = schema.nodes["paragraph"];
+          tr = tr.insert(pos + this.src.length + 2, type.create());
+          // move cursor to new paragraph
+          textSelection = TextSelection.create(
+            tr.doc,
+            pos + this.src.length + 2,
+            pos + this.src.length + 2
+          );
+          tr = tr.setSelection(textSelection);
+          this.view.dispatch(tr);
+          // focus the editor
+          this.view.focus();
         },
         validURL(str) {
           var pattern = new RegExp(
