@@ -1,4 +1,15 @@
 import { Image as TiptapImage } from "tiptap-extensions";
+import { Editor, Doc } from "tiptap";
+import FigCaptionContent from "./FigCaptionContent";
+import { Placeholder } from "tiptap-extensions";
+
+class CustomDoc extends Doc {
+  get schema() {
+    return {
+      content: "paragraph"
+    };
+  }
+}
 
 export default class Image extends TiptapImage {
   get schema() {
@@ -31,6 +42,32 @@ export default class Image extends TiptapImage {
   get view() {
     return {
       props: ["node", "updateAttrs", "view"],
+      components: {
+        FigCaptionContent
+      },
+      data() {
+        return {
+          editor: new Editor({
+            editable: true,
+            extensions: [
+              new CustomDoc(),
+              new Placeholder({
+                showOnlyCurrent: false,
+                emptyNodeText: () => {
+                  return "Placeholder";
+                }
+              })
+            ],
+            onUpdate: ({ getJSON }) => {
+              if (getJSON().content[0].content) {
+                this.caption = getJSON().content[0].content[0].text;
+              } else {
+                this.caption = null;
+              }
+            }
+          })
+        };
+      },
       computed: {
         src: {
           get() {
@@ -56,7 +93,7 @@ export default class Image extends TiptapImage {
       template: `
           <figure>
             <img :src="src" />
-            <input type="text" v-model="caption" :disabled="!view.editable" placeholder="write caption (optional)" />
+            <fig-caption-content :editor="editor" />
           </figure>
         `
     };
