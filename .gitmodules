@@ -1,0 +1,3 @@
+[submodule "ui_assets"]
+	path = ui_assets
+	url = git@bitbucket.org:scrolldev/ui_assets.git
