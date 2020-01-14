@@ -318,12 +318,17 @@ export default {
 <style lang="scss">
 .editor *.is-empty:nth-child(1)::before,
 .editor *.is-empty:nth-child(2)::before {
-  content: attr(data-empty-text);
   float: left;
-  color: #aaa;
+  content: attr(data-empty-text);
   pointer-events: none;
   height: 0;
 }
+
+figcaption > span {
+  display: inline-block;
+  text-align: left;
+}
+
 .dot {
   height: 15px;
   width: 15px;

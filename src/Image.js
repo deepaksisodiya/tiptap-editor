@@ -12,10 +12,10 @@ class CustomDoc extends Doc {
 
 class FigCaptionEditor extends Editor {
   set element(element) {
-    this._editor = this.options.mountOptions || element;
+    this._mountOptions = this.options.mountOptions || element;
   }
   get element() {
-    return this._editor;
+    return this._mountOptions;
   }
 }
 
