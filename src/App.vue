@@ -73,46 +73,17 @@
       :keep-in-bounds="keepInBounds"
       v-slot="{ commands, isActive, menu, getMarkAttrs }"
     >
-      <div :class="[menu.isActive ? 'is-active' : 'is-not-active']">
-        <button
-          class="menubar__button"
-          :class="{ 'is-active': isActive.heading({ level: 1 }) }"
-          @click="onClickMenuItem(commands.heading, { level: 1 })"
-        >
-          H1
-        </button>
+      <ul :class="[menu.isActive ? 'is-active' : 'is-not-active']">
+        <li :class="{ 'is-active': isActive.bold() }" @click="commands.bold">
+          <i class="bold-icon"></i>
+        </li>
 
-        <button
-          class="menubar__button"
-          :class="{ 'is-active': isActive.heading({ level: 2 }) }"
-          @click="onClickMenuItem(commands.heading, { level: 2 })"
-        >
-          H2
-        </button>
-
-        <button
-          class="menububble__button"
-          :class="{ 'is-active': isActive.bold() }"
-          @click="commands.bold"
-        >
-          bold
-        </button>
-
-        <button
-          class="menububble__button"
+        <li
           :class="{ 'is-active': isActive.italic() }"
           @click="commands.italic"
         >
-          italic
-        </button>
-
-        <button
-          class="menububble__button"
-          :class="{ 'is-active': isActive.code() }"
-          @click="commands.code"
-        >
-          code
-        </button>
+          <i class="italic-icon"></i>
+        </li>
 
         <form
           class="menububble__form"
@@ -120,30 +91,52 @@
           @submit.prevent="setLinkUrl(commands.link, linkUrl)"
         >
           <input
-            class="menububble__input"
             type="text"
             v-model="linkUrl"
             placeholder="https://"
             ref="linkInput"
             @keydown.esc="hideLinkMenu"
           />
-          <button
-            class="menububble__button"
-            @click="setLinkUrl(commands.link, null)"
-            type="button"
-          >
+          <button @click="setLinkUrl(commands.link, null)" type="button">
             remove
           </button>
         </form>
         <button
           v-else
-          class="menububble__button"
           @click="showLinkMenu(getMarkAttrs('link'))"
           :class="{ 'is-active': isActive.link() }"
         >
+          <i class="link-icon"></i>
           <span>{{ isActive.link() ? "Update Link" : "Add Link" }}</span>
         </button>
-      </div>
+
+        <li>
+          <i class="separator-icon"></i>
+        </li>
+
+        <li
+          :class="{ 'is-active': isActive.heading({ level: 3 }) }"
+          @click="onClickMenuItem(commands.heading, { level: 3 })"
+        >
+          <i class="large-heading-icon"></i>
+        </li>
+
+        <li
+          class="menubar__button"
+          :class="{ 'is-active': isActive.heading({ level: 5 }) }"
+          @click="onClickMenuItem(commands.heading, { level: 5 })"
+        >
+          <i class="small-heading-icon"></i>
+        </li>
+
+        <li
+          class="menububble__button"
+          :class="{ 'is-active': isActive.code() }"
+          @click="commands.code"
+        >
+          <i class="quote-icon"></i>
+        </li>
+      </ul>
     </editor-menu-bubble>
 
     <article>
@@ -211,7 +204,7 @@ export default {
             emptyNodeText: this.emptyNodeText
           }),
           new HardBreak(),
-          new Heading({ levels: [1, 2] }),
+          new Heading({ levels: [3, 5] }),
           new ListItem(),
           new OrderedList(),
           new Link(),
