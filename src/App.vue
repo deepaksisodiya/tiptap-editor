@@ -207,12 +207,7 @@ export default {
           new Title(),
           new Placeholder({
             showOnlyCurrent: false,
-            emptyNodeText: node => {
-              if (node.type.name === "title") {
-                return "Title";
-              }
-              return "Tell us your story";
-            }
+            emptyNodeText: this.emptyNodeText
           }),
           new HardBreak(),
           new Heading({ levels: [1, 2] }),
@@ -236,19 +231,7 @@ export default {
         ],
         onUpdate: ({ getJSON }) => {
           this.data = getJSON();
-        },
-        content: `
-          <h2>
-            Floating Menu
-          </h2>
-          <p>
-            This is an example of a medium-like editor. Enter a new line and some buttons will appear.
-          </p>
-          <p> Try to change some content here. With the <code>History</code> extension you are able to undo and redo your changes. You can also use keyboard shortcuts for this (<code>cmd+z</code> and <code>cmd+shift+z</code>).</p>
-          <p>This iframe is rendered as a vue component. This makes it possible to render the input below to change its source.</p>
-          <iframe src="https://www.youtube.com/embed/XIMLoLxmTDw" frameborder="0" allowfullscreen></iframe>
-
-        `
+        }
       })
     };
   },
@@ -259,6 +242,22 @@ export default {
       this.$nextTick(() => {
         this.$refs.linkInput.focus();
       });
+    },
+    emptyNodeText(node) {
+      if (node.type.name === "title") {
+        return "Title";
+      }
+      if (this.editor) {
+        const {
+          state: {
+            doc: {
+              content: { content }
+            }
+          }
+        } = this.editor;
+        if (content.length === 2) return "Start your content here ...";
+      }
+      return "";
     },
     hideLinkMenu() {
       this.linkUrl = null;
