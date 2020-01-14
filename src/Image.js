@@ -1,12 +1,38 @@
 import { Image as TiptapImage } from "tiptap-extensions";
-import { Editor, Doc } from "tiptap";
-import FigCaptionContent from "./FigCaptionContent";
+import { Editor, Doc, Node } from "tiptap";
 import { Placeholder } from "tiptap-extensions";
 
 class CustomDoc extends Doc {
   get schema() {
     return {
-      content: "paragraph"
+      content: "span"
+    };
+  }
+}
+
+class FigCaptionEditor extends Editor {
+  set element(element) {
+    this._editor = this.options.mountOptions || element;
+  }
+  get element() {
+    return this._editor;
+  }
+}
+
+class Span extends Node {
+  get name() {
+    return "span";
+  }
+
+  get schema() {
+    return {
+      content: "text*",
+      parseDOM: [
+        {
+          tag: "span"
+        }
+      ],
+      toDOM: () => ["span", 0]
     };
   }
 }
@@ -17,10 +43,10 @@ export default class Image extends TiptapImage {
       attrs: {
         src: {},
         alt: {
-          default: null
+          default: ""
         },
         caption: {
-          default: null
+          default: ""
         }
       },
       group: "block",
@@ -42,31 +68,9 @@ export default class Image extends TiptapImage {
   get view() {
     return {
       props: ["node", "updateAttrs", "view"],
-      components: {
-        FigCaptionContent
-      },
       data() {
         return {
-          editor: new Editor({
-            editable: true,
-            extensions: [
-              new CustomDoc(),
-              new Placeholder({
-                showOnlyCurrent: false,
-                emptyNodeText: () => {
-                  return "Placeholder";
-                }
-              })
-            ],
-            content: this.node.attrs.caption,
-            onUpdate: ({ getJSON }) => {
-              if (getJSON().content[0].content) {
-                this.caption = getJSON().content[0].content[0].text;
-              } else {
-                this.caption = null;
-              }
-            }
-          })
+          editor: null
         };
       },
       watch: {
@@ -98,10 +102,37 @@ export default class Image extends TiptapImage {
           }
         }
       },
+      mounted() {
+        this.editor = new FigCaptionEditor({
+          mountOptions: { mount: this.$refs.caption },
+          editable: true,
+          extensions: [
+            new Span(),
+            new CustomDoc(),
+            new Placeholder({
+              showOnlyCurrent: false,
+              emptyNodeText: this.captionPlaceHolder
+            })
+          ],
+          content: "<span>" + this.node.attrs.caption || "" + "</span>",
+          onUpdate: ({ getJSON }) => {
+            const { content } = getJSON();
+            this.caption = content[0].content ? content[0].content[0].text : "";
+          }
+        });
+      },
+      methods: {
+        captionPlaceHolder() {
+          return "Placeholder";
+        }
+      },
+      beforeDestroy() {
+        this.editor.destroy();
+      },
       template: `
           <figure>
             <img :src="src" />
-            <fig-caption-content :editor="editor" />
+            <figcaption ref="caption"/>
           </figure>
         `
     };
