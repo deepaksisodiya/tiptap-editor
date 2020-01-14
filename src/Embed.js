@@ -166,9 +166,10 @@ export default class EmbedNode extends Node {
             <div>{{ embeds.data.description }}</div>
             <img :src="embeds.data.thumnailUrl" />
           </div>
-          <div v-else>
+          <div class="embed-input" v-else>
             <div v-if="embeds.isLoading">Embeding...</div>
-            <input ref="embedInput" @paste.stop type="text" v-model="src" :disabled="!view.editable" />
+            <i class="embed-link-icon"></i>
+            <input ref="embedInput" placeholder="Paste or type a link" @paste.stop type="text" v-model="src" :disabled="!view.editable" />
             <button @click="onClickAdd">Add</button>
           </div>
         </div>
