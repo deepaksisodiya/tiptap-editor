@@ -146,10 +146,12 @@
       </div>
     </editor-menu-bubble>
 
-    <div class="editor">
+    <article>
       <editor-content id="editor" class="editor__content" :editor="editor" />
-    </div>
+    </article>
+    <!--
     <vue-json-pretty :path="'res'" :data="data"> </vue-json-pretty>
+    -->
   </div>
 </template>
 
@@ -175,7 +177,7 @@ import {
   Placeholder
 } from "tiptap-extensions";
 import { contains } from "prosemirror-utils";
-import VueJsonPretty from "vue-json-pretty";
+// import VueJsonPretty from "vue-json-pretty";
 
 import Embed from "./Embed";
 import Image from "./Image";
@@ -183,14 +185,13 @@ import Lock from "./Lock";
 import Doc from "./Doc";
 import Title from "./Title";
 
-// import "./editor/editor.scss";
+import "./../ui_assets/scss/editor/editor.scss";
 
 export default {
   components: {
     EditorContent,
     EditorFloatingMenu,
-    EditorMenuBubble,
-    VueJsonPretty
+    EditorMenuBubble
   },
   data() {
     return {
@@ -338,5 +339,12 @@ export default {
   visibility: visible;
   opacity: 1;
   transition: visibility 0.2s, opacity 0.2s;
+}
+.ProseMirror [contenteditable="false"] {
+  white-space: normal;
+}
+
+.ProseMirror [contenteditable="true"] {
+  white-space: pre-wrap;
 }
 </style>
