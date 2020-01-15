@@ -53,7 +53,7 @@
             :class="{ 'is-active': isActive.embed() }"
             @click="onClickMenuItem(commands.embed)"
           >
-            Link
+            Link`
           </button>
 
           <button
@@ -328,7 +328,7 @@ export default {
   height: 0;
 }
 
-figcaption > span {
+figcaption > span.is-empty {
   display: inline-block;
   text-align: left;
 }
