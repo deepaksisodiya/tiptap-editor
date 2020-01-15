@@ -73,16 +73,19 @@
       :keep-in-bounds="keepInBounds"
       v-slot="{ commands, isActive, menu, getMarkAttrs }"
     >
-      <ul :class="[menu.isActive ? 'is-active' : 'is-not-active']">
-        <li :class="{ 'is-active': isActive.bold() }" @click="commands.bold">
-          <i class="bold-icon"></i>
+      <div
+        class="menububble"
+        :class="[menu.isActive ? 'is-active' : 'is-not-active']"
+      >
+        <li class="menububble__button" @click="commands.bold">
+          <i class="bold-icon" :class="{ 'is-active': isActive.bold() }"></i>
         </li>
 
-        <li
-          :class="{ 'is-active': isActive.italic() }"
-          @click="commands.italic"
-        >
-          <i class="italic-icon"></i>
+        <li class="menububble__button" @click="commands.italic">
+          <i
+            class="italic-icon"
+            :class="{ 'is-active': isActive.italic() }"
+          ></i>
         </li>
 
         <form
@@ -91,52 +94,60 @@
           @submit.prevent="setLinkUrl(commands.link, linkUrl)"
         >
           <input
+            class="menububble__input"
             type="text"
             v-model="linkUrl"
             placeholder="https://"
             ref="linkInput"
             @keydown.esc="hideLinkMenu"
           />
-          <button @click="setLinkUrl(commands.link, null)" type="button">
+          <button
+            class="menububble__button"
+            @click="setLinkUrl(commands.link, null)"
+            type="button"
+          >
             remove
           </button>
         </form>
-        <button
+        <li
           v-else
+          class="menububble__button"
           @click="showLinkMenu(getMarkAttrs('link'))"
-          :class="{ 'is-active': isActive.link() }"
         >
-          <i class="link-icon"></i>
+          <i class="link-icon" :class="{ 'is-active': isActive.link() }"></i>
+          <!--
           <span>{{ isActive.link() ? "Update Link" : "Add Link" }}</span>
-        </button>
+          -->
+        </li>
 
         <li>
           <i class="separator-icon"></i>
         </li>
 
         <li
-          :class="{ 'is-active': isActive.heading({ level: 3 }) }"
+          class="menubar__button"
           @click="onClickMenuItem(commands.heading, { level: 3 })"
         >
-          <i class="large-heading-icon"></i>
+          <i
+            class="large-heading-icon"
+            :class="{ 'is-active': isActive.heading({ level: 3 }) }"
+          ></i>
         </li>
 
         <li
           class="menubar__button"
-          :class="{ 'is-active': isActive.heading({ level: 5 }) }"
           @click="onClickMenuItem(commands.heading, { level: 5 })"
         >
-          <i class="small-heading-icon"></i>
+          <i
+            class="small-heading-icon"
+            :class="{ 'is-active': isActive.heading({ level: 5 }) }"
+          ></i>
         </li>
 
-        <li
-          class="menububble__button"
-          :class="{ 'is-active': isActive.code() }"
-          @click="commands.code"
-        >
-          <i class="quote-icon"></i>
+        <li class="menububble__button" @click="commands.code">
+          <i class="quote-icon" :class="{ 'is-active': isActive.code() }"></i>
         </li>
-      </ul>
+      </div>
     </editor-menu-bubble>
 
     <article>
