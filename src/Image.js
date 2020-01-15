@@ -1,5 +1,5 @@
-import { Image as TiptapImage } from "tiptap-extensions";
-import { Editor, Doc, Node } from "tiptap";
+import { Image as TiptapImage, History } from "tiptap-extensions";
+import { Editor, Doc, Node, TextSelection } from "tiptap";
 import { Placeholder } from "tiptap-extensions";
 
 class CustomDoc extends Doc {
@@ -67,7 +67,7 @@ export default class Image extends TiptapImage {
 
   get view() {
     return {
-      props: ["node", "updateAttrs", "view"],
+      props: ["node", "updateAttrs", "view", "getPos"],
       data() {
         return {
           editor: null
@@ -112,12 +112,30 @@ export default class Image extends TiptapImage {
             new Placeholder({
               showOnlyCurrent: false,
               emptyNodeText: this.captionPlaceHolder
-            })
+            }),
+            new History()
           ],
           content: "<span>" + this.node.attrs.caption || "" + "</span>",
           onUpdate: ({ getJSON }) => {
             const { content } = getJSON();
+            // console.log(content[0].content ? content[0].content[0].text : "");
             this.caption = content[0].content ? content[0].content[0].text : "";
+          },
+          editorProps: {
+            handleKeyDown: (view, event) => {
+              if (event.key === "Backspace" && !this.caption) {
+                let {
+                  state: { tr }
+                } = this.view;
+                const pos = this.getPos();
+                let textSelection = TextSelection.create(tr.doc, pos, pos + 1);
+                this.view.dispatch(
+                  tr.setSelection(textSelection).deleteSelection(this.src)
+                );
+                this.view.focus();
+              }
+              return false;
+            }
           }
         });
       },
