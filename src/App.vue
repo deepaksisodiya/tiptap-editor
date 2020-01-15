@@ -160,12 +160,9 @@
 </template>
 
 <script>
-import {
-  Editor,
-  EditorContent,
-  EditorFloatingMenu,
-  EditorMenuBubble
-} from "tiptap";
+import { Editor, EditorContent, EditorFloatingMenu } from "tiptap";
+import EditorMenuBubble from "./EditorMenuBubble";
+
 import {
   HardBreak,
   Heading,
@@ -343,6 +340,7 @@ figcaption > span.is-empty {
 .is-not-active {
   visibility: hidden;
   opacity: 0;
+  position: fixed;
 }
 .is-active {
   visibility: visible;
