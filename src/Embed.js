@@ -17,7 +17,7 @@ export default class EmbedNode extends Node {
         }
       },
       group: "block",
-      selectable: true,
+      selectable: false,
       // parseDOM and toDOM is still required to make copy and paste work
       parseDOM: [
         {

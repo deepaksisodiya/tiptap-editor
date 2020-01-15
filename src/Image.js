@@ -51,6 +51,7 @@ export default class Image extends TiptapImage {
       },
       group: "block",
       draggable: true,
+      selectable: false,
       parseDOM: [
         {
           tag: "img[src]",
@@ -118,7 +119,6 @@ export default class Image extends TiptapImage {
           content: "<span>" + this.node.attrs.caption || "" + "</span>",
           onUpdate: ({ getJSON }) => {
             const { content } = getJSON();
-            // console.log(content[0].content ? content[0].content[0].text : "");
             this.caption = content[0].content ? content[0].content[0].text : "";
           },
           editorProps: {
@@ -130,7 +130,7 @@ export default class Image extends TiptapImage {
                 const pos = this.getPos();
                 let textSelection = TextSelection.create(tr.doc, pos, pos + 1);
                 this.view.dispatch(
-                  tr.setSelection(textSelection).deleteSelection(this.src)
+                  tr.setSelection(textSelection).deleteSelection()
                 );
                 this.view.focus();
               }
