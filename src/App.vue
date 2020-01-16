@@ -1,10 +1,5 @@
 <template>
   <div class="editor">
-    <div class="checkbox">
-      <input type="checkbox" id="editable" v-model="editable" />
-      <label for="editable">editable</label>
-    </div>
-
     <!-- on hover it will show bold, italic and code -->
     <editor-menu-bubble
       :editor="editor"
