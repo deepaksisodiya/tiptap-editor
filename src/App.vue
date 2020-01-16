@@ -311,6 +311,25 @@ export default {
       this.editor.setOptions({
         editable: this.editable
       });
+    },
+    shouldShowFloatingMenu() {
+      console.log(this.shouldShowFloatingMenu);
+      const {
+        state: {
+          doc: {
+            content: { content }
+          }
+        }
+      } = this.editor;
+      console.log(content.length);
+      if (content.length === 2) {
+        if (this.shouldShowFloatingMenu) {
+          this.editor.extensions.options.placeholder.emptyNodeText = "";
+        } else {
+          this.editor.extensions.options.placeholder.emptyNodeText =
+            "Start your content here ...";
+        }
+      }
     }
   },
   computed: {
