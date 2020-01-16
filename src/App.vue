@@ -13,16 +13,16 @@
         :class="{ 'is-active': menu.isActive }"
         :style="`top: ${menu.top}px`"
       >
+        <input
+          type="file"
+          ref="fileInput"
+          style="display:none"
+          @change="previewFiles(commands.image)"
+        />
         <button @click="toggleFloatingMenu">
           Plus_icon
         </button>
         <div v-if="shouldShowFloatingMenu">
-          <input
-            type="file"
-            ref="fileInput"
-            style="display:none"
-            @change="previewFiles(commands.image)"
-          />
           <button class="menubar__button" @click="onClickImage()">
             Image
           </button>
@@ -274,6 +274,7 @@ export default {
     },
     onClickImage() {
       this.$refs.fileInput.click();
+      this.shouldShowFloatingMenu = false;
     },
     previewFiles(command) {
       this.editor.focus();
