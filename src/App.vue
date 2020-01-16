@@ -4,68 +4,6 @@
       <input type="checkbox" id="editable" v-model="editable" />
       <label for="editable">editable</label>
     </div>
-    <editor-floating-menu
-      :editor="editor"
-      v-slot="{ commands, isActive, menu }"
-    >
-      <div
-        class="editor__floating-menu"
-        :class="{ 'is-active': menu.isActive }"
-        :style="`top: ${menu.top}px`"
-      >
-        <input
-          type="file"
-          ref="fileInput"
-          style="display:none"
-          @change="previewFiles(commands.image)"
-        />
-        <button @click="toggleFloatingMenu">
-          Plus_icon
-        </button>
-        <div v-if="shouldShowFloatingMenu">
-          <button class="menubar__button" @click="onClickImage()">
-            Image
-          </button>
-          <button
-            class="menubar__button"
-            :class="{ 'is-active': isActive.horizontal_rule() }"
-            @click="onClickMenuItem(commands.horizontal_rule)"
-          >
-            HorizontalRule
-          </button>
-
-          <button
-            class="menubar__button"
-            :class="{ 'is-active': isActive.ordered_list() }"
-            @click="onClickMenuItem(commands.ordered_list)"
-          >
-            List
-          </button>
-
-          <button
-            :class="{ 'is-active': isActive.embed() }"
-            @click="onClickMenuItem(commands.embed)"
-          >
-            Video
-          </button>
-
-          <button
-            :class="{ 'is-active': isActive.embed() }"
-            @click="onClickMenuItem(commands.embed)"
-          >
-            Link`
-          </button>
-
-          <button
-            :style="`display: ${hasLock ? 'none' : 'inline'}`"
-            :class="{ 'is-active': isActive.lock() }"
-            @click="onClickMenuItem(commands.lock)"
-          >
-            Lock
-          </button>
-        </div>
-      </div>
-    </editor-floating-menu>
 
     <!-- on hover it will show bold, italic and code -->
     <editor-menu-bubble
@@ -151,6 +89,84 @@
     </editor-menu-bubble>
 
     <article>
+      <editor-floating-menu
+        :editor="editor"
+        v-slot="{ commands, isActive, menu }"
+      >
+        <div
+          class="editor__floating-menu"
+          :class="{ 'is-plus-active': menu.isActive }"
+          :style="`top: ${menu.top - 20}px`"
+        >
+          <input
+            type="file"
+            ref="fileInput"
+            style="display:none"
+            @change="previewFiles(commands.image)"
+          />
+          <ul class="kitchensink">
+            <li @click="toggleFloatingMenu">
+              <i
+                class="add-icon"
+                :class="{ 'close-icon': shouldShowFloatingMenu }"
+              ></i>
+            </li>
+            <li
+              class="menubar__button"
+              @click="onClickImage()"
+              v-if="shouldShowFloatingMenu"
+            >
+              <i class="image-icon"></i>
+            </li>
+            <li
+              class="menubar__button"
+              :class="{ 'is-active': isActive.horizontal_rule() }"
+              v-if="shouldShowFloatingMenu"
+              @click="onClickMenuItem(commands.horizontal_rule)"
+            >
+              <i class="separator-icon"></i>
+            </li>
+
+            <li
+              class="menubar__button"
+              v-if="shouldShowFloatingMenu"
+              :class="{ 'is-active': isActive.ordered_list() }"
+              @click="onClickMenuItem(commands.ordered_list)"
+            >
+              <i class="list-icon"></i>
+            </li>
+
+            <li
+              :class="{ 'is-active': isActive.embed() }"
+              v-if="shouldShowFloatingMenu"
+              @click="onClickMenuItem(commands.embed)"
+            >
+              <i class="video-icon"></i>
+            </li>
+
+            <li
+              :class="{ 'is-active': isActive.embed() }"
+              v-if="shouldShowFloatingMenu"
+              @click="onClickMenuItem(commands.embed)"
+            >
+              <i class="link-icon"></i>
+            </li>
+
+            <li v-if="shouldShowFloatingMenu">
+              <i class="kitchensink-divider"></i>
+            </li>
+
+            <li
+              v-if="shouldShowFloatingMenu"
+              :style="`display: ${hasLock ? 'none' : 'inline'}`"
+              :class="{ 'is-active': isActive.lock() }"
+              @click="onClickMenuItem(commands.lock)"
+            >
+              <i class="lock-icon"></i>
+            </li>
+          </ul>
+        </div>
+      </editor-floating-menu>
       <editor-content id="editor" class="editor__content" :editor="editor" />
     </article>
     <!--
