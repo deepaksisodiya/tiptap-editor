@@ -180,11 +180,7 @@ import {
 import { contains } from "prosemirror-utils";
 // import VueJsonPretty from "vue-json-pretty";
 
-import Embed from "./Embed";
-import Image from "./Image";
-import Lock from "./Lock";
-import Doc from "./Doc";
-import Title from "./Title";
+import { Embed, Image, Lock, Doc, Title } from "./blocks";
 
 import "./../ui_assets/scss/editor/editor.scss";
 
