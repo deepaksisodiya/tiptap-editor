@@ -30,6 +30,12 @@ export default class Image extends TiptapImage {
     };
   }
 
+  commands({ type }) {
+    return attrs => (state, dispatch) => {
+      return dispatch(state.tr.replaceSelectionWith(type.create(attrs)));
+    };
+  }
+
   get view() {
     return {
       props: ["node", "updateAttrs", "view", "getPos"],
