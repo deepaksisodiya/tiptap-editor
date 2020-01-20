@@ -6,19 +6,13 @@
       :keep-in-bounds="keepInBounds"
       v-slot="{ commands, isActive, menu, getMarkAttrs }"
     >
-      <div
-        class="menububble"
-        :class="[menu.isActive ? 'is-active' : 'is-not-active']"
-      >
+      <div class="menububble" :class="[menu.isActive ? 'is-active' : 'is-not-active']">
         <li class="menububble__button" @click="commands.bold">
           <i class="bold-icon" :class="{ 'is-active': isActive.bold() }"></i>
         </li>
 
         <li class="menububble__button" @click="commands.italic">
-          <i
-            class="italic-icon"
-            :class="{ 'is-active': isActive.italic() }"
-          ></i>
+          <i class="italic-icon" :class="{ 'is-active': isActive.italic() }"></i>
         </li>
 
         <form
@@ -38,15 +32,9 @@
             class="menububble__button"
             @click="setLinkUrl(commands.link, null)"
             type="button"
-          >
-            remove
-          </button>
+          >remove</button>
         </form>
-        <li
-          v-else
-          class="menububble__button"
-          @click="showLinkMenu(getMarkAttrs('link'))"
-        >
+        <li v-else class="menububble__button" @click="showLinkMenu(getMarkAttrs('link'))">
           <i class="link-icon" :class="{ 'is-active': isActive.link() }"></i>
           <!--
           <span>{{ isActive.link() ? "Update Link" : "Add Link" }}</span>
@@ -57,24 +45,12 @@
           <i class="separator-icon"></i>
         </li>
 
-        <li
-          class="menubar__button"
-          @click="onClickMenuItem(commands.heading, { level: 3 })"
-        >
-          <i
-            class="large-heading-icon"
-            :class="{ 'is-active': isActive.heading({ level: 3 }) }"
-          ></i>
+        <li class="menubar__button" @click="onClickMenuItem(commands.heading, { level: 3 })">
+          <i class="large-heading-icon" :class="{ 'is-active': isActive.heading({ level: 3 }) }"></i>
         </li>
 
-        <li
-          class="menubar__button"
-          @click="onClickMenuItem(commands.heading, { level: 5 })"
-        >
-          <i
-            class="small-heading-icon"
-            :class="{ 'is-active': isActive.heading({ level: 5 }) }"
-          ></i>
+        <li class="menubar__button" @click="onClickMenuItem(commands.heading, { level: 5 })">
+          <i class="small-heading-icon" :class="{ 'is-active': isActive.heading({ level: 5 }) }"></i>
         </li>
 
         <li class="menububble__button" @click="commands.code">
@@ -84,10 +60,7 @@
     </editor-menu-bubble>
 
     <article>
-      <editor-floating-menu
-        :editor="editor"
-        v-slot="{ commands, isActive, menu }"
-      >
+      <editor-floating-menu :editor="editor" v-slot="{ commands, isActive, menu }">
         <div
           class="editor__floating-menu"
           :class="{ 'is-plus-active': menu.isActive }"
@@ -101,16 +74,9 @@
           />
           <ul class="kitchensink">
             <li @click="toggleFloatingMenu">
-              <i
-                class="add-icon"
-                :class="{ 'close-icon': shouldShowFloatingMenu }"
-              ></i>
+              <i class="add-icon" :class="{ 'close-icon': shouldShowFloatingMenu }"></i>
             </li>
-            <li
-              class="menubar__button"
-              @click="onClickImage()"
-              v-if="shouldShowFloatingMenu"
-            >
+            <li class="menubar__button" @click="onClickImage()" v-if="shouldShowFloatingMenu">
               <i class="image-icon"></i>
             </li>
             <li
@@ -264,7 +230,8 @@ export default {
             }
           }
         } = this.editor;
-        if (content.length === 2) return "Start your content here ...";
+        if (content.length === 2 && !this.shouldShowFloatingMenu)
+          return "Start your content here ...";
       }
       return "";
     },
@@ -313,7 +280,6 @@ export default {
       });
     },
     shouldShowFloatingMenu() {
-      console.log(this.shouldShowFloatingMenu);
       const {
         state: {
           doc: {
@@ -321,14 +287,8 @@ export default {
           }
         }
       } = this.editor;
-      console.log(content.length);
       if (content.length === 2) {
-        if (this.shouldShowFloatingMenu) {
-          this.editor.extensions.options.placeholder.emptyNodeText = "";
-        } else {
-          this.editor.extensions.options.placeholder.emptyNodeText =
-            "Start your content here ...";
-        }
+        this.editor.setOptions({});
       }
     }
   },
