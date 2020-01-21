@@ -1,18 +1,38 @@
 <template>
   <div class="editor">
     <!-- on hover it will show bold, italic and code -->
+    <!-- menububble start -->
     <editor-menu-bubble
       :editor="editor"
       :keep-in-bounds="keepInBounds"
       v-slot="{ commands, isActive, menu, getMarkAttrs }"
     >
-      <div class="menububble" :class="[menu.isActive ? 'is-active' : 'is-not-active']">
-        <li class="menububble__button" @click="commands.bold">
-          <i class="bold-icon" :class="{ 'is-active': isActive.bold() }"></i>
+      <ul
+        class="highlight-menu"
+        :class="{ 'is-active': menu.isActive || linkMenuIsActive }"
+        :style="`left: ${menu.left}px; bottom: ${menu.bottom}px;`"
+      >
+        <li
+          class="menububble3__button"
+          @click="commands.bold"
+          v-if="!linkMenuIsActive"
+        >
+          <button>
+            <i class="bold-icon" :class="{ 'is-active': isActive.bold() }"></i>
+          </button>
         </li>
 
-        <li class="menububble__button" @click="commands.italic">
-          <i class="italic-icon" :class="{ 'is-active': isActive.italic() }"></i>
+        <li
+          class="menububble3__button"
+          @click="commands.italic"
+          v-if="!linkMenuIsActive"
+        >
+          <button>
+            <i
+              class="italic-icon"
+              :class="{ 'is-active': isActive.italic() }"
+            ></i>
+          </button>
         </li>
 
         <form
@@ -32,35 +52,75 @@
             class="menububble__button"
             @click="setLinkUrl(commands.link, null)"
             type="button"
-          >remove</button>
+          >
+            remove
+          </button>
         </form>
-        <li v-else class="menububble__button" @click="showLinkMenu(getMarkAttrs('link'))">
-          <i class="link-icon" :class="{ 'is-active': isActive.link() }"></i>
-          <!--
+        <li
+          v-else
+          class="menububble__button"
+          @click="showLinkMenu(getMarkAttrs('link'))"
+        >
+          <button>
+            <i class="link-icon" :class="{ 'is-active': isActive.link() }"></i>
+            <!--
           <span>{{ isActive.link() ? "Update Link" : "Add Link" }}</span>
-          -->
+          --></button>
         </li>
 
-        <li>
-          <i class="separator-icon"></i>
+        <li v-if="!linkMenuIsActive">
+          <button>
+            <i class="separator-icon"></i>
+          </button>
         </li>
 
-        <li class="menubar__button" @click="onClickMenuItem(commands.heading, { level: 3 })">
-          <i class="large-heading-icon" :class="{ 'is-active': isActive.heading({ level: 3 }) }"></i>
+        <li
+          class="menubar__button"
+          @click="onClickMenuItem(commands.heading, { level: 3 })"
+          v-if="!linkMenuIsActive"
+        >
+          <button>
+            <i
+              class="large-heading-icon"
+              :class="{ 'is-active': isActive.heading({ level: 3 }) }"
+            ></i>
+          </button>
         </li>
 
-        <li class="menubar__button" @click="onClickMenuItem(commands.heading, { level: 5 })">
-          <i class="small-heading-icon" :class="{ 'is-active': isActive.heading({ level: 5 }) }"></i>
+        <li
+          class="menubar__button"
+          @click="onClickMenuItem(commands.heading, { level: 5 })"
+          v-if="!linkMenuIsActive"
+        >
+          <button>
+            <i
+              class="small-heading-icon"
+              :class="{ 'is-active': isActive.heading({ level: 5 }) }"
+            ></i>
+          </button>
         </li>
 
-        <li class="menububble__button" @click="commands.code">
-          <i class="quote-icon" :class="{ 'is-active': isActive.code() }"></i>
+        <li
+          class="menububble__button"
+          @click="commands.blockquote"
+          v-if="!linkMenuIsActive"
+        >
+          <button>
+            <i
+              class="quote-icon"
+              :class="{ 'is-active': isActive.blockquote() }"
+            ></i>
+          </button>
         </li>
-      </div>
+      </ul>
     </editor-menu-bubble>
+    <!-- menububble end -->
 
     <article>
-      <editor-floating-menu :editor="editor" v-slot="{ commands, isActive, menu }">
+      <editor-floating-menu
+        :editor="editor"
+        v-slot="{ commands, isActive, menu }"
+      >
         <div
           class="editor__floating-menu"
           :class="{ 'is-plus-active': menu.isActive }"
@@ -74,9 +134,16 @@
           />
           <ul class="kitchensink">
             <li @click="toggleFloatingMenu">
-              <i class="add-icon" :class="{ 'close-icon': shouldShowFloatingMenu }"></i>
+              <i
+                class="add-icon"
+                :class="{ 'close-icon': shouldShowFloatingMenu }"
+              ></i>
             </li>
-            <li class="menubar__button" @click="onClickImage()" v-if="shouldShowFloatingMenu">
+            <li
+              class="menubar__button"
+              @click="onClickImage()"
+              v-if="shouldShowFloatingMenu"
+            >
               <i class="image-icon"></i>
             </li>
             <li
@@ -137,16 +204,20 @@
 </template>
 
 <script>
-import { Editor, EditorContent, EditorFloatingMenu } from "tiptap";
-import EditorMenuBubble from "./EditorMenuBubble";
+import {
+  Editor,
+  EditorContent,
+  EditorFloatingMenu,
+  EditorMenuBubble
+} from "tiptap";
 
 import {
+  Blockquote,
   HardBreak,
   Heading,
   ListItem,
   OrderedList,
   Bold,
-  Code,
   Italic,
   Link,
   History,
@@ -190,7 +261,7 @@ export default {
           new OrderedList(),
           new Link(),
           new Bold(),
-          new Code(),
+          new Blockquote(),
           new Italic(),
           new History(),
           new TrailingNode({
@@ -324,21 +395,26 @@ figcaption > span.is-empty {
   border-radius: 50%;
   display: inline-block;
 }
-.is-not-active {
-  visibility: hidden;
-  opacity: 0;
-  position: fixed;
-}
-.is-active {
-  visibility: visible;
-  opacity: 1;
-  transition: visibility 0.2s, opacity 0.2s;
-}
+
 .ProseMirror [contenteditable="false"] {
   white-space: normal;
 }
 
 .ProseMirror [contenteditable="true"] {
   white-space: pre-wrap;
+}
+
+.menububble3 {
+  &__form {
+    display: flex;
+    align-items: center;
+  }
+
+  &__input {
+    font: inherit;
+    border: none;
+    background: transparent;
+    color: white;
+  }
 }
 </style>
