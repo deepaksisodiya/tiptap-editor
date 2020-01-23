@@ -270,7 +270,9 @@ export default {
             notAfter: ["paragraph"]
           }),
           new Image(),
-          new Embed(),
+          new Embed({
+            baseUrl: "http://139.59.32.245:8000/metadata"
+          }),
           new HorizontalRule(),
           new Lock()
         ],
