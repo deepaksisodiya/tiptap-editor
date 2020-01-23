@@ -177,15 +177,22 @@ export default class EmbedNode extends Node {
             "i"
           ); // fragment locator
           return !!pattern.test(str);
+        },
+        embedUrl(url, provider) {
+          if (provider !== "YouTube") return url;
+          return url.replace(
+            "https://www.youtube.com/watch?v=",
+            "https://www.youtube.com/embed/"
+          );
         }
       },
       template: `
         <div>
           <div v-if="embeds.data && embeds.data.type === 'video'">
-            <iframe :src="embeds.data.iframeUrl"></iframe>
+            <iframe :src="embedUrl(embeds.data.url, embeds.data.provider_name)"></iframe>
             <input type="text" v-model="caption" :disabled="!view.editable" placeholder="write caption (optional)" />
           </div>
-          <div v-if="embeds.data && embeds.data.type === 'article'">
+          <div v-if="embeds.data && embeds.data.type === 'link'">
             <div>{{ embeds.data.title }}</div>
             <div>{{ embeds.data.description }}</div>
             <img :src="embeds.data.thumnailUrl" />
