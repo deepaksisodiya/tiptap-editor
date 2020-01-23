@@ -118,7 +118,6 @@ export default class EmbedNode extends Node {
             this.embeds.isLoading = true;
             this.embeds.isError = false;
             try {
-              const response = await axios("http://localhost:3000/embeds");
               const response = await axios(
                 `${this.options.baseUrl}?url=${this.src}`
               );
@@ -182,16 +181,16 @@ export default class EmbedNode extends Node {
       },
       template: `
         <div>
-          <div v-if="embeds.data">
+          <div v-if="embeds.data && embeds.data.type === 'video'">
             <iframe :src="embeds.data.iframeUrl"></iframe>
             <input type="text" v-model="caption" :disabled="!view.editable" placeholder="write caption (optional)" />
           </div>
-          <div v-else-if="embeds.data && embeds.data.type === 'link'">
+          <div v-if="embeds.data && embeds.data.type === 'article'">
             <div>{{ embeds.data.title }}</div>
             <div>{{ embeds.data.description }}</div>
             <img :src="embeds.data.thumnailUrl" />
           </div>
-          <div class="embed-input" v-else>
+          <div class="embed-input" v-if="embeds.data === null">
             <div v-if="embeds.isLoading">Embeding...</div>
             <i class="embed-link-icon"></i>
             <input ref="embedInput" :placeholder="placeholderText" @paste.stop type="text" v-model="src" :disabled="!view.editable" />
