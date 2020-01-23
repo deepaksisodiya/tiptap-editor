@@ -76,7 +76,7 @@
 
         <li
           class="menubar__button"
-          @click="onClickMenuItem(commands.heading, { level: 3 })"
+          @click="commands.heading({ level: 3 })"
           v-if="!linkMenuIsActive"
         >
           <button>
@@ -89,7 +89,7 @@
 
         <li
           class="menubar__button"
-          @click="onClickMenuItem(commands.heading, { level: 5 })"
+          @click="commands.heading({ level: 5 })"
           v-if="!linkMenuIsActive"
         >
           <button>
@@ -167,7 +167,7 @@
             <li
               :class="{ 'is-active': isActive.embed() }"
               v-if="shouldShowFloatingMenu"
-              @click="onClickMenuItem(commands.embed)"
+              @click="onClickEmbed(commands.embed, 'video')"
             >
               <i class="video-icon"></i>
             </li>
@@ -175,7 +175,7 @@
             <li
               :class="{ 'is-active': isActive.embed() }"
               v-if="shouldShowFloatingMenu"
-              @click="onClickMenuItem(commands.embed)"
+              @click="onClickEmbed(commands.embed, 'link')"
             >
               <i class="link-icon"></i>
             </li>
@@ -318,12 +318,20 @@ export default {
     toggleFloatingMenu() {
       this.shouldShowFloatingMenu = !this.shouldShowFloatingMenu;
     },
-    onClickMenuItem(command, obj) {
-      command(obj);
-      this.shouldShowFloatingMenu = false;
+    onClickMenuItem(command) {
+      command();
+      this.hideFloatingMenu();
+    },
+    onClickEmbed(command, type) {
+      console.log(type);
+      command();
+      this.hideFloatingMenu();
     },
     onClickImage() {
       this.$refs.fileInput.click();
+      this.hideFloatingMenu();
+    },
+    hideFloatingMenu() {
       this.shouldShowFloatingMenu = false;
     },
     previewFiles(command) {
