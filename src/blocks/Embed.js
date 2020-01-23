@@ -52,7 +52,7 @@ export default class EmbedNode extends Node {
 
   get view() {
     return {
-      props: ["node", "updateAttrs", "view", "getPos"],
+      props: ["node", "updateAttrs", "view", "getPos", "options"],
       data() {
         return {
           embeds: {
@@ -99,6 +99,12 @@ export default class EmbedNode extends Node {
             return "Paste or type a link";
           }
           return "Paste or type a video";
+        },
+        loadingText() {
+          if (this.node.attrs.embedType === "link") {
+            return "Linking video";
+          }
+          return "Embedding video";
         }
       },
       methods: {
@@ -113,6 +119,9 @@ export default class EmbedNode extends Node {
             this.embeds.isError = false;
             try {
               const response = await axios("http://localhost:3000/embeds");
+              const response = await axios(
+                `${this.options.baseUrl}?url=${this.src}`
+              );
               this.embeds.data = response.data;
               // for copy pasting to work
               this.src = response.data.iframeUrl;
