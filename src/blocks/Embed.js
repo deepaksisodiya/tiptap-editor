@@ -185,6 +185,15 @@ export default class EmbedNode extends Node {
       },
       template: `
         <div>
+          <div class="embed-input" v-if="embeds.data === null && embeds.isLoading === false">
+            <i class="embed-link-icon"></i>
+            <input ref="embedInput" :placeholder="placeholderText" @paste.stop type="text" v-model="src" :disabled="!view.editable" />
+            <button @click="onClickAdd">Add</button>
+          </div>
+          <div class="embed-input" v-if="embeds.data === null && embeds.isLoading === true">
+            <i class="loading-icon"></i>
+            <span>{{ loadingText }}</span>
+          </div>
           <div v-if="embeds.data && embeds.data.type === 'video'">
             <iframe :src="embedUrl(embeds.data.url, embeds.data.provider_name)"></iframe>
             <input type="text" v-model="caption" :disabled="!view.editable" placeholder="write caption (optional)" />
@@ -193,12 +202,6 @@ export default class EmbedNode extends Node {
             <div>{{ embeds.data.title }}</div>
             <div>{{ embeds.data.description }}</div>
             <img :src="embeds.data.thumnailUrl" />
-          </div>
-          <div class="embed-input" v-if="embeds.data === null">
-            <div v-if="embeds.isLoading">Embeding...</div>
-            <i class="embed-link-icon"></i>
-            <input ref="embedInput" :placeholder="placeholderText" @paste.stop type="text" v-model="src" :disabled="!view.editable" />
-            <button @click="onClickAdd">Add</button>
           </div>
         </div>
       `
