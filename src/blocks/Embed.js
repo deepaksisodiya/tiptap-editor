@@ -180,10 +180,7 @@ export default class EmbedNode extends Node {
         },
         embedUrl(url, provider) {
           if (provider !== "YouTube") return url;
-          return url.replace(
-            "https://www.youtube.com/watch?v=",
-            "https://www.youtube.com/embed/"
-          );
+          return "https://www.youtube.com/embed/" + url.split("=")[1];
         }
       },
       template: `
