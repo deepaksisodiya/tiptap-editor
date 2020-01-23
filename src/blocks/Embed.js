@@ -198,10 +198,19 @@ export default class EmbedNode extends Node {
             <iframe :src="embedUrl(embeds.data.url, embeds.data.provider_name)"></iframe>
             <input type="text" v-model="caption" :disabled="!view.editable" placeholder="write caption (optional)" />
           </div>
-          <div v-if="embeds.data && embeds.data.type === 'link'">
-            <div>{{ embeds.data.title }}</div>
-            <div>{{ embeds.data.description }}</div>
-            <img :src="embeds.data.thumnailUrl" />
+          <div
+            class="embed-link-block"
+            :class="{ 'no-image': !embeds.data.thumbnail_url }"
+            v-if="embeds.data && embeds.data.type === 'link'"
+          >
+            <div class="content">
+              <h1>{{ embeds.data.title }}</h1>
+              <p>{{ embeds.data.description }}</p>
+              <span>{{ embeds.data.url }}</span>
+            </div>
+            <figure v-if="embeds.data.thumbnail_url">
+              <img :src="embeds.data.thumbnail_url" alt="Trulli">
+            </figure>
           </div>
         </div>
       `
