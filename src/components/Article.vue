@@ -270,9 +270,7 @@ export default {
             notAfter: ["paragraph"]
           }),
           new Image(),
-          new Embed({
-            type: ["video", "link"]
-          }),
+          new Embed(),
           new HorizontalRule(),
           new Lock()
         ],
@@ -322,9 +320,8 @@ export default {
       command();
       this.hideFloatingMenu();
     },
-    onClickEmbed(command, type) {
-      console.log(type);
-      command();
+    onClickEmbed(command, embedType) {
+      command({ embedType });
       this.hideFloatingMenu();
     },
     onClickImage() {

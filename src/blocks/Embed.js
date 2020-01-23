@@ -1,9 +1,16 @@
 import { Node, TextSelection } from "tiptap";
 import axios from "axios";
+// import { setBlockType } from "tiptap-commands";
 
 export default class EmbedNode extends Node {
   get name() {
     return "embed";
+  }
+
+  get defaultOptions() {
+    return {
+      embedType: "video"
+    };
   }
 
   get schema() {
@@ -13,6 +20,9 @@ export default class EmbedNode extends Node {
           default: null
         },
         caption: {
+          default: null
+        },
+        embedType: {
           default: null
         }
       },
@@ -35,8 +45,8 @@ export default class EmbedNode extends Node {
   }
 
   commands({ type }) {
-    return () => (state, dispatch) => {
-      return dispatch(state.tr.replaceSelectionWith(type.create()));
+    return attrs => (state, dispatch) => {
+      return dispatch(state.tr.replaceSelectionWith(type.create(attrs)));
     };
   }
 
@@ -83,6 +93,12 @@ export default class EmbedNode extends Node {
               caption
             });
           }
+        },
+        placeholderText() {
+          if (this.node.attrs.embedType === "link") {
+            return "Paste or type a link";
+          }
+          return "Paste or type a video";
         }
       },
       methods: {
@@ -169,7 +185,7 @@ export default class EmbedNode extends Node {
           <div class="embed-input" v-else>
             <div v-if="embeds.isLoading">Embeding...</div>
             <i class="embed-link-icon"></i>
-            <input ref="embedInput" placeholder="Paste or type a link" @paste.stop type="text" v-model="src" :disabled="!view.editable" />
+            <input ref="embedInput" :placeholder="placeholderText" @paste.stop type="text" v-model="src" :disabled="!view.editable" />
             <button @click="onClickAdd">Add</button>
           </div>
         </div>
