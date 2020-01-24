@@ -30,8 +30,8 @@ export default class LockNode extends Node {
       tr = tr.replaceSelectionWith(type.create(attrs));
       let textSelection = TextSelection.create(
         tr.doc,
-        tr.selection.head,
-        tr.selection.head
+        tr.selection.head + 1,
+        tr.selection.head + 1
       );
       tr = tr.setSelection(textSelection);
       return dispatch(tr);
