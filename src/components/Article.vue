@@ -196,6 +196,7 @@
         </div>
       </editor-floating-menu>
       <editor-content id="editor" class="editor__content" :editor="editor" />
+      <div class="ios">s</div>
     </article>
     <!--
     <vue-json-pretty :path="'res'" :data="data"> </vue-json-pretty>
@@ -424,5 +425,9 @@ figcaption > span.is-empty {
     background: transparent;
     color: white;
   }
+}
+.ios {
+  height: 500px;
+  visibility: hidden;
 }
 </style>
