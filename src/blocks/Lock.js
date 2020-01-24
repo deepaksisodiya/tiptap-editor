@@ -17,7 +17,7 @@ export default class LockNode extends Node {
     return {
       // here you have to specify all values that can be stored in this node
       group: "block",
-      selectable: true,
+      selectable: false,
       // parseDOM and toDOM is still required to make copy and paste work
       parseDOM: [{ tag: this.name }]
     };
