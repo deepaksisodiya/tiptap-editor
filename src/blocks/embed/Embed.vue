@@ -30,6 +30,7 @@
         type="text"
         v-model="caption"
         :disabled="!view.editable"
+        @keyup="handleKeyup"
         placeholder="write caption (optional)"
       />
     </div>
@@ -181,6 +182,23 @@ export default {
     embedUrl(url, provider) {
       if (provider !== "YouTube") return url;
       return "https://www.youtube.com/embed/" + url.split("=")[1];
+    },
+    handleKeyup(event) {
+      let {
+        state: { tr }
+      } = this.view;
+      const pos = this.getPos();
+      if (event.key === "Backspace" && !this.caption) {
+        let textSelection = TextSelection.create(tr.doc, pos, pos + 1);
+        this.view.dispatch(
+          tr.setSelection(textSelection).deleteSelection(this.src)
+        );
+        this.view.focus();
+      } else if (event.key === "Enter") {
+        let textSelection = TextSelection.create(tr.doc, pos + 2, pos + 2);
+        this.view.dispatch(tr.setSelection(textSelection));
+        this.view.focus();
+      }
     }
   }
 };
