@@ -32,7 +32,15 @@ export default class Image extends TiptapImage {
 
   commands({ type }) {
     return attrs => (state, dispatch) => {
-      return dispatch(state.tr.replaceSelectionWith(type.create(attrs)));
+      let tr = state.tr;
+      tr = tr.replaceSelectionWith(type.create(attrs));
+      let textSelection = TextSelection.create(
+        tr.doc,
+        tr.selection.head + 1,
+        tr.selection.head + 1
+      );
+      tr = tr.setSelection(textSelection);
+      return dispatch(tr);
     };
   }
 

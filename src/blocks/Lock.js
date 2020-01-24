@@ -1,5 +1,6 @@
 import { Node } from "tiptap";
 import { chainCommands, exitCode } from "tiptap-commands";
+import { TextSelection } from "tiptap";
 
 export default class LockNode extends Node {
   // name of the component
@@ -24,8 +25,17 @@ export default class LockNode extends Node {
   }
 
   commands({ type }) {
-    return () => (state, dispatch) =>
-      dispatch(state.tr.replaceSelectionWith(type.create()));
+    return attrs => (state, dispatch) => {
+      let tr = state.tr;
+      tr = tr.replaceSelectionWith(type.create(attrs));
+      let textSelection = TextSelection.create(
+        tr.doc,
+        tr.selection.head,
+        tr.selection.head
+      );
+      tr = tr.setSelection(textSelection);
+      return dispatch(tr);
+    };
   }
 
   keys({ type }) {
