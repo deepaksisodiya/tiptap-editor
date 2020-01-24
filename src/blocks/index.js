@@ -3,3 +3,4 @@ export { default as Embed } from "./embed/Embed.js";
 export { default as Image } from "./image/Image.js";
 export { default as Lock } from "./Lock";
 export { default as Title } from "./Title";
+export { default as HorizontalRule } from "./HorizontalRule";

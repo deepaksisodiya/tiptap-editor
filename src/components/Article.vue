@@ -223,13 +223,12 @@ import {
   Link,
   History,
   TrailingNode,
-  HorizontalRule,
   Placeholder
 } from "tiptap-extensions";
 import { contains } from "prosemirror-utils";
 // import VueJsonPretty from "vue-json-pretty";
 
-import { Embed, Image, Lock, Doc, Title } from "./../blocks";
+import { Embed, Image, Lock, Doc, Title, HorizontalRule } from "./../blocks";
 
 import "./../../ui_assets/scss/editor/editor.scss";
 
