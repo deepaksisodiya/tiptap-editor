@@ -39,6 +39,11 @@ export default {
       }
     }
   },
+  mounted() {
+    this.$nextTick(() => {
+      this.$el.scrollIntoView();
+    });
+  },
   methods: {
     handleKeyup(event) {
       let {
