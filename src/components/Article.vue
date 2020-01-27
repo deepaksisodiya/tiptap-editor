@@ -10,7 +10,7 @@
       <ul
         class="highlight-menu"
         :class="{ 'is-active': menu.isActive || linkMenuIsActive }"
-        :style="`left: ${menu.left}px; bottom: ${menu.bottom}px;`"
+        :style="`left: ${menu.left}px; bottom: ${getBottom(menu.bottom)}px;`"
       >
         <li
           class="menububble3__button"
@@ -241,6 +241,7 @@ export default {
   },
   data() {
     return {
+      isAndroid: false,
       imageSrc: "",
       data: null,
       shouldShowFloatingMenu: false,
@@ -281,6 +282,13 @@ export default {
         }
       })
     };
+  },
+  mounted() {
+    const ua = navigator.userAgent.toLowerCase();
+    const isAndroid = ua.indexOf("android") > -1;
+    if (isAndroid) {
+      this.isAndroid = true;
+    }
   },
   methods: {
     showLinkMenu(attrs) {
@@ -350,6 +358,10 @@ export default {
         // console.log("File not supported!");
       }
       this.$refs.fileInput.value = "";
+    },
+    getBottom(bottom) {
+      if (this.isAndroid) return bottom - 113;
+      return bottom;
     }
   },
   watch: {

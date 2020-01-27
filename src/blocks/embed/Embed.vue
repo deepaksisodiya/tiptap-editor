@@ -13,7 +13,9 @@
         v-model="src"
         :disabled="!view.editable"
       />
-      <button @click="onClickAdd">Add</button>
+      <button :class="{ active: isButtonActive }" @click="onClickAdd">
+        Add
+      </button>
     </div>
     <div
       class="embed-input"
@@ -23,16 +25,20 @@
       <span>{{ loadingText }}</span>
     </div>
     <div v-if="embeds.data && embeds.data.type === 'video'">
-      <iframe
-        :src="embedUrl(embeds.data.url, embeds.data.provider_name)"
-      ></iframe>
-      <input
-        type="text"
-        v-model="caption"
-        :disabled="!view.editable"
-        @keyup="handleKeyup"
-        placeholder="write caption (optional)"
-      />
+      <figure>
+        <iframe
+          :src="embedUrl(embeds.data.url, embeds.data.provider_name)"
+        ></iframe>
+        <figcaption>
+          <input
+            type="text"
+            v-model="caption"
+            :disabled="!view.editable"
+            @keyup="handleKeyup"
+            placeholder="write caption (optional)"
+          />
+        </figcaption>
+      </figure>
     </div>
     <div
       class="embed-link-block"
@@ -60,6 +66,7 @@ export default {
   props: ["node", "updateAttrs", "view", "getPos", "options"],
   data() {
     return {
+      isButtonActive: false,
       embeds: {
         isLoading: false,
         isError: false,
@@ -75,6 +82,15 @@ export default {
         this.$nextTick(() => {
           this.$refs.embedInput.focus();
         });
+      }
+    }
+  },
+  watch: {
+    src() {
+      if (this.src) {
+        this.isButtonActive = true;
+      } else {
+        this.isButtonActive = false;
       }
     }
   },
