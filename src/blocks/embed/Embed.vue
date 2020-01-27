@@ -24,22 +24,29 @@
       <i class="loading-icon"></i>
       <span>{{ loadingText }}</span>
     </div>
-    <div v-if="embeds.data && embeds.data.type === 'video'">
+    <div
+      v-if="embeds.data && embeds.data.type === 'video'"
+      class="videoWrapper"
+    >
       <figure>
         <iframe
+          allowfullscreen
+          frameborder="0"
+          width="560"
+          height="349"
           :src="embedUrl(embeds.data.url, embeds.data.provider_name)"
         ></iframe>
-        <figcaption>
-          <input
-            type="text"
-            v-model="caption"
-            :disabled="!view.editable"
-            @keyup="handleKeyup"
-            placeholder="write caption (optional)"
-          />
-        </figcaption>
       </figure>
     </div>
+    <figcaption v-if="embeds.data && embeds.data.type === 'video'">
+      <input
+        type="text"
+        v-model="caption"
+        :disabled="!view.editable"
+        @keyup="handleKeyup"
+        placeholder="write caption (optional)"
+      />
+    </figcaption>
     <div
       class="embed-link-block"
       :class="{ 'no-image': !embeds.data.thumbnail_url }"
@@ -219,3 +226,19 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+.videoWrapper {
+  position: relative;
+  padding-bottom: 56.25%; /* 16:9 */
+  padding-top: 25px;
+  height: 0;
+}
+.videoWrapper iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+</style>
