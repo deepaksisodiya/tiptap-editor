@@ -9,8 +9,8 @@
     >
       <ul
         class="highlight-menu"
-        :class="{ 'is-active': menu.isActive || linkMenuIsActive }"
-        :style="`left: ${menu.left}px; bottom: ${getBottom(menu.bottom)}px;`"
+        :class="{ 'is-active': menu.isActive || linkMenuIsActive, ios: isIOS }"
+        ref="menuUl"
       >
         <li
           class="menububble3__button"
@@ -196,7 +196,7 @@
         </div>
       </editor-floating-menu>
       <editor-content id="editor" class="editor__content" :editor="editor" />
-      <div class="ios">s</div>
+      <div class="test-ios">s</div>
     </article>
     <!--
     <vue-json-pretty :path="'res'" :data="data"> </vue-json-pretty>
@@ -248,6 +248,7 @@ export default {
       editable: true,
       linkUrl: null,
       linkMenuIsActive: false,
+      isIOS: /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream,
       editor: new Editor({
         editable: true,
         extensions: [
@@ -289,6 +290,7 @@ export default {
     if (isAndroid) {
       this.isAndroid = true;
     }
+    this.isIOS && window.setInterval(() => this.fixMenubarforIos(), 100);
   },
   methods: {
     showLinkMenu(attrs) {
@@ -362,6 +364,11 @@ export default {
     getBottom(bottom) {
       if (this.isAndroid) return bottom - 113;
       return bottom;
+    },
+    fixMenubarforIos() {
+      const menuUl = this.$refs.menuUl;
+      const pageTop = window.visualViewport.pageTop;
+      menuUl.style.top = `${pageTop}px`;
     }
   },
   watch: {
@@ -437,7 +444,7 @@ figcaption > span.is-empty {
     color: white;
   }
 }
-.ios {
+.test-ios {
   height: 500px;
   visibility: hidden;
 }
