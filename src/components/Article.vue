@@ -6,6 +6,7 @@
       :editor="editor"
       :keep-in-bounds="keepInBounds"
       v-slot="{ commands, isActive, menu, getMarkAttrs }"
+      ref="menububble"
     >
       <ul
         class="highlight-menu"
@@ -248,7 +249,6 @@ export default {
   },
   data() {
     return {
-      isAndroid: false,
       imageSrc: "",
       data: null,
       shouldShowFloatingMenu: false,
@@ -292,11 +292,9 @@ export default {
     };
   },
   mounted() {
-    const ua = navigator.userAgent.toLowerCase();
-    const isAndroid = ua.indexOf("android") > -1;
-    if (isAndroid) {
-      this.isAndroid = true;
-    }
+    this.$refs.menububble.$watch("menu.isActive", newValue => {
+      if (!newValue) this.linkMenuIsActive = false;
+    });
     this.isIOS && window.setInterval(() => this.fixMenubarforIos(), 100);
   },
   methods: {
@@ -364,10 +362,6 @@ export default {
         // console.log("File not supported!");
       }
       this.$refs.fileInput.value = "";
-    },
-    getBottom(bottom) {
-      if (this.isAndroid) return bottom - 113;
-      return bottom;
     },
     fixMenubarforIos() {
       const menuUl = this.$refs.menuUl;
