@@ -50,10 +50,17 @@
           />
           <button
             class="menububble__button"
+            @click="setLinkUrl(commands.link, linkUrl)"
+            type="button"
+          >
+            add
+          </button>
+          <button
+            class="menububble__button"
             @click="setLinkUrl(commands.link, null)"
             type="button"
           >
-            remove
+            Remove
           </button>
         </form>
         <li
@@ -296,9 +303,6 @@ export default {
     showLinkMenu(attrs) {
       this.linkUrl = attrs.href;
       this.linkMenuIsActive = true;
-      this.$nextTick(() => {
-        this.$refs.linkInput.focus();
-      });
     },
     emptyNodeText(node) {
       if (node.type.name === "title") {
