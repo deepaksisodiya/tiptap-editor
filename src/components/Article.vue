@@ -128,11 +128,13 @@
       <editor-floating-menu
         :editor="editor"
         v-slot="{ commands, isActive, menu }"
+        ref="floatingMenu"
       >
         <div
           class="editor__floating-menu"
           :class="{ 'is-plus-active': menu.isActive }"
           :style="`top: ${menu.top - 20}px`"
+          ref="floatingMenuElement"
         >
           <input
             type="file"
@@ -204,7 +206,6 @@
         </div>
       </editor-floating-menu>
       <editor-content id="editor" class="editor__content" :editor="editor" />
-      <div class="test-ios">s</div>
     </article>
     <!--
     <vue-json-pretty :path="'res'" :data="data"> </vue-json-pretty>
@@ -295,7 +296,19 @@ export default {
     this.$refs.menububble.$watch("menu.isActive", newValue => {
       if (!newValue) this.linkMenuIsActive = false;
     });
-    this.isIOS && window.setInterval(() => this.fixMenubarforIos(), 100);
+
+    if (this.isIOS) {
+      this.$refs.floatingMenu.$watch("menu.top", newValue => {
+        if (
+          newValue >
+          window.visualViewport.pageTop + window.visualViewport.height
+        ) {
+          this.$refs.floatingMenuElement.scrollIntoView(true);
+        }
+      });
+
+      window.setInterval(() => this.fixMenubarforIos(), 100);
+    }
   },
   methods: {
     showLinkMenu(attrs) {
@@ -441,9 +454,5 @@ figcaption > span.is-empty {
     background: transparent;
     color: white;
   }
-}
-.test-ios {
-  height: 500px;
-  visibility: hidden;
 }
 </style>
