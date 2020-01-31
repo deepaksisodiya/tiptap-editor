@@ -206,6 +206,7 @@
         </div>
       </editor-floating-menu>
       <editor-content id="editor" class="editor__content" :editor="editor" />
+      <div class="ios-test-fix">empt</div>
     </article>
     <!--
     <vue-json-pretty :path="'res'" :data="data"> </vue-json-pretty>
@@ -300,7 +301,7 @@ export default {
     if (this.isIOS) {
       this.$refs.floatingMenu.$watch("menu.top", newValue => {
         if (
-          newValue >
+          newValue + 13 >=
           window.visualViewport.pageTop + window.visualViewport.height
         ) {
           this.$refs.floatingMenuElement.scrollIntoView(true);
@@ -454,5 +455,9 @@ figcaption > span.is-empty {
     background: transparent;
     color: white;
   }
+}
+.ios-test-fix {
+  visibility: hidden;
+  height: 500px;
 }
 </style>

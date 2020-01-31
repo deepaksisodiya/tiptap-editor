@@ -41,6 +41,14 @@ export default {
   },
   mounted() {
     this.$nextTick(() => {
+      let tr = this.view.state.tr;
+      let textSelection = TextSelection.create(
+        tr.doc,
+        tr.selection.$head.pos + 2,
+        tr.selection.$head.pos + 2
+      );
+      tr = tr.setSelection(textSelection).scrollIntoView();
+      this.view.dispatch(tr);
       this.$el.scrollIntoView();
     });
   },
