@@ -262,6 +262,9 @@ export default {
         editable: true,
         extensions: [
           new Doc(),
+          new Bold(),
+          new Blockquote(),
+          new Italic(),
           new Title(),
           new Placeholder({
             showOnlyCurrent: false,
@@ -272,9 +275,6 @@ export default {
           new ListItem(),
           new OrderedList(),
           new Link(),
-          new Bold(),
-          new Blockquote(),
-          new Italic(),
           new History(),
           new TrailingNode({
             node: "paragraph",
@@ -353,6 +353,7 @@ export default {
       this.hideFloatingMenu();
     },
     onClickImage() {
+      this.addImageAt = this.editor.view.state.tr.selection.head;
       this.$refs.fileInput.click();
       this.hideFloatingMenu();
     },
@@ -369,7 +370,7 @@ export default {
           const img = new Image();
           img.src = reader.result;
           this.imageSrc = img.src;
-          command({ src: img.src });
+          command({ src: img.src, addImageAt: this.addImageAt });
         };
         reader.readAsDataURL(file);
       } else {

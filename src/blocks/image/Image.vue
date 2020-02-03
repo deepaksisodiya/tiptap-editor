@@ -41,15 +41,14 @@ export default {
   },
   mounted() {
     this.$nextTick(() => {
-      let tr = this.view.state.tr;
-      let textSelection = TextSelection.create(
-        tr.doc,
-        tr.selection.$head.pos + 2,
-        tr.selection.$head.pos + 2
-      );
-      tr = tr.setSelection(textSelection).scrollIntoView();
-      this.view.dispatch(tr);
-      this.$el.scrollIntoView();
+      let {
+        state: { tr }
+      } = this.view;
+      const pos = this.getPos();
+      let textSelection = TextSelection.create(tr.doc, pos + 2, pos + 2);
+      this.view.dispatch(tr.setSelection(textSelection));
+      this.view.focus();
+      this.$el.scrollIntoView(true);
     });
   },
   methods: {
