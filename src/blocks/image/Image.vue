@@ -41,12 +41,6 @@ export default {
   },
   mounted() {
     this.$nextTick(() => {
-      let {
-        state: { tr }
-      } = this.view;
-      const pos = this.getPos();
-      let textSelection = TextSelection.create(tr.doc, pos + 2, pos + 2);
-      this.view.dispatch(tr.setSelection(textSelection));
       this.view.focus();
       this.$el.scrollIntoView(true);
     });

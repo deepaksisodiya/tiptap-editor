@@ -1,5 +1,4 @@
 import { HorizontalRule as TiptapHorizontalRule } from "tiptap-extensions";
-import { TextSelection } from "tiptap";
 
 export default class HorizontalRuleNode extends TiptapHorizontalRule {
   get schema() {
@@ -13,14 +12,10 @@ export default class HorizontalRuleNode extends TiptapHorizontalRule {
 
   commands({ type }) {
     return attrs => (state, dispatch) => {
-      let tr = state.tr;
+      let { tr, schema } = state;
+      if (tr.doc.content.size - tr.selection.head === 1)
+        tr = tr.insert(tr.doc.content.size, schema.nodes["paragraph"].create());
       tr = tr.replaceSelectionWith(type.create(attrs));
-      let textSelection = TextSelection.create(
-        tr.doc,
-        tr.selection.head + 1,
-        tr.selection.head + 1
-      );
-      tr = tr.setSelection(textSelection);
       return dispatch(tr);
     };
   }

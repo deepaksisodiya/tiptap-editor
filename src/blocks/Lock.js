@@ -20,20 +20,24 @@ export default class LockNode extends Node {
       group: "block",
       selectable: false,
       // parseDOM and toDOM is still required to make copy and paste work
-      parseDOM: [{ tag: this.name }]
+      parseDOM: [{ tag: "div" }],
+      toDom: () => ["div"]
     };
   }
 
   commands({ type }) {
     return attrs => (state, dispatch) => {
-      let tr = state.tr;
-      tr = tr.replaceSelectionWith(type.create(attrs));
+      let { tr, schema } = state;
+      if (tr.doc.content.size - tr.selection.head === 1)
+        tr = tr.insert(tr.doc.content.size, schema.nodes["paragraph"].create());
       let textSelection = TextSelection.create(
         tr.doc,
-        tr.selection.head + 1,
-        tr.selection.head + 1
+        tr.selection.head,
+        tr.selection.head
       );
-      tr = tr.setSelection(textSelection);
+      tr = tr
+        .setSelection(textSelection)
+        .replaceSelectionWith(type.create(attrs));
       return dispatch(tr);
     };
   }
@@ -58,8 +62,10 @@ export default class LockNode extends Node {
       },
       props: ["node", "updateAttrs", "view"],
       template: `
-        <div @paste.stop style="text-align:center" contenteditable="false">
-          {{text}}
+        <div>
+          <div @paste.stop style="text-align:center">
+            {{text}}
+          </div>
         </div>
       `
     };

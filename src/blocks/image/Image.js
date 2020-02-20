@@ -16,7 +16,6 @@ export default class ImageNode extends TiptapImage {
         }
       },
       group: "block",
-      draggable: true,
       selectable: false,
       parseDOM: [
         {
@@ -34,7 +33,9 @@ export default class ImageNode extends TiptapImage {
 
   commands({ type }) {
     return ({ src, addImageAt }) => (state, dispatch) => {
-      let { tr } = state;
+      let { tr, schema } = state;
+      if (tr.doc.content.size - addImageAt === 1)
+        tr = tr.insert(tr.doc.content.size, schema.nodes["paragraph"].create());
       let textSelection = TextSelection.create(tr.doc, addImageAt, addImageAt);
       tr = tr
         .setSelection(textSelection)
