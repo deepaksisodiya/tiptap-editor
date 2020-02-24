@@ -1,4 +1,5 @@
 import { Image as TiptapImage } from "tiptap-extensions";
+import { TextSelection } from "tiptap";
 
 import ImageComponent from "./Image.vue";
 
@@ -15,7 +16,6 @@ export default class ImageNode extends TiptapImage {
         }
       },
       group: "block",
-      draggable: true,
       selectable: false,
       parseDOM: [
         {
@@ -32,9 +32,14 @@ export default class ImageNode extends TiptapImage {
   }
 
   commands({ type }) {
-    return attrs => (state, dispatch) => {
-      let tr = state.tr;
-      tr = tr.replaceSelectionWith(type.create(attrs));
+    return ({ src, addImageAt }) => (state, dispatch) => {
+      let { tr, schema } = state;
+      if (tr.doc.content.size - addImageAt === 1)
+        tr = tr.insert(tr.doc.content.size, schema.nodes["paragraph"].create());
+      let textSelection = TextSelection.create(tr.doc, addImageAt, addImageAt);
+      tr = tr
+        .setSelection(textSelection)
+        .replaceSelectionWith(type.create({ src }));
       return dispatch(tr);
     };
   }

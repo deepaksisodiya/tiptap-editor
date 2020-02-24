@@ -13,7 +13,8 @@ export default class Title extends Node {
           tag: "h1"
         }
       ],
-      toDOM: () => ["h1", 0]
+      toDOM: () => ["h1", 0],
+      marks: "bold italic"
     };
   }
 }
