@@ -1,5 +1,5 @@
 <template>
-  <Article />
+  <Article :onUpdatePost="onUpdatePost" />
 </template>
 
 <script>
@@ -9,6 +9,11 @@ export default {
   name: "App",
   components: {
     Article
+  },
+  methods: {
+    onUpdatePost(postJSON) {
+      console.log(postJSON);
+    }
   }
 };
 </script>

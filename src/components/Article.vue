@@ -208,9 +208,7 @@
       <editor-content id="editor" class="editor__content" :editor="editor" />
       <div class="ios-test-fix">empt</div>
     </article>
-    <!--
     <vue-json-pretty :path="'res'" :data="data"> </vue-json-pretty>
-    -->
   </div>
 </template>
 
@@ -236,7 +234,8 @@ import {
   Placeholder
 } from "tiptap-extensions";
 import { contains } from "prosemirror-utils";
-// import VueJsonPretty from "vue-json-pretty";
+import VueJsonPretty from "vue-json-pretty";
+import _debounce from "lodash.debounce";
 
 import { Embed, Image, Lock, Doc, Title, HorizontalRule } from "./../blocks";
 
@@ -244,10 +243,17 @@ import "@/assets/scss/editor.scss";
 
 export default {
   name: "Article",
+  props: {
+    onUpdatePost: {
+      type: Function,
+      required: true
+    }
+  },
   components: {
     EditorContent,
     EditorFloatingMenu,
-    EditorMenuBubble
+    EditorMenuBubble,
+    VueJsonPretty
   },
   data() {
     return {
@@ -287,9 +293,10 @@ export default {
           new HorizontalRule(),
           new Lock()
         ],
-        onUpdate: ({ getJSON }) => {
+        onUpdate: _debounce(({ getJSON }) => {
           this.data = getJSON();
-        }
+          this.onUpdatePost(this.data);
+        }, 300)
       })
     };
   },
