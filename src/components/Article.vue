@@ -240,7 +240,7 @@ import { contains } from "prosemirror-utils";
 
 import { Embed, Image, Lock, Doc, Title, HorizontalRule } from "./../blocks";
 
-import "./../../ui_assets/scss/editor/editor.scss";
+import "@/assets/scss/editor.scss";
 
 export default {
   name: "Article",
