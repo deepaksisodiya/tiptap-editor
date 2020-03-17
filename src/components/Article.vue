@@ -263,7 +263,7 @@ export default {
   data() {
     return {
       imageSrc: "",
-      data: null,
+      data: this.content,
       shouldShowFloatingMenu: false,
       editable: true,
       linkUrl: null,
