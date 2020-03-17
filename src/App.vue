@@ -1,5 +1,8 @@
 <template>
-  <Article :onUpdatePost="onUpdatePost" :content="content" />
+  <div>
+    <button @click="changeContent">Change content</button>
+    <Article :onUpdatePost="onUpdatePost" :content="content" />
+  </div>
 </template>
 
 <script>
@@ -49,6 +52,23 @@ export default {
   methods: {
     onUpdatePost(preData, newData) {
       console.log(preData, newData);
+    },
+    changeContent() {
+      this.content = {
+        type: "doc",
+        content: [
+          ...this.content.content,
+          {
+            type: "paragraph",
+            content: [
+              {
+                type: "text",
+                text: "paragraph 3"
+              }
+            ]
+          }
+        ]
+      };
     }
   }
 };

@@ -404,6 +404,9 @@ export default {
     }
   },
   watch: {
+    content(newValue) {
+      this.editor.setContent(newValue, true);
+    },
     editable() {
       this.editor.setOptions({
         editable: this.editable
