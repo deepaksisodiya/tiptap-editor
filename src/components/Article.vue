@@ -326,7 +326,9 @@ export default {
     }
 
     // init data
-    this.editor.setContent(this.content, true);
+    if (this.content) {
+      this.editor.setContent(this.content, true);
+    }
   },
   methods: {
     showLinkMenu(attrs) {
