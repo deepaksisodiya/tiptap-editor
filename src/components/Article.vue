@@ -249,6 +249,10 @@ export default {
     onUpdatePost: {
       type: Function,
       required: true
+    },
+    content: {
+      type: Object,
+      required: false
     }
   },
   components: {
@@ -320,6 +324,9 @@ export default {
 
       window.setInterval(() => this.fixMenubarforIos(), 100);
     }
+
+    // init data
+    this.editor.setContent(this.content, true);
   },
   methods: {
     showLinkMenu(attrs) {
