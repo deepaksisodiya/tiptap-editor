@@ -4,7 +4,6 @@
       class="embed-input"
       v-if="embeds.data === null && embeds.isLoading === false"
     >
-      <i class="embed-link-icon"></i>
       <input
         ref="embedInput"
         :placeholder="placeholderText"

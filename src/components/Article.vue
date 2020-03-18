@@ -241,7 +241,9 @@ import _debounce from "lodash.debounce";
 
 import { Embed, Image, Lock, Doc, Title, HorizontalRule } from "./../blocks";
 
+import "@/assets/scss/base.scss";
 import "@/assets/scss/editor.scss";
+import "@/assets/scss/article.scss";
 
 export default {
   name: "Article",
