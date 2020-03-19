@@ -14,17 +14,18 @@
         ref="menuUl"
       >
         <li
-          class="menububble3__button"
           @click="commands.bold"
           v-if="!linkMenuIsActive"
         >
           <button>
-            <i class="bold-icon" :class="{ 'is-active': isActive.bold() }"></i>
+            <i
+              class="bold-icon"
+              :class="{ 'is-active': isActive.bold() }"
+            ></i>
           </button>
         </li>
 
         <li
-          class="menububble3__button"
           @click="commands.italic"
           v-if="!linkMenuIsActive"
         >
@@ -37,12 +38,10 @@
         </li>
 
         <form
-          class="menububble__form"
           v-if="linkMenuIsActive"
           @submit.prevent="setLinkUrl(commands.link, linkUrl)"
         >
           <input
-            class="menububble__input"
             type="text"
             v-model="linkUrl"
             placeholder="https://"
@@ -50,14 +49,12 @@
             @keydown.esc="hideLinkMenu"
           />
           <button
-            class="menububble__button"
             @click="setLinkUrl(commands.link, linkUrl)"
             type="button"
           >
             add
           </button>
           <button
-            class="menububble__button"
             @click="setLinkUrl(commands.link, null)"
             type="button"
           >
@@ -66,11 +63,13 @@
         </form>
         <li
           v-else
-          class="menububble__button"
           @click="showLinkMenu(getMarkAttrs('link'))"
         >
           <button>
-            <i class="link-icon" :class="{ 'is-active': isActive.link() }"></i>
+            <i
+              class="link-icon"
+              :class="{ 'is-active': isActive.link() }"
+            ></i>
             <!--
           <span>{{ isActive.link() ? "Update Link" : "Add Link" }}</span>
           --></button>
@@ -205,12 +204,19 @@
           </ul>
         </div>
       </editor-floating-menu>
-      <editor-content id="editor" class="editor__content" :editor="editor" />
+      <editor-content
+        id="editor"
+        class="editor__content"
+        :editor="editor"
+      />
       <div class="ios-test-fix">empt</div>
     </article>
     <!--
-    <vue-json-pretty :path="'res'" :data="data"> </vue-json-pretty>
+    <vue-json-pretty
     -->
+    :path="'res'"
+    :data="data"
+    > </vue-json-pretty>
   </div>
 </template>
 
@@ -469,19 +475,19 @@ figcaption > span.is-empty {
   white-space: pre-wrap;
 }
 
-.menububble3 {
-  &__form {
-    display: flex;
-    align-items: center;
-  }
+// .menububble3 {
+//   &__form {
+//     display: flex;
+//     align-items: center;
+//   }
 
-  &__input {
-    font: inherit;
-    border: none;
-    background: transparent;
-    color: white;
-  }
-}
+//   &__input {
+//     font: inherit;
+//     border: none;
+//     background: transparent;
+//     color: white;
+//   }
+// }
 .ios-test-fix {
   visibility: hidden;
   height: 500px;
