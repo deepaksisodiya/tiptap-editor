@@ -217,6 +217,7 @@ import {
 import { contains } from "prosemirror-utils";
 // import VueJsonPretty from "vue-json-pretty";
 import _debounce from "lodash.debounce";
+import axios from "axios";
 
 import { Embed, Image, Lock, Doc, Title, HorizontalRule } from "./../blocks";
 
@@ -363,20 +364,29 @@ export default {
     previewFiles(command) {
       this.editor.focus();
       const file = this.$refs.fileInput.files[0];
+
       const imageType = /image.*/;
       if (file.type.match(imageType)) {
         const reader = new FileReader();
-        reader.onload = () => {
+        reader.onload = async () => {
           const img = new Image();
           img.src = reader.result;
           this.imageSrc = img.src;
+
+          const formData = new FormData();
+          formData.append(file.name, file);
+          await axios.post("http://139.59.47.96:8000/images", formData, {
+            headers: {
+              "Content-Type": "multipart/form-data"
+            }
+          });
           command({ src: img.src, addImageAt: this.addImageAt });
         };
         reader.readAsDataURL(file);
       } else {
-        // console.log("File not supported!");
+        console.log("File not supported!");
       }
-      this.$refs.fileInput.value = "";
+      // this.$refs.fileInput.value = "";
     },
     fixMenubarforIos() {
       const menuUl = this.$refs.menuUl;
