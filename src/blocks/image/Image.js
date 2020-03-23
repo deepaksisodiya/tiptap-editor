@@ -7,9 +7,6 @@ export default class ImageNode extends TiptapImage {
   get schema() {
     return {
       attrs: {
-        imageUrl: {
-          default: ""
-        },
         src: {},
         alt: {
           default: ""
@@ -25,7 +22,6 @@ export default class ImageNode extends TiptapImage {
           tag: "img[src]",
           getAttrs: dom => ({
             src: dom.getAttribute("src"),
-            imageUrl: dom.getAttribute("imageUrl"),
             alt: dom.getAttribute("alt"),
             caption: dom.getAttribute("caption")
           })
@@ -36,14 +32,14 @@ export default class ImageNode extends TiptapImage {
   }
 
   commands({ type }) {
-    return ({ src, imageUrl, addImageAt }) => (state, dispatch) => {
+    return ({ src, addImageAt }) => (state, dispatch) => {
       let { tr, schema } = state;
       if (tr.doc.content.size - addImageAt === 1)
         tr = tr.insert(tr.doc.content.size, schema.nodes["paragraph"].create());
       let textSelection = TextSelection.create(tr.doc, addImageAt, addImageAt);
       tr = tr
         .setSelection(textSelection)
-        .replaceSelectionWith(type.create({ src, imageUrl }));
+        .replaceSelectionWith(type.create({ src }));
       return dispatch(tr);
     };
   }
