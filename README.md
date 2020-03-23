@@ -47,5 +47,10 @@ const { Article } = Post;
 import 'tiptap-editor/dist/editor.css';
 ```
 
+## Update submodule
+```
+git submodule update --remote
+```
+
 ## Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).

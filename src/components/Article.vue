@@ -13,13 +13,22 @@
         :class="{ 'is-active': menu.isActive || linkMenuIsActive, ios: isIOS }"
         ref="menuUl"
       >
-        <li @click="commands.bold" v-if="!linkMenuIsActive">
+        <li
+          @click="commands.bold"
+          v-if="!linkMenuIsActive"
+        >
           <button>
-            <i class="bold-icon" :class="{ 'is-active': isActive.bold() }"></i>
+            <i
+              class="bold-icon"
+              :class="{ 'is-active': isActive.bold() }"
+            ></i>
           </button>
         </li>
 
-        <li @click="commands.italic" v-if="!linkMenuIsActive">
+        <li
+          @click="commands.italic"
+          v-if="!linkMenuIsActive"
+        >
           <button>
             <i
               class="italic-icon"
@@ -39,16 +48,28 @@
             ref="linkInput"
             @keydown.esc="hideLinkMenu"
           />
-          <button @click="setLinkUrl(commands.link, linkUrl)" type="button">
+          <button
+            @click="setLinkUrl(commands.link, linkUrl)"
+            type="button"
+          >
             add
           </button>
-          <button @click="setLinkUrl(commands.link, null)" type="button">
+          <button
+            @click="setLinkUrl(commands.link, null)"
+            type="button"
+          >
             Remove
           </button>
         </form>
-        <li v-else @click="showLinkMenu(getMarkAttrs('link'))">
+        <li
+          v-else
+          @click="showLinkMenu(getMarkAttrs('link'))"
+        >
           <button>
-            <i class="link-icon" :class="{ 'is-active': isActive.link() }"></i>
+            <i
+              class="link-icon"
+              :class="{ 'is-active': isActive.link() }"
+            ></i>
             <!--
           <span>{{ isActive.link() ? "Update Link" : "Add Link" }}</span>
           --></button>
@@ -168,13 +189,20 @@
               <i class="link-icon"></i>
             </li>
 
-            <li v-if="shouldShowFloatingMenu">
+            <li
+              v-if="shouldShowFloatingMenu"
+              style="display:none"
+            >
               <i class="kitchensink-divider"></i>
             </li>
 
+            <!--
+              For now disable the lock icon from floating menu kitchsink for pre-alpha relese
+              later do like :style="`display: ${hasLock ? 'none' : 'inline'}`"
+            -->
             <li
               v-if="shouldShowFloatingMenu"
-              :style="`display: ${hasLock ? 'none' : 'inline'}`"
+              :style="`display: ${hasLock ? 'none' : 'none'}`"
               :class="{ 'is-active': isActive.lock() }"
               @click="onClickMenuItem(commands.lock)"
             >
@@ -183,12 +211,19 @@
           </ul>
         </div>
       </editor-floating-menu>
-      <editor-content id="editor" class="editor__content" :editor="editor" />
+      <editor-content
+        id="editor"
+        class="editor__content"
+        :editor="editor"
+      />
       <div class="ios-test-fix">empt</div>
     </article>
 
     <!--
-    <vue-json-pretty :path="'res'" :data="data"> </vue-json-pretty>
+    <vue-json-pretty
+      :path="'res'"
+      :data="data"
+    > </vue-json-pretty>
     -->
   </div>
 </template>
