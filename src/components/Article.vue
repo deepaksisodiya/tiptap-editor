@@ -410,12 +410,21 @@ export default {
 
           const formData = new FormData();
           formData.append(file.name, file);
-          await axios.post("http://139.59.47.96:8000/images", formData, {
-            headers: {
-              "Content-Type": "multipart/form-data"
+          // TODO handle image loading here later
+          const response = await axios.post(
+            "http://139.59.47.96:8000/images",
+            formData,
+            {
+              headers: {
+                "Content-Type": "multipart/form-data"
+              }
             }
+          );
+          command({
+            src: img.src,
+            imageUrl: response.data.url,
+            addImageAt: this.addImageAt
           });
-          command({ src: img.src, addImageAt: this.addImageAt });
         };
         reader.readAsDataURL(file);
       } else {
