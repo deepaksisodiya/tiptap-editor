@@ -421,7 +421,7 @@ export default {
             }
           );
           command({
-            src: `//${response.data.url}`,
+            src: response.data.url,
             addImageAt: this.addImageAt
           });
         };
