@@ -1,9 +1,13 @@
 import { Image as TiptapImage } from "tiptap-extensions";
 import { TextSelection } from "tiptap";
 
-import ImageComponent from "./Image.vue";
+import ImageComponent from "./FeatureImage.vue";
 
 export default class ImageNode extends TiptapImage {
+  get name() {
+    return "featureimage";
+  }
+
   get schema() {
     return {
       attrs: {
