@@ -412,7 +412,7 @@ export default {
           formData.append(file.name, file);
           // TODO handle image loading here later
           const response = await axios.post(
-            "http://139.59.47.96:8000/images",
+            "https://api.scrollstack.com/images",
             formData,
             {
               headers: {
@@ -421,7 +421,7 @@ export default {
             }
           );
           command({
-            src: `http://${response.data.url}`,
+            src: `//${response.data.url}`,
             addImageAt: this.addImageAt
           });
         };
