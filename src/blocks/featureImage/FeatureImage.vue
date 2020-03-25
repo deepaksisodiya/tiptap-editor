@@ -1,15 +1,13 @@
 <template>
-  <div>
+  <div :class="{ 'upload-picture-block': !src }" @click="addImage">
     <input
       type="file"
       ref="fileInput"
       style="display:none"
       @change="previewFiles()"
     />
-    <div v-if="!src" class="upload-picture-block" @click="addImage">
-      <i class="upload-icon"></i>
-      <span>Upload feature image (optional)</span>
-    </div>
+    <i class="upload-icon"></i>
+    <span>Upload feature image (optional)</span>
     <figure v-if="src" class="featured-image">
       <img :src="src" />
       <figcaption>
@@ -108,7 +106,7 @@ export default {
       // this.$refs.fileInput.value = "";
     },
     addImage() {
-      this.$refs.fileInput.click();
+      if (!this.src) this.$refs.fileInput.click();
     }
   }
 };

@@ -219,8 +219,7 @@ import {
   Italic,
   Link,
   History,
-  TrailingNode,
-  Placeholder
+  TrailingNode
 } from "tiptap-extensions";
 import { contains } from "prosemirror-utils";
 // import VueJsonPretty from "vue-json-pretty";
@@ -237,6 +236,8 @@ import {
   HorizontalRule,
   Header
 } from "./../blocks";
+
+import Placeholder from "./../extensions/Placeholder";
 
 import "@/assets/scss/base.scss";
 import "@/assets/scss/editor.scss";
@@ -337,7 +338,7 @@ export default {
       this.linkMenuIsActive = true;
     },
     emptyNodeText(node) {
-      if (node.type.name === "title") {
+      if (node.type.name === "header") {
         return "Title";
       }
       if (this.editor) {

@@ -13,6 +13,7 @@
     "core-js": "^3.3.2",
     "lodash.debounce": "^4.0.8",
     "prosemirror-utils": "^0.9.6",
+    "prosemirror-view": "^1.14.5",
     "tiptap": "^1.26.4",
     "tiptap-commands": "^1.12.4",
     "tiptap-extensions": "^1.28.4",
