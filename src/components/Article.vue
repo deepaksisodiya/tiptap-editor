@@ -295,7 +295,7 @@ export default {
           new Image(),
           new FeatureImage(),
           new Embed({
-            baseUrl: "http://139.59.32.245:8000/metadata"
+            baseUrl: "https://api.scrollstack.com/embeds/metadata"
           }),
           new HorizontalRule(),
           new Lock()
