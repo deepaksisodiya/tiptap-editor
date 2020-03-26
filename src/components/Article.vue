@@ -104,7 +104,7 @@
     <!-- menububble end -->
 
     <article>
-      <input type="text" placeholder="Title" v-model="title" />
+      <input type="text" placeholder="Title" v-model="articleTitle" />
       <editor-floating-menu
         :editor="editor"
         v-slot="{ commands, isActive, menu }"
@@ -193,12 +193,7 @@
       <div class="ios-test-fix">empt</div>
     </article>
 
-    <!--
-    <vue-json-pretty
-      :path="'res'"
-      :data="data"
-    > </vue-json-pretty>
-    -->
+    <vue-json-pretty :path="'res'" :data="data"> </vue-json-pretty>
   </div>
 </template>
 
@@ -224,7 +219,7 @@ import {
   Placeholder
 } from "tiptap-extensions";
 import { contains } from "prosemirror-utils";
-// import VueJsonPretty from "vue-json-pretty";
+import VueJsonPretty from "vue-json-pretty";
 import _debounce from "lodash.debounce";
 import axios from "axios";
 
@@ -253,18 +248,23 @@ export default {
     content: {
       type: Object,
       required: false
+    },
+    title: {
+      type: String,
+      required: false
     }
   },
   components: {
+    VueJsonPretty,
     EditorContent,
     EditorFloatingMenu,
     EditorMenuBubble
   },
   data() {
     return {
-      title: "",
-      imageSrc: "",
+      articleTitle: this.title,
       data: this.content,
+      imageSrc: "",
       shouldShowFloatingMenu: false,
       editable: true,
       linkUrl: null,
@@ -302,10 +302,8 @@ export default {
           new Lock()
         ],
         onUpdate: _debounce(({ getJSON }) => {
-          const preData = this.data;
           this.data = getJSON();
-          const newData = this.data;
-          this.onUpdatePost(preData, newData, this.title);
+          this.onUpdatePost(this.data, this.articleTitle);
         }, 300)
       })
     };
@@ -424,8 +422,8 @@ export default {
     }
   },
   watch: {
-    title: _debounce(function(title) {
-      this.onUpdatePost(this.data, this.data, title);
+    articleTitle: _debounce(articleTitle => {
+      this.onUpdatePost(this.data, articleTitle);
     }, 300),
     content(newValue) {
       this.data = newValue;
