@@ -6,8 +6,10 @@
       style="display:none"
       @change="previewFiles()"
     />
-    <i class="upload-icon"></i>
-    <span>Upload feature image (optional)</span>
+    <template v-if="!src">
+      <i class="upload-icon"></i>
+      <span>Upload feature image (optional)</span>
+    </template>
     <figure v-if="src" class="featured-image">
       <img :src="src" />
       <figcaption>
