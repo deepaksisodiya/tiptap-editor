@@ -14,34 +14,7 @@ export default {
     return {
       content: {
         type: "doc",
-        content: [
-          {
-            type: "title",
-            content: [
-              {
-                type: "text",
-                text: "title of the doc"
-              }
-            ]
-          },
-          {
-            type: "paragraph",
-            content: [
-              {
-                type: "text",
-                text: "paragraph 1"
-              }
-            ]
-          },
-          {
-            type: "image",
-            attrs: {
-              src: "http://139.59.47.96:8000/images/hfxoqmivbh1584967545.jpeg",
-              alt: "",
-              caption: ""
-            }
-          }
-        ]
+        content: []
       }
     };
   },
