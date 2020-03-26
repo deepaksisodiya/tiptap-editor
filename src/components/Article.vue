@@ -426,7 +426,7 @@ export default {
     title: function() {
       this.articleTitle = this.title;
     },
-    articleTitle: _debounce(articleTitle => {
+    articleTitle: _debounce(function(articleTitle) {
       this.onUpdatePost(this.data, articleTitle);
     }, 300),
     content(newValue) {
