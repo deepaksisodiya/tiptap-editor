@@ -49,8 +49,8 @@ export default {
     Article
   },
   methods: {
-    onUpdatePost(preData, newData) {
-      console.log(preData, newData);
+    onUpdatePost(preData, newData, title) {
+      console.log(preData, newData, title);
     },
     changeContent() {
       this.content = {

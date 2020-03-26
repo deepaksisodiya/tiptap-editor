@@ -17,7 +17,7 @@ export default class EmbedNode extends Node {
     return {
       attrs: {
         src: {
-          default: null
+          default: {}
         },
         caption: {
           default: null

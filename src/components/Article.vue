@@ -104,6 +104,7 @@
     <!-- menububble end -->
 
     <article>
+      <input type="text" placeholder="Title" v-model="title" />
       <editor-floating-menu
         :editor="editor"
         v-slot="{ commands, isActive, menu }"
@@ -262,6 +263,7 @@ export default {
   },
   data() {
     return {
+      title: "",
       imageSrc: "",
       data: this.content,
       shouldShowFloatingMenu: false,
@@ -304,7 +306,7 @@ export default {
           const preData = this.data;
           this.data = getJSON();
           const newData = this.data;
-          this.onUpdatePost(preData, newData);
+          this.onUpdatePost(preData, newData, this.title);
         }, 300)
       })
     };
@@ -423,6 +425,9 @@ export default {
     }
   },
   watch: {
+    title: _debounce(function(title) {
+      this.onUpdatePost(this.data, this.data, title);
+    }, 500),
     content(newValue) {
       this.data = newValue;
       this.editor.setContent(newValue, true);
