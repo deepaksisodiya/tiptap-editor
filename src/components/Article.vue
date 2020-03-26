@@ -423,6 +423,9 @@ export default {
     }
   },
   watch: {
+    title: function() {
+      this.articleTitle = this.title;
+    },
     articleTitle: _debounce(articleTitle => {
       this.onUpdatePost(this.data, articleTitle);
     }, 300),
