@@ -369,8 +369,8 @@ export default {
       command();
       this.hideFloatingMenu();
     },
-    onClickEmbed(command, embedType) {
-      command({ embedType });
+    onClickEmbed(command, type) {
+      command({ type });
       this.hideFloatingMenu();
     },
     onClickImage() {

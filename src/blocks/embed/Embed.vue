@@ -1,30 +1,34 @@
 <template>
   <div>
     <div
+      v-if="!embeds.data.url && embeds.isLoading === false"
       class="embed-input"
-      v-if="embeds.data === null && embeds.isLoading === false"
     >
       <input
         ref="embedInput"
         :placeholder="placeholderText"
         @paste.stop
         type="text"
-        v-model="src"
+        v-model="url"
         :disabled="!view.editable"
       />
-      <button :class="{ active: isButtonActive }" @click="onClickAdd">
+      <button
+        :disabled="!isButtonActive"
+        :class="{ active: isButtonActive }"
+        @click="onClickAdd"
+      >
         Add
       </button>
     </div>
     <div
       class="embed-input"
-      v-if="embeds.data === null && embeds.isLoading === true"
+      v-if="!embeds.data.url && embeds.isLoading === true"
     >
       <i class="loading-icon"></i>
       <span>{{ loadingText }}</span>
     </div>
     <div
-      v-if="embeds.data && embeds.data.type === 'video'"
+      v-if="embeds.data.url && embeds.data.type === 'video'"
       class="videoWrapper"
     >
       <figure>
@@ -37,7 +41,7 @@
         ></iframe>
       </figure>
     </div>
-    <figcaption v-if="embeds.data && embeds.data.type === 'video'">
+    <figcaption v-if="embeds.data.url && embeds.data.type === 'video'">
       <input
         type="text"
         v-model="caption"
@@ -47,9 +51,9 @@
       />
     </figcaption>
     <div
+      v-if="embeds.data.url && embeds.data.type === 'link'"
       class="embed-link-block"
       :class="{ 'no-image': !embeds.data.thumbnail_url }"
-      v-if="embeds.data && embeds.data.type === 'link'"
     >
       <div class="content">
         <h1>{{ embeds.data.title }}</h1>
@@ -76,24 +80,41 @@ export default {
       embeds: {
         isLoading: false,
         isError: false,
-        data: null
+        data: {
+          title: "",
+          author_name: "",
+          type: "",
+          url: "",
+          thumbnail_url: "",
+          thumbnail_width: 0,
+          thumbnail_height: 0,
+          provider_name: ""
+        }
       }
     };
   },
   mounted() {
-    if (this.validURL(this.src)) {
-      this.embeds.data = { iframeUrl: this.src };
+    if (this.url) {
+      const data = {
+        title: this.node.attrs.title,
+        url: this.node.attrs.url,
+        author_name: this.node.attrs.author_name,
+        thumbnail_url: this.node.attrs.thumbnail_url,
+        thumbnail_width: this.node.attrs.thumbnail_width,
+        thumbnail_height: this.node.attrs.thumbnail_height,
+        provider_name: this.node.attrs.provider_name,
+        type: this.node.attrs.type
+      };
+      this.embeds.data = data;
     } else {
-      if (!this.src) {
-        this.$nextTick(() => {
-          this.$refs.embedInput.focus();
-        });
-      }
+      this.$nextTick(() => {
+        this.$refs.embedInput.focus();
+      });
     }
   },
   watch: {
-    src() {
-      if (this.src) {
+    url() {
+      if (this.url) {
         this.isButtonActive = true;
       } else {
         this.isButtonActive = false;
@@ -101,13 +122,13 @@ export default {
     }
   },
   computed: {
-    src: {
+    url: {
       get() {
-        return this.node.attrs.src;
+        return this.node.attrs.url;
       },
-      set(src) {
+      set(url) {
         this.updateAttrs({
-          src
+          url
         });
       }
     },
@@ -122,13 +143,13 @@ export default {
       }
     },
     placeholderText() {
-      if (this.node.attrs.embedType === "link") {
+      if (this.node.attrs.type === "link") {
         return "Paste or type a link";
       }
       return "Paste or type a video";
     },
     loadingText() {
-      if (this.node.attrs.embedType === "link") {
+      if (this.node.attrs.type === "link") {
         return "Linking video";
       }
       return "Embedding video";
@@ -136,8 +157,8 @@ export default {
   },
   methods: {
     async onClickAdd() {
-      if (!this.src) return;
-      const isUrl = this.validURL(this.src);
+      if (!this.url) return;
+      const isUrl = this.validURL(this.url);
 
       if (!isUrl) {
         this.createAndMovetoNextParagraph();
@@ -146,11 +167,20 @@ export default {
         this.embeds.isError = false;
         try {
           const response = await axios(
-            `${this.options.baseUrl}?url=${this.src}`
+            `${this.options.baseUrl}?url=${this.url}`
           );
           this.embeds.data = response.data;
           // for copy pasting to work
-          this.src = response.data.iframeUrl;
+          this.updateAttrs({
+            title: response.data.title,
+            author_name: response.data.author_name,
+            url: response.data.url,
+            thumbnail_url: response.data.thumbnail_url,
+            thumbnail_width: response.data.thumbnail_width,
+            thumbnail_height: response.data.thumbnail_height,
+            provider_name: response.data.provider_name,
+            type: response.data.type
+          });
         } catch (error) {
           this.embeds.isError = true;
         } finally {
@@ -173,16 +203,16 @@ export default {
       const pos = this.getPos();
       // replce embeds with paragraph
       let textSelection = TextSelection.create(tr.doc, pos, pos + 1);
-      tr = tr.setSelection(textSelection).insertText(this.src);
+      tr = tr.setSelection(textSelection).insertText(this.url);
 
       // create new paragraph
       const type = schema.nodes["paragraph"];
-      tr = tr.insert(pos + this.src.length + 2, type.create());
+      tr = tr.insert(pos + this.url.length + 2, type.create());
       // move cursor to new paragraph
       textSelection = TextSelection.create(
         tr.doc,
-        pos + this.src.length + 2,
-        pos + this.src.length + 2
+        pos + this.url.length + 2,
+        pos + this.url.length + 2
       );
       tr = tr.setSelection(textSelection);
       this.view.dispatch(tr);
@@ -213,7 +243,7 @@ export default {
       if (event.key === "Backspace" && !this.caption) {
         let textSelection = TextSelection.create(tr.doc, pos, pos + 1);
         this.view.dispatch(
-          tr.setSelection(textSelection).deleteSelection(this.src)
+          tr.setSelection(textSelection).deleteSelection(this.url)
         );
         this.view.focus();
       } else if (event.key === "Enter") {

@@ -9,20 +9,38 @@ export default class EmbedNode extends Node {
 
   get defaultOptions() {
     return {
-      embedType: "video"
+      type: "video"
     };
   }
 
   get schema() {
     return {
       attrs: {
-        src: {
-          default: {}
+        title: {
+          default: ""
+        },
+        author_name: {
+          default: ""
+        },
+        type: {
+          default: ""
+        },
+        url: {
+          default: ""
+        },
+        thumbnail_url: {
+          default: ""
+        },
+        thumbnail_width: {
+          default: ""
+        },
+        thumbnail_height: {
+          default: ""
+        },
+        provider_name: {
+          default: ""
         },
         caption: {
-          default: null
-        },
-        embedType: {
           default: null
         }
       },
@@ -34,7 +52,14 @@ export default class EmbedNode extends Node {
           tag: this.name,
           getAttrs: dom => {
             return {
-              src: dom.getAttribute("src"),
+              title: dom.getAttribute("title"),
+              author_name: dom.getAttribute("author_name"),
+              type: dom.getAttribute("type"),
+              url: dom.getAttribute("url"),
+              thumbnail_url: dom.getAttribute("thumbnail_url"),
+              thumbnail_width: dom.getAttribute("thumbnail_width"),
+              thumbnail_height: dom.getAttribute("thumbnail_height"),
+              provider_name: dom.getAttribute("provider_name"),
               caption: dom.getAttribute("caption")
             };
           }
