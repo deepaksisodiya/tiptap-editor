@@ -278,7 +278,9 @@ export default {
           let title = "";
           if (headerContent) {
             title =
-              headerContent[0].content[0] && headerContent[0].content[0].text;
+              headerContent[0].content &&
+              headerContent[0].content[0] &&
+              headerContent[0].content[0].text;
             newData.content[0].content.shift();
           }
           this.onUpdatePost(newData, title);
@@ -318,10 +320,15 @@ export default {
       this.linkMenuIsActive = true;
     },
     addTitle(data, title) {
-      data.content[0].content[0].content = {
-        type: "title",
-        content: [{ type: "text", text: title }]
-      };
+      let newData = data;
+      newData.content[0].content = [
+        {
+          type: "title",
+          content: [{ type: "text", text: title }]
+        },
+        data.content[0].content[0]
+      ];
+      return newData;
     },
     emptyNodeText(node) {
       if (node.type.name === "header") {
@@ -412,7 +419,6 @@ export default {
     content(newValue) {
       if (newValue) {
         const newContent = this.addTitle(newValue, this.title);
-        console.log(newContent);
         this.editor.setContent(newContent, false);
       }
     },
