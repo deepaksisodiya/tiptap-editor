@@ -272,7 +272,6 @@ export default {
           new Lock()
         ],
         onUpdate: _debounce(({ getJSON }) => {
-          const preData = this.data;
           this.data = getJSON();
           const newData = { ...this.data };
           const headerContent = newData.content[0].content;
@@ -282,7 +281,7 @@ export default {
               headerContent[0].content[0] && headerContent[0].content[0].text;
             newData.content[0].content.shift();
           }
-          this.onUpdatePost(preData, newData, title);
+          this.onUpdatePost(newData, title);
         }, 300)
       })
     };
@@ -306,14 +305,23 @@ export default {
     }
 
     // init data
+    console.log(this.content);
     if (this.content) {
-      this.editor.setContent(this.addTitle(this.content, this.title), true);
+      const newContent = this.addTitle(this.content, this.title);
+      console.log(newContent);
+      this.editor.setContent(newContent, false);
     }
   },
   methods: {
     showLinkMenu(attrs) {
       this.linkUrl = attrs.href;
       this.linkMenuIsActive = true;
+    },
+    addTitle(data, title) {
+      data.content[0].content[0].content = {
+        type: "title",
+        content: [{ type: "text", text: title }]
+      };
     },
     emptyNodeText(node) {
       if (node.type.name === "header") {
@@ -402,20 +410,16 @@ export default {
   },
   watch: {
     content(newValue) {
-      this.data = newValue;
-      if (newValue)
-        this.editor.setContent(this.addTitle(newValue, this.title), true);
+      if (newValue) {
+        const newContent = this.addTitle(newValue, this.title);
+        console.log(newContent);
+        this.editor.setContent(newContent, false);
+      }
     },
     editable() {
       this.editor.setOptions({
         editable: this.editable
       });
-    },
-    addTitle(data, title) {
-      data.content[0].content[0].content = {
-        type: "title",
-        content: [{ type: "text", text: title }]
-      };
     },
     shouldShowFloatingMenu() {
       const {
