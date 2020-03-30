@@ -272,8 +272,17 @@ export default {
           new Lock()
         ],
         onUpdate: _debounce(({ getJSON }) => {
+          const preData = this.data;
           this.data = getJSON();
-          this.onUpdatePost(this.data);
+          const newData = { ...this.data };
+          const headerContent = newData.content[0].content;
+          let title = "";
+          if (headerContent) {
+            title =
+              headerContent[0].content[0] && headerContent[0].content[0].text;
+            newData.content[0].content.shift();
+          }
+          this.onUpdatePost(preData, newData, title);
         }, 300)
       })
     };
@@ -298,7 +307,7 @@ export default {
 
     // init data
     if (this.content) {
-      this.editor.setContent(this.content, true);
+      this.editor.setContent(this.addTitle(this.content, this.title), true);
     }
   },
   methods: {
@@ -394,12 +403,19 @@ export default {
   watch: {
     content(newValue) {
       this.data = newValue;
-      this.editor.setContent(newValue, true);
+      if (newValue)
+        this.editor.setContent(this.addTitle(newValue, this.title), true);
     },
     editable() {
       this.editor.setOptions({
         editable: this.editable
       });
+    },
+    addTitle(data, title) {
+      data.content[0].content[0].content = {
+        type: "title",
+        content: [{ type: "text", text: title }]
+      };
     },
     shouldShowFloatingMenu() {
       const {
