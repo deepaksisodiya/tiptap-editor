@@ -37,7 +37,7 @@
           frameborder="0"
           width="560"
           height="349"
-          :src="embedUrl(embeds.data.url, embeds.data.provider_name)"
+          :src="embedUrl(embeds.data)"
         ></iframe>
       </figure>
     </div>
@@ -88,7 +88,8 @@ export default {
           thumbnail_url: "",
           thumbnail_width: 0,
           thumbnail_height: 0,
-          provider_name: ""
+          provider_name: "",
+          html: ""
         }
       }
     };
@@ -103,7 +104,8 @@ export default {
         thumbnail_width: this.node.attrs.thumbnail_width,
         thumbnail_height: this.node.attrs.thumbnail_height,
         provider_name: this.node.attrs.provider_name,
-        type: this.node.attrs.type
+        type: this.node.attrs.type,
+        html: this.node.attrs.html
       };
       this.embeds.data = data;
     } else {
@@ -179,7 +181,8 @@ export default {
             thumbnail_width: response.data.thumbnail_width,
             thumbnail_height: response.data.thumbnail_height,
             provider_name: response.data.provider_name,
-            type: response.data.type
+            type: response.data.type,
+            html: response.data.html
           });
         } catch (error) {
           this.embeds.isError = true;
@@ -231,9 +234,13 @@ export default {
       ); // fragment locator
       return !!pattern.test(str);
     },
-    embedUrl(url, provider) {
-      if (provider !== "YouTube") return url;
-      return "https://www.youtube.com/embed/" + url.split("=")[1];
+    embedUrl(data) {
+      if (data.provider_name !== "YouTube") return data.url;
+
+      const div = document.createElement("div");
+      div.innerHTML = data.html;
+      const iframeNode = div.getElementsByTagName("iframe")[0];
+      return iframeNode.src;
     },
     handleKeyup(event) {
       let {

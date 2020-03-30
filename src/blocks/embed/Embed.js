@@ -42,6 +42,9 @@ export default class EmbedNode extends Node {
         },
         caption: {
           default: null
+        },
+        html: {
+          default: ""
         }
       },
       group: "block",
@@ -60,7 +63,8 @@ export default class EmbedNode extends Node {
               thumbnail_width: dom.getAttribute("thumbnail_width"),
               thumbnail_height: dom.getAttribute("thumbnail_height"),
               provider_name: dom.getAttribute("provider_name"),
-              caption: dom.getAttribute("caption")
+              caption: dom.getAttribute("caption"),
+              html: dom.getAttribute("html")
             };
           }
         }
