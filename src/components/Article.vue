@@ -21,17 +21,11 @@
 
         <li @click="commands.italic" v-if="!linkMenuIsActive">
           <button>
-            <i
-              class="italic-icon"
-              :class="{ 'is-active': isActive.italic() }"
-            ></i>
+            <i class="italic-icon" :class="{ 'is-active': isActive.italic() }"></i>
           </button>
         </li>
 
-        <form
-          v-if="linkMenuIsActive"
-          @submit.prevent="setLinkUrl(commands.link, linkUrl)"
-        >
+        <form v-if="linkMenuIsActive" @submit.prevent="setLinkUrl(commands.link, linkUrl)">
           <input
             type="text"
             v-model="linkUrl"
@@ -39,12 +33,8 @@
             ref="linkInput"
             @keydown.esc="hideLinkMenu"
           />
-          <button @click="setLinkUrl(commands.link, linkUrl)" type="button">
-            add
-          </button>
-          <button @click="setLinkUrl(commands.link, null)" type="button">
-            Remove
-          </button>
+          <button @click="setLinkUrl(commands.link, linkUrl)" type="button">add</button>
+          <button @click="setLinkUrl(commands.link, null)" type="button">Remove</button>
         </form>
         <li v-else @click="showLinkMenu(getMarkAttrs('link'))">
           <button>
@@ -67,10 +57,7 @@
           v-if="!linkMenuIsActive"
         >
           <button>
-            <i
-              class="large-heading-icon"
-              :class="{ 'is-active': isActive.heading({ level: 3 }) }"
-            ></i>
+            <i class="large-heading-icon" :class="{ 'is-active': isActive.heading({ level: 3 }) }"></i>
           </button>
         </li>
 
@@ -80,23 +67,13 @@
           v-if="!linkMenuIsActive"
         >
           <button>
-            <i
-              class="small-heading-icon"
-              :class="{ 'is-active': isActive.heading({ level: 5 }) }"
-            ></i>
+            <i class="small-heading-icon" :class="{ 'is-active': isActive.heading({ level: 5 }) }"></i>
           </button>
         </li>
 
-        <li
-          class="menububble__button"
-          @click="commands.blockquote"
-          v-if="!linkMenuIsActive"
-        >
+        <li class="menububble__button" @click="commands.blockquote" v-if="!linkMenuIsActive">
           <button>
-            <i
-              class="quote-icon"
-              :class="{ 'is-active': isActive.blockquote() }"
-            ></i>
+            <i class="quote-icon" :class="{ 'is-active': isActive.blockquote() }"></i>
           </button>
         </li>
       </ul>
@@ -104,7 +81,6 @@
     <!-- menububble end -->
 
     <article>
-      <input type="text" placeholder="Title" v-model="articleTitle" />
       <editor-floating-menu
         :editor="editor"
         v-slot="{ commands, isActive, menu }"
@@ -124,16 +100,9 @@
           />
           <ul class="kitchensink">
             <li @click="toggleFloatingMenu">
-              <i
-                class="add-icon"
-                :class="{ 'close-icon': shouldShowFloatingMenu }"
-              ></i>
+              <i class="add-icon" :class="{ 'close-icon': shouldShowFloatingMenu }"></i>
             </li>
-            <li
-              class="menubar__button"
-              @click="onClickImage()"
-              v-if="shouldShowFloatingMenu"
-            >
+            <li class="menubar__button" @click="onClickImage()" v-if="shouldShowFloatingMenu">
               <i class="image-icon"></i>
             </li>
             <li
@@ -217,8 +186,7 @@ import {
   Italic,
   Link,
   History,
-  TrailingNode,
-  Placeholder
+  TrailingNode
 } from "tiptap-extensions";
 import { contains } from "prosemirror-utils";
 // import VueJsonPretty from "vue-json-pretty";
@@ -235,6 +203,8 @@ import {
   HorizontalRule,
   Header
 } from "./../blocks";
+
+import Placeholder from "./../extensions/Placeholder";
 
 import "@/assets/scss/base.scss";
 import "@/assets/scss/editor.scss";
@@ -263,7 +233,6 @@ export default {
   },
   data() {
     return {
-      articleTitle: this.title,
       data: this.content,
       imageSrc: "",
       shouldShowFloatingMenu: false,
@@ -304,7 +273,17 @@ export default {
         ],
         onUpdate: _debounce(({ getJSON }) => {
           this.data = getJSON();
-          this.onUpdatePost(this.data, this.articleTitle);
+          const newData = { ...this.data };
+          const headerContent = newData.content[0].content;
+          let title = "";
+          if (headerContent) {
+            title =
+              headerContent[0].content &&
+              headerContent[0].content[0] &&
+              headerContent[0].content[0].text;
+            newData.content[0].content.shift();
+          }
+          this.onUpdatePost(newData, title);
         }, 300)
       })
     };
@@ -328,14 +307,28 @@ export default {
     }
 
     // init data
+    console.log(this.content);
     if (this.content) {
-      this.editor.setContent(this.content, true);
+      const newContent = this.addTitle(this.content, this.title);
+      console.log(newContent);
+      this.editor.setContent(newContent, false);
     }
   },
   methods: {
     showLinkMenu(attrs) {
       this.linkUrl = attrs.href;
       this.linkMenuIsActive = true;
+    },
+    addTitle(data, title) {
+      let newData = data;
+      newData.content[0].content = [
+        {
+          type: "title",
+          content: [{ type: "text", text: title }]
+        },
+        data.content[0].content[0]
+      ];
+      return newData;
     },
     emptyNodeText(node) {
       if (node.type.name === "header") {
@@ -423,15 +416,11 @@ export default {
     }
   },
   watch: {
-    title: function() {
-      this.articleTitle = this.title;
-    },
-    articleTitle: _debounce(function(articleTitle) {
-      this.onUpdatePost(this.data, articleTitle);
-    }, 300),
     content(newValue) {
-      this.data = newValue;
-      this.editor.setContent(newValue, true);
+      if (newValue) {
+        const newContent = this.addTitle(newValue, this.title);
+        this.editor.setContent(newContent, false);
+      }
     },
     editable() {
       this.editor.setOptions({

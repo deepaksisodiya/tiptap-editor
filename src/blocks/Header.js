@@ -7,7 +7,7 @@ export default class Title extends Node {
 
   get schema() {
     return {
-      content: "featureimage",
+      content: "title featureimage",
       selectable: false,
       parseDOM: [
         {
