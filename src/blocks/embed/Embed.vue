@@ -53,11 +53,24 @@
     <div
       v-if="embeds.data.url && embeds.data.type === 'link'"
       class="embed-link-block"
-      :class="{ 'no-image': !embeds.data.thumbnail_url }"
+      :class="{
+        'no-image': !embeds.data.thumbnail_url,
+        'full-width-image': !isSquareImage,
+        'link-only': isOnlyLink
+      }"
     >
-      <div class="content">
-        <h1>{{ embeds.data.title }}</h1>
-        <p>{{ embeds.data.description }}</p>
+      <div v-if="isOnlyLink" class="content">
+        <div class="embed-source">
+          <div class="link-embed">
+            <i class="embed-link-icon"></i>
+          </div>
+          <span>kdelaney.com/a/12232F/</span>
+        </div>
+        <i class="right-arrow"></i>
+      </div>
+      <div v-else class="content">
+        <h1 v-if="embeds.data.title">{{ embeds.data.title }}</h1>
+        <p v-if="embeds.data.description">{{ embeds.data.description }}</p>
         <span>{{ embeds.data.url }}</span>
       </div>
       <figure v-if="embeds.data.thumbnail_url">
@@ -126,6 +139,14 @@ export default {
     }
   },
   computed: {
+    isOnlyLink() {
+      const { url, thumbnail_url, title, description } = this.embeds.data;
+      return !thumbnail_url && title && description && url;
+    },
+    isSquareImage() {
+      const { thumbnail_width, thumbnail_height } = this.embeds.data;
+      return thumbnail_width === thumbnail_height;
+    },
     url: {
       get() {
         return this.node.attrs.url;
