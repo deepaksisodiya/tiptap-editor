@@ -11,36 +11,22 @@
       <ul
         class="highlight-menu"
         :class="{ 'is-active': menu.isActive || linkMenuIsActive, ios: isIOS }"
+        style="position: sticky;"
         ref="menuUl"
       >
-        <li
-          @click="commands.bold"
-          v-if="!linkMenuIsActive"
-        >
+        <li @click="commands.bold" v-if="!linkMenuIsActive">
           <button>
-            <i
-              class="bold-icon"
-              :class="{ 'is-active': isActive.bold() }"
-            ></i>
+            <i class="bold-icon" :class="{ 'is-active': isActive.bold() }"></i>
           </button>
         </li>
 
-        <li
-          @click="commands.italic"
-          v-if="!linkMenuIsActive"
-        >
+        <li @click="commands.italic" v-if="!linkMenuIsActive">
           <button>
-            <i
-              class="italic-icon"
-              :class="{ 'is-active': isActive.italic() }"
-            ></i>
+            <i class="italic-icon" :class="{ 'is-active': isActive.italic() }"></i>
           </button>
         </li>
 
-        <form
-          v-if="linkMenuIsActive"
-          @submit.prevent="setLinkUrl(commands.link, linkUrl)"
-        >
+        <form v-if="linkMenuIsActive" @submit.prevent="setLinkUrl(commands.link, linkUrl)">
           <input
             type="text"
             v-model="linkUrl"
@@ -48,28 +34,12 @@
             ref="linkInput"
             @keydown.esc="hideLinkMenu"
           />
-          <button
-            @click="setLinkUrl(commands.link, linkUrl)"
-            type="button"
-          >
-            add
-          </button>
-          <button
-            @click="setLinkUrl(commands.link, null)"
-            type="button"
-          >
-            Remove
-          </button>
+          <button @click="setLinkUrl(commands.link, linkUrl)" type="button">add</button>
+          <button @click="setLinkUrl(commands.link, null)" type="button">Remove</button>
         </form>
-        <li
-          v-else
-          @click="showLinkMenu(getMarkAttrs('link'))"
-        >
+        <li v-else @click="showLinkMenu(getMarkAttrs('link'))">
           <button>
-            <i
-              class="link-icon"
-              :class="{ 'is-active': isActive.link() }"
-            ></i>
+            <i class="link-icon" :class="{ 'is-active': isActive.link() }"></i>
             <!--
           <span>{{ isActive.link() ? "Update Link" : "Add Link" }}</span>
             -->
@@ -88,10 +58,7 @@
           v-if="!linkMenuIsActive"
         >
           <button>
-            <i
-              class="large-heading-icon"
-              :class="{ 'is-active': isActive.heading({ level: 3 }) }"
-            ></i>
+            <i class="large-heading-icon" :class="{ 'is-active': isActive.heading({ level: 3 }) }"></i>
           </button>
         </li>
 
@@ -101,23 +68,13 @@
           v-if="!linkMenuIsActive"
         >
           <button>
-            <i
-              class="small-heading-icon"
-              :class="{ 'is-active': isActive.heading({ level: 5 }) }"
-            ></i>
+            <i class="small-heading-icon" :class="{ 'is-active': isActive.heading({ level: 5 }) }"></i>
           </button>
         </li>
 
-        <li
-          class="menububble__button"
-          @click="commands.blockquote"
-          v-if="!linkMenuIsActive"
-        >
+        <li class="menububble__button" @click="commands.blockquote" v-if="!linkMenuIsActive">
           <button>
-            <i
-              class="quote-icon"
-              :class="{ 'is-active': isActive.blockquote() }"
-            ></i>
+            <i class="quote-icon" :class="{ 'is-active': isActive.blockquote() }"></i>
           </button>
         </li>
       </ul>
@@ -144,16 +101,9 @@
           />
           <ul class="kitchensink">
             <li @click="toggleFloatingMenu">
-              <i
-                class="add-icon"
-                :class="{ 'close-icon': shouldShowFloatingMenu }"
-              ></i>
+              <i class="add-icon" :class="{ 'close-icon': shouldShowFloatingMenu }"></i>
             </li>
-            <li
-              class="menubar__button"
-              @click="onClickImage()"
-              v-if="shouldShowFloatingMenu"
-            >
+            <li class="menubar__button" @click="onClickImage()" v-if="shouldShowFloatingMenu">
               <i class="image-icon"></i>
             </li>
             <li
@@ -190,10 +140,7 @@
               <i class="link-icon"></i>
             </li>
 
-            <li
-              v-if="shouldShowFloatingMenu"
-              style="display:none"
-            >
+            <li v-if="shouldShowFloatingMenu" style="display:none">
               <i class="kitchensink-divider"></i>
             </li>
 
@@ -212,11 +159,7 @@
           </ul>
         </div>
       </editor-floating-menu>
-      <editor-content
-        id="editor"
-        class="editor__content"
-        :editor="editor"
-      />
+      <editor-content id="editor" class="editor__content" :editor="editor" />
       <div class="ios-test-fix">empt</div>
     </article>
 
