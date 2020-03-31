@@ -11,6 +11,7 @@
       <ul
         class="highlight-menu"
         :class="{ 'is-active': menu.isActive || linkMenuIsActive, ios: isIOS }"
+        style="position: sticky;"
         ref="menuUl"
       >
         <li @click="commands.bold" v-if="!linkMenuIsActive">
@@ -189,11 +190,7 @@
           </ul>
         </div>
       </editor-floating-menu>
-      <editor-content
-        id="editor"
-        class="editor__content"
-        :editor="editor"
-      />
+      <editor-content id="editor" class="editor__content" :editor="editor" />
       <div class="ios-test-fix">empt</div>
     </article>
 
