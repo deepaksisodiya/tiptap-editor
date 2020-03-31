@@ -150,13 +150,11 @@ export default {
       if (this.node.attrs.type === "link") {
         return "Paste or type a link";
       }
-      return "Paste or type a video";
+      return "Paste or type video link";
     },
     loadingText() {
-      if (this.node.attrs.type === "link") {
-        return "Linking video";
-      }
-      return "Embedding video";
+      if (this.node.attrs.type === "link") return "Embedding link…";
+      return "Embedding video…";
     }
   },
   methods: {
