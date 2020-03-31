@@ -82,6 +82,7 @@ export default {
         isError: false,
         data: {
           title: "",
+          description: "",
           author_name: "",
           type: "",
           url: "",
@@ -105,7 +106,8 @@ export default {
         thumbnail_height: this.node.attrs.thumbnail_height,
         provider_name: this.node.attrs.provider_name,
         type: this.node.attrs.type,
-        html: this.node.attrs.html
+        html: this.node.attrs.html,
+        description: this.node.attrs.description
       };
       this.embeds.data = data;
     } else {
@@ -175,6 +177,7 @@ export default {
           // for copy pasting to work
           this.updateAttrs({
             title: response.data.title,
+            description: response.data.description,
             author_name: response.data.author_name,
             url: response.data.url,
             thumbnail_url: response.data.thumbnail_url,

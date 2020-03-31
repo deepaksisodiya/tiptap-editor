@@ -19,6 +19,9 @@ export default class EmbedNode extends Node {
         title: {
           default: ""
         },
+        description: {
+          default: ""
+        },
         author_name: {
           default: ""
         },
@@ -64,7 +67,8 @@ export default class EmbedNode extends Node {
               thumbnail_height: dom.getAttribute("thumbnail_height"),
               provider_name: dom.getAttribute("provider_name"),
               caption: dom.getAttribute("caption"),
-              html: dom.getAttribute("html")
+              html: dom.getAttribute("html"),
+              description: dom.getAttribute("description")
             };
           }
         }
