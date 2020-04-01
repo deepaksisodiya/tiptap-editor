@@ -36,7 +36,6 @@
             <i class="italic-icon" :class="{ 'is-active': isActive.italic() }"></i>
           </button>
         </li>
-
         <li v-if="!linkMenuIsActive" @click="showLinkMenu(getMarkAttrs('link'))">
           <button>
             <i class="link-icon" :class="{ 'is-active': isActive.link() }"></i>
@@ -106,13 +105,13 @@
             <li class="menubar__button" @click="onClickImage()" v-if="shouldShowFloatingMenu">
               <i class="image-icon"></i>
             </li>
+
             <li
-              class="menubar__button"
-              :class="{ 'is-active': isActive.horizontal_rule() }"
+              :class="{ 'is-active': isActive.embed() }"
               v-if="shouldShowFloatingMenu"
-              @click="onClickMenuItem(commands.horizontal_rule)"
+              @click="onClickEmbed(commands.embed, 'video')"
             >
-              <i class="separator-icon"></i>
+              <i class="video-icon"></i>
             </li>
 
             <li
@@ -127,17 +126,18 @@
             <li
               :class="{ 'is-active': isActive.embed() }"
               v-if="shouldShowFloatingMenu"
-              @click="onClickEmbed(commands.embed, 'video')"
-            >
-              <i class="video-icon"></i>
-            </li>
-
-            <li
-              :class="{ 'is-active': isActive.embed() }"
-              v-if="shouldShowFloatingMenu"
               @click="onClickEmbed(commands.embed, 'link')"
             >
               <i class="link-icon"></i>
+            </li>
+
+            <li
+              class="menubar__button"
+              :class="{ 'is-active': isActive.horizontal_rule() }"
+              v-if="shouldShowFloatingMenu"
+              @click="onClickMenuItem(commands.horizontal_rule)"
+            >
+              <i class="separator-icon"></i>
             </li>
 
             <li v-if="shouldShowFloatingMenu" style="display:none">
