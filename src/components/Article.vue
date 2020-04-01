@@ -11,7 +11,10 @@
         @keydown.enter.prevent="setLinkUrl(editor.commands.link, linkUrl)"
         @keydown.esc="hideLinkMenu"
       />
-      <i class="toolbar-close-icon" @click="setLinkUrl(editor.commands.link, linkUrl)"></i>
+      <i
+        class="toolbar-close-icon"
+        @click="setLinkUrl(editor.commands.link, linkUrl)"
+      ></i>
     </div>
     <editor-menu-bubble
       :editor="editor"
@@ -21,7 +24,12 @@
     >
       <ul
         class="highlight-menu"
-        :class="{'link-menu-active': linkMenuIsActive, 'is-active': menu.isActive, ios: isIOS, 'sticky-highlight-menu': !isIOS }"
+        :class="{
+          'link-menu-active': linkMenuIsActive,
+          'is-active': menu.isActive,
+          ios: isIOS,
+          'sticky-highlight-menu': !isIOS
+        }"
         ref="menuUl"
       >
         <li @click="commands.bold" v-if="!linkMenuIsActive">
@@ -32,10 +40,16 @@
 
         <li @click="commands.italic" v-if="!linkMenuIsActive">
           <button>
-            <i class="italic-icon" :class="{ 'is-active': isActive.italic() }"></i>
+            <i
+              class="italic-icon"
+              :class="{ 'is-active': isActive.italic() }"
+            ></i>
           </button>
         </li>
-        <li v-if="!linkMenuIsActive" @click="showLinkMenu(getMarkAttrs('link'))">
+        <li
+          v-if="!linkMenuIsActive"
+          @click="showLinkMenu(getMarkAttrs('link'))"
+        >
           <button>
             <i class="link-icon" :class="{ 'is-active': isActive.link() }"></i>
             <!--
@@ -56,7 +70,10 @@
           v-if="!linkMenuIsActive"
         >
           <button>
-            <i class="large-heading-icon" :class="{ 'is-active': isActive.heading({ level: 3 }) }"></i>
+            <i
+              class="large-heading-icon"
+              :class="{ 'is-active': isActive.heading({ level: 3 }) }"
+            ></i>
           </button>
         </li>
 
@@ -66,13 +83,23 @@
           v-if="!linkMenuIsActive"
         >
           <button>
-            <i class="small-heading-icon" :class="{ 'is-active': isActive.heading({ level: 5 }) }"></i>
+            <i
+              class="small-heading-icon"
+              :class="{ 'is-active': isActive.heading({ level: 5 }) }"
+            ></i>
           </button>
         </li>
 
-        <li class="menububble__button" @click="commands.blockquote" v-if="!linkMenuIsActive">
+        <li
+          class="menububble__button"
+          @click="commands.blockquote"
+          v-if="!linkMenuIsActive"
+        >
           <button>
-            <i class="quote-icon" :class="{ 'is-active': isActive.blockquote() }"></i>
+            <i
+              class="quote-icon"
+              :class="{ 'is-active': isActive.blockquote() }"
+            ></i>
           </button>
         </li>
       </ul>
@@ -99,9 +126,28 @@
           />
           <ul class="kitchensink">
             <li @click="toggleFloatingMenu">
-              <i class="add-icon" :class="{ 'close-icon': shouldShowFloatingMenu }"></i>
+              <i
+                class="add-icon"
+                :class="{ 'close-icon': shouldShowFloatingMenu }"
+              ></i>
             </li>
-            <li class="menubar__button" @click="onClickImage()" v-if="shouldShowFloatingMenu">
+            <li v-if="shouldShowTooltip" class="popover right-popover">
+              <div class="popover-content">
+                <h3>WELCOME TO SCROLLSTACK</h3>
+                <p>
+                  Tap the (+) button to add images, videos, embeds and more to
+                  your story.
+                </p>
+                <button @click="onClickOk" class="dark-button">
+                  <span>OK, Got it</span>
+                </button>
+              </div>
+            </li>
+            <li
+              class="menubar__button"
+              @click="onClickImage()"
+              v-if="shouldShowFloatingMenu"
+            >
               <i class="image-icon"></i>
             </li>
 
@@ -233,6 +279,7 @@ export default {
   },
   data() {
     return {
+      shouldShowTooltip: !localStorage.getItem("editorTour"),
       data: this.content,
       imageSrc: "",
       shouldShowFloatingMenu: false,
@@ -241,6 +288,7 @@ export default {
       linkMenuIsActive: false,
       isIOS: /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream,
       editor: new Editor({
+        autoFocus: true,
         editable: true,
         extensions: [
           new Doc(),
@@ -415,6 +463,10 @@ export default {
       const pageTop = window.visualViewport.pageTop;
       linkInput.style.top = `${pageTop}px`;
       menuUl.style.top = `${pageTop}px`;
+    },
+    onClickOk() {
+      localStorage.setItem("editorTour", true);
+      this.shouldShowTooltip = false;
     }
   },
   watch: {
