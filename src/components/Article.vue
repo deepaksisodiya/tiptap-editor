@@ -21,8 +21,7 @@
     >
       <ul
         class="highlight-menu"
-        :class="{ 'is-active': menu.isActive, ios: isIOS }"
-        :style="{ position: 'sticky', display: linkMenuIsActive ? 'none' : 'block'}"
+        :class="{'link-menu-active': linkMenuIsActive, 'is-active': menu.isActive, ios: isIOS, 'sticky-highlight-menu': !isIOS }"
         ref="menuUl"
       >
         <li @click="commands.bold" v-if="!linkMenuIsActive">
@@ -354,6 +353,7 @@ export default {
     setLinkUrl(command, url) {
       command({ href: url });
       this.hideLinkMenu();
+      this.$refs.menububble.menu.isActive = true;
     },
     toggleFloatingMenu() {
       this.shouldShowFloatingMenu = !this.shouldShowFloatingMenu;
@@ -496,6 +496,14 @@ figcaption > span.is-empty {
 //     color: white;
 //   }
 // }
+.sticky-highlight-menu {
+  position: sticky;
+}
+
+.link-menu-active {
+  display: none;
+}
+
 .ios-test-fix {
   visibility: hidden;
   height: 500px;
