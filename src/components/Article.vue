@@ -273,6 +273,7 @@ export default {
       linkMenuIsActive: false,
       isIOS: /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream,
       editor: new Editor({
+        autoFocus: true,
         editable: true,
         extensions: [
           new Doc(),
