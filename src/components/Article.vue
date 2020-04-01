@@ -2,6 +2,17 @@
   <div class="editor">
     <!-- on hover it will show bold, italic and code -->
     <!-- menububble start -->
+    <div ref="linkInput" v-if="linkMenuIsActive" class="highlight-menu-input">
+      <input
+        type="text"
+        v-model="linkUrl"
+        placeholder="Paste or type a link"
+        ref="linkInput"
+        @keydown.enter.prevent="setLinkUrl(editor.commands.link, linkUrl)"
+        @keydown.esc="hideLinkMenu"
+      />
+      <i class="toolbar-close-icon" @click="setLinkUrl(editor.commands.link, linkUrl)"></i>
+    </div>
     <editor-menu-bubble
       :editor="editor"
       :keep-in-bounds="keepInBounds"
@@ -10,8 +21,8 @@
     >
       <ul
         class="highlight-menu"
-        :class="{ 'is-active': menu.isActive || linkMenuIsActive, ios: isIOS }"
-        style="position: sticky;"
+        :class="{ 'is-active': menu.isActive, ios: isIOS }"
+        :style="{ position: 'sticky', display: linkMenuIsActive ? 'none' : 'block'}"
         ref="menuUl"
       >
         <li @click="commands.bold" v-if="!linkMenuIsActive">
@@ -26,18 +37,7 @@
           </button>
         </li>
 
-        <form v-if="linkMenuIsActive" @submit.prevent="setLinkUrl(commands.link, linkUrl)">
-          <input
-            type="text"
-            v-model="linkUrl"
-            placeholder="https://"
-            ref="linkInput"
-            @keydown.esc="hideLinkMenu"
-          />
-          <button @click="setLinkUrl(commands.link, linkUrl)" type="button">add</button>
-          <button @click="setLinkUrl(commands.link, null)" type="button">Remove</button>
-        </form>
-        <li v-else @click="showLinkMenu(getMarkAttrs('link'))">
+        <li v-if="!linkMenuIsActive" @click="showLinkMenu(getMarkAttrs('link'))">
           <button>
             <i class="link-icon" :class="{ 'is-active': isActive.link() }"></i>
             <!--
@@ -411,7 +411,9 @@ export default {
     },
     fixMenubarforIos() {
       const menuUl = this.$refs.menuUl;
+      const linkInput = this.$refs.linkInput;
       const pageTop = window.visualViewport.pageTop;
+      linkInput.style.top = `${pageTop}px`;
       menuUl.style.top = `${pageTop}px`;
     }
   },
