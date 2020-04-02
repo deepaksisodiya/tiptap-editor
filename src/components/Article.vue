@@ -344,7 +344,7 @@ export default {
       const el = document.getElementsByClassName("editor__floating-menu")[0];
 
       if (this.isIOS) {
-        el.style.top = `${top + 40}px`;
+        el.style.top = `${top + 20}px`;
       } else {
         el.style.top = `${top + 91}px`;
       }
