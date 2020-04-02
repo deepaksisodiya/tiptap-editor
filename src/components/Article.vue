@@ -350,7 +350,7 @@ export default {
     },
     emptyNodeText(node) {
       if (node.type.name === "header") {
-        return "New Post - ScrollStack";
+        return "Title";
       }
       if (this.editor) {
         const {
