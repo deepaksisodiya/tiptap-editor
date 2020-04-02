@@ -405,6 +405,11 @@ export default {
           img.src = reader.result;
           this.imageSrc = img.src;
 
+          command({
+            src: this.imageSrc,
+            addImageAt: this.addImageAt
+          });
+
           const formData = new FormData();
           formData.append(file.name, file);
           // TODO handle image loading here later
@@ -417,10 +422,9 @@ export default {
               }
             }
           );
-          command({
-            src: response.data.url,
-            addImageAt: this.addImageAt
-          });
+
+          window.imageInstance.src = response.data.url;
+          window.imageInstance = null;
         };
         reader.readAsDataURL(file);
       } else {

@@ -2,11 +2,7 @@
   <figure>
     <img :src="src" />
     <figcaption>
-      <input
-        v-model="caption"
-        placeholder="Type caption for image (optional)"
-        @keyup="handleKeyup"
-      />
+      <input v-model="caption" placeholder="Type caption for image (optional)" @keyup="handleKeyup" />
     </figcaption>
   </figure>
 </template>
@@ -44,6 +40,7 @@ export default {
       this.view.focus();
       this.$el.scrollIntoView(true);
     });
+    window.imageInstance = this;
   },
   methods: {
     handleKeyup(event) {
