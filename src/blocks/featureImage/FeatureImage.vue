@@ -90,15 +90,11 @@ export default {
           const formData = new FormData();
           formData.append(file.name, file);
           // TODO handle image loading here later
-          const response = await axios.post(
-            "https://api.scrollstack.com/images",
-            formData,
-            {
-              headers: {
-                "Content-Type": "multipart/form-data"
-              }
+          const response = await axios.post("/api/w/images", formData, {
+            headers: {
+              "Content-Type": "multipart/form-data"
             }
-          );
+          });
           this.src = response.data.url;
         };
         reader.readAsDataURL(file);
