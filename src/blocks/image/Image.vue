@@ -1,6 +1,6 @@
 <template>
   <figure>
-    <img ref="img" :src="src" :height="height" :width="width" />
+    <img ref="img" :src="dataUrl" :height="height" :width="width" />
     <figcaption>
       <input v-model="caption" placeholder="Type caption for image (optional)" @keyup="handleKeyup" />
     </figcaption>
@@ -16,7 +16,8 @@ export default {
   data() {
     return {
       height: "",
-      width: ""
+      width: "",
+      dataUrl: this.node.attrs.src
     };
   },
   computed: {
