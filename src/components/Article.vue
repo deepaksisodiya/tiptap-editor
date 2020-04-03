@@ -419,7 +419,7 @@ export default {
       const imageType = /image.*/;
       if (file.type.match(imageType)) {
         const reader = new FileReader();
-        reader.onload = async () => {
+        reader.onload = () => {
           const img = new Image();
           img.src = reader.result;
           this.imageSrc = img.src;
@@ -429,24 +429,28 @@ export default {
             addImageAt: this.addImageAt
           });
 
-          const formData = new FormData();
-          formData.append(file.name, file);
-          // TODO handle image loading here later
-          const response = await axios.post(
-            "https://api.scrollstack.com/images",
-            formData,
-            {
-              headers: {
-                "Content-Type": "multipart/form-data"
-              }
+          window.imageInstance.$refs.img.onload = async e => {
+            if (e.path[0].src.includes("data:")) {
+              const formData = new FormData();
+              formData.append(file.name, file);
+              // TODO handle image loading here later
+              const response = await axios.post(
+                "https://api.scrollstack.com/images",
+                formData,
+                {
+                  headers: {
+                    "Content-Type": "multipart/form-data"
+                  }
+                }
+              );
+              let height = window.imageInstance.$refs.img.clientHeight;
+              let width = window.imageInstance.$refs.img.clientWidth;
+              window.imageInstance.height = height;
+              window.imageInstance.width = width;
+              window.imageInstance.src = response.data.url;
+              window.imageInstance = null;
             }
-          );
-          let height = window.imageInstance.$refs.img.clientHeight;
-          let width = window.imageInstance.$refs.img.clientWidth;
-          window.imageInstance.height = height;
-          window.imageInstance.width = width;
-          window.imageInstance.src = response.data.url;
-          window.imageInstance = null;
+          };
         };
         reader.readAsDataURL(file);
       } else {
