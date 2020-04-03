@@ -441,7 +441,10 @@ export default {
               }
             }
           );
-
+          let height = window.imageInstance.$refs.img.clientHeight;
+          let width = window.imageInstance.$refs.img.clientWidth;
+          window.imageInstance.height = height;
+          window.imageInstance.width = width;
           window.imageInstance.src = response.data.url;
           window.imageInstance = null;
         };

@@ -1,6 +1,6 @@
 <template>
   <figure>
-    <img :src="src" />
+    <img ref="img" :src="src" :height="height" :width="width" />
     <figcaption>
       <input v-model="caption" placeholder="Type caption for image (optional)" @keyup="handleKeyup" />
     </figcaption>
@@ -13,6 +13,12 @@ import { TextSelection } from "tiptap";
 export default {
   name: "Image",
   props: ["node", "updateAttrs", "view", "getPos"],
+  data() {
+    return {
+      height: "",
+      width: ""
+    };
+  },
   computed: {
     src: {
       get() {
