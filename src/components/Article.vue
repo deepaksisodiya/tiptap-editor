@@ -314,7 +314,7 @@ export default {
           new Image(),
           new FeatureImage(),
           new Embed({
-            baseUrl: "https://api.scrollstack.com/embeds/metadata"
+            baseUrl: "https://api.scrollstack.com/api/w/embeds/metadata"
           }),
           new HorizontalRule(),
           new Lock()
@@ -452,7 +452,7 @@ export default {
           formData.append(file.name, file);
           // TODO handle image loading here later
           const response = await axios.post(
-            "https://api.scrollstack.com/images",
+            "https://api.scrollstack.com/api/w/images",
             formData,
             {
               headers: {
