@@ -314,7 +314,7 @@ export default {
           new Image(),
           new FeatureImage(),
           new Embed({
-            baseUrl: "https://api.scrollstack.com/api/w/embeds/metadata"
+            baseUrl: "/api/w/embeds/metadata"
           }),
           new HorizontalRule(),
           new Lock()
@@ -462,15 +462,11 @@ export default {
               const formData = new FormData();
               formData.append(file.name, file);
               // TODO handle image loading here later
-              const response = await axios.post(
-                "https://api.scrollstack.com/api/w/images",
-                formData,
-                {
-                  headers: {
-                    "Content-Type": "multipart/form-data"
-                  }
+              const response = await axios.post("/api/w/images", formData, {
+                headers: {
+                  "Content-Type": "multipart/form-data"
                 }
-              );
+              });
               window.imageInstance.src = response.data.url;
               window.imageInstance = null;
             }
