@@ -463,7 +463,7 @@ export default {
               formData.append(file.name, file);
               // TODO handle image loading here later
               const response = await axios.post(
-                "https://api.scrollstack.com/images",
+                "https://api.scrollstack.com/api/w/images",
                 formData,
                 {
                   headers: {
