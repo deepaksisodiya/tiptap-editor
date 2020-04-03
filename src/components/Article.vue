@@ -331,6 +331,11 @@ export default {
               headerContent[0].content[0].text;
             newData.content[0].content.shift();
           }
+          newData.content.forEach(block => {
+            if (block.type === "image" && block.attrs.src.includes("data:")) {
+              block.attrs.src = "";
+            }
+          });
           this.onUpdatePost(newData, title);
         }, 300)
       })
@@ -443,27 +448,33 @@ export default {
       const imageType = /image.*/;
       if (file.type.match(imageType)) {
         const reader = new FileReader();
-        reader.onload = async () => {
+        reader.onload = () => {
           const img = new Image();
           img.src = reader.result;
           this.imageSrc = img.src;
-
-          const formData = new FormData();
-          formData.append(file.name, file);
-          // TODO handle image loading here later
-          const response = await axios.post(
-            "https://api.scrollstack.com/api/w/images",
-            formData,
-            {
-              headers: {
-                "Content-Type": "multipart/form-data"
-              }
-            }
-          );
           command({
-            src: response.data.url,
+            src: this.imageSrc,
             addImageAt: this.addImageAt
           });
+
+          window.imageInstance.$refs.img.onload = async e => {
+            if (e.path[0].src.includes("data:")) {
+              const formData = new FormData();
+              formData.append(file.name, file);
+              // TODO handle image loading here later
+              const response = await axios.post(
+                "https://api.scrollstack.com/images",
+                formData,
+                {
+                  headers: {
+                    "Content-Type": "multipart/form-data"
+                  }
+                }
+              );
+              window.imageInstance.src = response.data.url;
+              window.imageInstance = null;
+            }
+          };
         };
         reader.readAsDataURL(file);
       } else {

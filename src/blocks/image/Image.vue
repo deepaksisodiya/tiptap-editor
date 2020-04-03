@@ -1,6 +1,6 @@
 <template>
   <figure>
-    <img :src="src" />
+    <img ref="img" :src="dataUrl" :height="height" :width="width" />
     <figcaption>
       <input
         v-model="caption"
@@ -17,6 +17,13 @@ import { TextSelection } from "tiptap";
 export default {
   name: "Image",
   props: ["node", "updateAttrs", "view", "getPos"],
+  data() {
+    return {
+      height: "",
+      width: "",
+      dataUrl: this.node.attrs.src
+    };
+  },
   computed: {
     src: {
       get() {
@@ -44,6 +51,7 @@ export default {
       this.view.focus();
       this.$el.scrollIntoView(true);
     });
+    window.imageInstance = this;
   },
   methods: {
     handleKeyup(event) {
