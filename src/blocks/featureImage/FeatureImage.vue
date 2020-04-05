@@ -1,17 +1,12 @@
 <template>
-  <div :class="{ 'upload-picture-block': !src }" @click="addImage">
-    <input
-      type="file"
-      ref="fileInput"
-      style="display:none"
-      @change="previewFiles()"
-    />
-    <template v-if="!src">
+  <div :class="{ 'upload-picture-block': !dataUrl }" @click="addImage">
+    <input type="file" ref="fileInput" style="display:none" @change="previewFiles()" />
+    <template v-if="!dataUrl">
       <i class="upload-icon"></i>
       <span>Upload feature image (optional)</span>
     </template>
-    <figure v-if="src" class="featured-image">
-      <img :src="src" />
+    <figure v-if="dataUrl" class="featured-image">
+      <img :src="dataUrl" />
       <figcaption>
         <input
           v-model="caption"
@@ -30,6 +25,11 @@ import axios from "axios";
 export default {
   name: "Image",
   props: ["node", "updateAttrs", "view", "getPos"],
+  data() {
+    return {
+      dataUrl: this.node.attrs.src
+    };
+  },
   computed: {
     src: {
       get() {
@@ -85,7 +85,7 @@ export default {
         reader.onload = async () => {
           const img = new Image();
           img.src = reader.result;
-          this.imageSrc = img.src;
+          this.dataUrl = img.src;
 
           const formData = new FormData();
           formData.append(file.name, file);
