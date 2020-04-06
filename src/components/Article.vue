@@ -390,7 +390,7 @@ export default {
       newData.content[0].content = [
         {
           type: "title",
-          content: [{ type: "text", text: title }]
+          content: title ? [{ type: "text", text: title }] : []
         },
         data.content[0].content[0]
       ];
