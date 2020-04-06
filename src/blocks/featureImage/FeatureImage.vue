@@ -30,6 +30,11 @@ export default {
       dataUrl: this.node.attrs.src
     };
   },
+  watch: {
+    "node.attrs.src"(newValue) {
+      if (!this.dataUrl) this.dataUrl = newValue;
+    }
+  },
   computed: {
     src: {
       get() {
