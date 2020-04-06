@@ -2,11 +2,7 @@
   <div class="editor">
     <!-- on hover it will show bold, italic and code -->
     <!-- menububble start -->
-    <div
-      ref="linkInput"
-      v-if="linkMenuIsActive"
-      class="highlight-menu-input"
-    >
+    <div ref="linkInput" v-if="linkMenuIsActive" class="highlight-menu-input">
       <input
         type="text"
         v-model="linkUrl"
@@ -15,7 +11,10 @@
         @keydown.enter.prevent="setLinkUrl(editor.commands.link, linkUrl)"
         @keydown.esc="hideLinkMenu"
       />
-      <i class="toolbar-close-icon" @click="setLinkUrl(editor.commands.link, linkUrl)"></i>
+      <i
+        class="toolbar-close-icon"
+        @click="setLinkUrl(editor.commands.link, linkUrl)"
+      ></i>
     </div>
     <editor-menu-bubble
       :editor="editor"
@@ -33,32 +32,26 @@
         }"
         ref="menuUl"
       >
-        <li
-          @click="commands.bold"
-          v-if="!linkMenuIsActive"
-        >
+        <li @click="commands.bold" v-if="!linkMenuIsActive">
           <button>
-            <i
-              class="bold-icon"
-              :class="{ 'is-active': isActive.bold() }"
-            ></i>
+            <i class="bold-icon" :class="{ 'is-active': isActive.bold() }"></i>
           </button>
         </li>
 
-        <li
-          @click="commands.italic"
-          v-if="!linkMenuIsActive"
-        >
-          <button>
-            <i class="italic-icon" :class="{ 'is-active': isActive.italic() }"></i>
-          </button>
-        </li>
-        <li v-if="!linkMenuIsActive" @click="showLinkMenu(getMarkAttrs('link'))">
+        <li @click="commands.italic" v-if="!linkMenuIsActive">
           <button>
             <i
-              class="link-icon"
-              :class="{ 'is-active': isActive.link() }"
+              class="italic-icon"
+              :class="{ 'is-active': isActive.italic() }"
             ></i>
+          </button>
+        </li>
+        <li
+          v-if="!linkMenuIsActive"
+          @click="showLinkMenu(getMarkAttrs('link'))"
+        >
+          <button>
+            <i class="link-icon" :class="{ 'is-active': isActive.link() }"></i>
             <!--
           <span>{{ isActive.link() ? "Update Link" : "Add Link" }}</span>
             -->
@@ -77,7 +70,10 @@
           v-if="!linkMenuIsActive"
         >
           <button>
-            <i class="large-heading-icon" :class="{ 'is-active': isActive.heading({ level: 3 }) }"></i>
+            <i
+              class="large-heading-icon"
+              :class="{ 'is-active': isActive.heading({ level: 3 }) }"
+            ></i>
           </button>
         </li>
 
@@ -87,13 +83,23 @@
           v-if="!linkMenuIsActive"
         >
           <button>
-            <i class="small-heading-icon" :class="{ 'is-active': isActive.heading({ level: 5 }) }"></i>
+            <i
+              class="small-heading-icon"
+              :class="{ 'is-active': isActive.heading({ level: 5 }) }"
+            ></i>
           </button>
         </li>
 
-        <li class="menububble__button" @click="commands.blockquote" v-if="!linkMenuIsActive">
+        <li
+          class="menububble__button"
+          @click="commands.blockquote"
+          v-if="!linkMenuIsActive"
+        >
           <button>
-            <i class="quote-icon" :class="{ 'is-active': isActive.blockquote() }"></i>
+            <i
+              class="quote-icon"
+              :class="{ 'is-active': isActive.blockquote() }"
+            ></i>
           </button>
         </li>
       </ul>
@@ -102,13 +108,10 @@
 
     <article>
       <!-- Message-bar -->
-      <div
-        v-if="displayTitleError"
-        class="message-bar with-icon error"
-      >
+      <div v-if="displayTitleError" class="message-bar with-icon error">
         <p>You need to add a title to your post before continuing.</p>
         <div class="close-message-bar">
-          <i class="close-icon"></i>
+          <i @click="closeTitleError" class="close-icon"></i>
         </div>
       </div>
       <!-- End of message-bar -->
@@ -132,27 +135,28 @@
           />
           <ul class="kitchensink">
             <li @click="toggleFloatingMenu">
-              <i class="add-icon" :class="{ 'close-icon': shouldShowFloatingMenu }"></i>
+              <i
+                class="add-icon"
+                :class="{ 'close-icon': shouldShowFloatingMenu }"
+              ></i>
             </li>
-            <li
-              v-if="shouldShowTooltip"
-              class="popover right-popover"
-            >
+            <li v-if="shouldShowTooltip" class="popover right-popover">
               <div class="popover-content">
                 <h3>WELCOME TO SCROLLSTACK</h3>
                 <p>
                   Tap the (+) button to add images, videos, embeds and more to
                   your story.
                 </p>
-                <button
-                  @click="onClickOk"
-                  class="dark-button"
-                >
+                <button @click="onClickOk" class="dark-button">
                   <span>OK, Got it</span>
                 </button>
               </div>
             </li>
-            <li class="menubar__button" @click="onClickImage()" v-if="shouldShowFloatingMenu">
+            <li
+              class="menubar__button"
+              @click="onClickImage()"
+              v-if="shouldShowFloatingMenu"
+            >
               <i class="image-icon"></i>
             </li>
 
@@ -190,10 +194,7 @@
               <i class="separator-icon"></i>
             </li>
 
-            <li
-              v-if="shouldShowFloatingMenu"
-              style="display:none"
-            >
+            <li v-if="shouldShowFloatingMenu" style="display:none">
               <i class="kitchensink-divider"></i>
             </li>
 
@@ -212,11 +213,7 @@
           </ul>
         </div>
       </editor-floating-menu>
-      <editor-content
-        id="editor"
-        class="editor__content"
-        :editor="editor"
-      />
+      <editor-content id="editor" class="editor__content" :editor="editor" />
       <div class="ios-test-fix">empt</div>
     </article>
 
@@ -293,6 +290,7 @@ export default {
   },
   data() {
     return {
+      displayTitleError: this.showTitleError,
       shouldShowTooltip: !localStorage.getItem("editorTour"),
       data: this.content,
       imageSrc: "",
@@ -488,9 +486,15 @@ export default {
     onClickOk() {
       localStorage.setItem("editorTour", true);
       this.shouldShowTooltip = false;
+    },
+    closeTitleError() {
+      this.displayTitleError = false;
     }
   },
   watch: {
+    showTitleError() {
+      this.displayTitleError = this.showTitleError;
+    },
     content(newValue) {
       if (newValue) {
         const newContent = this.addTitle(newValue, this.title);
@@ -521,9 +525,6 @@ export default {
         this.editor.view.state.doc,
         this.editor.schema.nodes.lock
       );
-    },
-    displayTitleError() {
-      return this.showTitleError;
     }
   }
 };
