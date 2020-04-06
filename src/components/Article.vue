@@ -2,7 +2,11 @@
   <div class="editor">
     <!-- on hover it will show bold, italic and code -->
     <!-- menububble start -->
-    <div ref="linkInput" v-if="linkMenuIsActive" class="highlight-menu-input">
+    <div
+      ref="linkInput"
+      v-if="linkMenuIsActive"
+      class="highlight-menu-input"
+    >
       <input
         type="text"
         v-model="linkUrl"
@@ -32,13 +36,22 @@
         }"
         ref="menuUl"
       >
-        <li @click="commands.bold" v-if="!linkMenuIsActive">
+        <li
+          @click="commands.bold"
+          v-if="!linkMenuIsActive"
+        >
           <button>
-            <i class="bold-icon" :class="{ 'is-active': isActive.bold() }"></i>
+            <i
+              class="bold-icon"
+              :class="{ 'is-active': isActive.bold() }"
+            ></i>
           </button>
         </li>
 
-        <li @click="commands.italic" v-if="!linkMenuIsActive">
+        <li
+          @click="commands.italic"
+          v-if="!linkMenuIsActive"
+        >
           <button>
             <i
               class="italic-icon"
@@ -51,7 +64,10 @@
           @click="showLinkMenu(getMarkAttrs('link'))"
         >
           <button>
-            <i class="link-icon" :class="{ 'is-active': isActive.link() }"></i>
+            <i
+              class="link-icon"
+              :class="{ 'is-active': isActive.link() }"
+            ></i>
             <!--
           <span>{{ isActive.link() ? "Update Link" : "Add Link" }}</span>
             -->
@@ -107,6 +123,18 @@
     <!-- menububble end -->
 
     <article>
+      <!-- Message-bar -->
+      <div
+        v-if="displayTitleError"
+        class="message-bar with-icon error"
+      >
+        <p>You need to add a title to your post before continuing.</p>
+        <div class="close-message-bar">
+          <i class="close-icon"></i>
+        </div>
+      </div>
+      <!-- End of message-bar -->
+
       <editor-floating-menu
         :editor="editor"
         v-slot="{ commands, isActive, menu }"
@@ -131,14 +159,20 @@
                 :class="{ 'close-icon': shouldShowFloatingMenu }"
               ></i>
             </li>
-            <li v-if="shouldShowTooltip" class="popover right-popover">
+            <li
+              v-if="shouldShowTooltip"
+              class="popover right-popover"
+            >
               <div class="popover-content">
                 <h3>WELCOME TO SCROLLSTACK</h3>
                 <p>
                   Tap the (+) button to add images, videos, embeds and more to
                   your story.
                 </p>
-                <button @click="onClickOk" class="dark-button">
+                <button
+                  @click="onClickOk"
+                  class="dark-button"
+                >
                   <span>OK, Got it</span>
                 </button>
               </div>
@@ -185,7 +219,10 @@
               <i class="separator-icon"></i>
             </li>
 
-            <li v-if="shouldShowFloatingMenu" style="display:none">
+            <li
+              v-if="shouldShowFloatingMenu"
+              style="display:none"
+            >
               <i class="kitchensink-divider"></i>
             </li>
 
@@ -204,7 +241,11 @@
           </ul>
         </div>
       </editor-floating-menu>
-      <editor-content id="editor" class="editor__content" :editor="editor" />
+      <editor-content
+        id="editor"
+        class="editor__content"
+        :editor="editor"
+      />
       <div class="ios-test-fix">empt</div>
     </article>
 
@@ -270,6 +311,11 @@ export default {
     title: {
       type: String,
       required: false
+    },
+    showTitleError: {
+      type: Boolean,
+      required: false,
+      default: () => false
     }
   },
   components: {
@@ -521,6 +567,9 @@ export default {
         this.editor.view.state.doc,
         this.editor.schema.nodes.lock
       );
+    },
+    displayTitleError() {
+      return this.showTitleError;
     }
   }
 };
