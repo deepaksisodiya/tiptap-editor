@@ -15,10 +15,7 @@
         @keydown.enter.prevent="setLinkUrl(editor.commands.link, linkUrl)"
         @keydown.esc="hideLinkMenu"
       />
-      <i
-        class="toolbar-close-icon"
-        @click="setLinkUrl(editor.commands.link, linkUrl)"
-      ></i>
+      <i class="toolbar-close-icon" @click="setLinkUrl(editor.commands.link, linkUrl)"></i>
     </div>
     <editor-menu-bubble
       :editor="editor"
@@ -53,16 +50,10 @@
           v-if="!linkMenuIsActive"
         >
           <button>
-            <i
-              class="italic-icon"
-              :class="{ 'is-active': isActive.italic() }"
-            ></i>
+            <i class="italic-icon" :class="{ 'is-active': isActive.italic() }"></i>
           </button>
         </li>
-        <li
-          v-if="!linkMenuIsActive"
-          @click="showLinkMenu(getMarkAttrs('link'))"
-        >
+        <li v-if="!linkMenuIsActive" @click="showLinkMenu(getMarkAttrs('link'))">
           <button>
             <i
               class="link-icon"
@@ -86,10 +77,7 @@
           v-if="!linkMenuIsActive"
         >
           <button>
-            <i
-              class="large-heading-icon"
-              :class="{ 'is-active': isActive.heading({ level: 3 }) }"
-            ></i>
+            <i class="large-heading-icon" :class="{ 'is-active': isActive.heading({ level: 3 }) }"></i>
           </button>
         </li>
 
@@ -99,23 +87,13 @@
           v-if="!linkMenuIsActive"
         >
           <button>
-            <i
-              class="small-heading-icon"
-              :class="{ 'is-active': isActive.heading({ level: 5 }) }"
-            ></i>
+            <i class="small-heading-icon" :class="{ 'is-active': isActive.heading({ level: 5 }) }"></i>
           </button>
         </li>
 
-        <li
-          class="menububble__button"
-          @click="commands.blockquote"
-          v-if="!linkMenuIsActive"
-        >
+        <li class="menububble__button" @click="commands.blockquote" v-if="!linkMenuIsActive">
           <button>
-            <i
-              class="quote-icon"
-              :class="{ 'is-active': isActive.blockquote() }"
-            ></i>
+            <i class="quote-icon" :class="{ 'is-active': isActive.blockquote() }"></i>
           </button>
         </li>
       </ul>
@@ -154,10 +132,7 @@
           />
           <ul class="kitchensink">
             <li @click="toggleFloatingMenu">
-              <i
-                class="add-icon"
-                :class="{ 'close-icon': shouldShowFloatingMenu }"
-              ></i>
+              <i class="add-icon" :class="{ 'close-icon': shouldShowFloatingMenu }"></i>
             </li>
             <li
               v-if="shouldShowTooltip"
@@ -177,11 +152,7 @@
                 </button>
               </div>
             </li>
-            <li
-              class="menubar__button"
-              @click="onClickImage()"
-              v-if="shouldShowFloatingMenu"
-            >
+            <li class="menubar__button" @click="onClickImage()" v-if="shouldShowFloatingMenu">
               <i class="image-icon"></i>
             </li>
 
@@ -256,12 +227,9 @@
 </template>
 
 <script>
-import {
-  Editor,
-  EditorContent,
-  EditorFloatingMenu,
-  EditorMenuBubble
-} from "tiptap";
+import { Editor, EditorContent, EditorMenuBubble } from "tiptap";
+
+import EditorFloatingMenu from "./EditorFloatingMenu";
 
 import {
   Blockquote,
@@ -388,20 +356,6 @@ export default {
     };
   },
   mounted() {
-    // focus on editor
-    setTimeout(() => {
-      const top = document.getElementsByTagName("header")[0].nextSibling
-        .offsetTop;
-      const el = document.getElementsByClassName("editor__floating-menu")[0];
-
-      if (this.isIOS) {
-        el.style.top = `${top + 24}px`;
-      } else {
-        el.style.top = `${top + 91}px`;
-      }
-      el.classList.add("is-plus-active");
-    }, 1000);
-
     this.$refs.menububble.$watch("menu.isActive", newValue => {
       if (!newValue) this.linkMenuIsActive = false;
     });
