@@ -85,6 +85,15 @@
     <!-- menububble end -->
 
     <article>
+      <!-- Message-bar -->
+      <div v-if="displayTitleError" class="message-bar with-icon error">
+        <p>You need to add a title to your post before continuing.</p>
+        <div class="close-message-bar">
+          <i @click="closeTitleError" class="close-icon"></i>
+        </div>
+      </div>
+      <!-- End of message-bar -->
+
       <editor-floating-menu
         :editor="editor"
         v-slot="{ commands, isActive, menu }"
@@ -238,6 +247,11 @@ export default {
     title: {
       type: String,
       required: false
+    },
+    showTitleError: {
+      type: Boolean,
+      required: false,
+      default: () => false
     }
   },
   components: {
@@ -247,6 +261,7 @@ export default {
   },
   data() {
     return {
+      displayTitleError: this.showTitleError,
       shouldShowTooltip: !localStorage.getItem("editorTour"),
       data: this.content,
       imageSrc: "",
@@ -447,9 +462,15 @@ export default {
     onClickOk() {
       localStorage.setItem("editorTour", true);
       this.shouldShowTooltip = false;
+    },
+    closeTitleError() {
+      this.displayTitleError = false;
     }
   },
   watch: {
+    showTitleError() {
+      this.displayTitleError = this.showTitleError;
+    },
     content(newValue) {
       if (newValue) {
         const newContent = this.addTitle(newValue, this.title);
