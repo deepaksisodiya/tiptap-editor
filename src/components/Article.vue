@@ -252,11 +252,6 @@ export default {
       type: Boolean,
       required: false,
       default: () => false
-    },
-    hideTitleError: {
-      type: Function,
-      required: false,
-      default: Function.prototype
     }
   },
   components: {
@@ -266,6 +261,7 @@ export default {
   },
   data() {
     return {
+      displayTitleError: this.showTitleError,
       shouldShowTooltip: !localStorage.getItem("editorTour"),
       data: this.content,
       imageSrc: "",
@@ -275,6 +271,7 @@ export default {
       linkMenuIsActive: false,
       isIOS: /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream,
       editor: new Editor({
+        autoFocus: false,
         editable: true,
         extensions: [
           new Doc(),
@@ -467,10 +464,13 @@ export default {
       this.shouldShowTooltip = false;
     },
     closeTitleError() {
-      this.hideTitleError();
+      this.displayTitleError = false;
     }
   },
   watch: {
+    showTitleError() {
+      this.displayTitleError = this.showTitleError;
+    },
     content(newValue) {
       if (newValue) {
         const newContent = this.addTitle(newValue, this.title);
@@ -501,9 +501,6 @@ export default {
         this.editor.view.state.doc,
         this.editor.schema.nodes.lock
       );
-    },
-    displayTitleError() {
-      return this.showTitleError;
     }
   }
 };
@@ -564,5 +561,4 @@ figcaption > span.is-empty {
   visibility: hidden;
   height: 500px;
 }
-
 </style>
