@@ -141,7 +141,10 @@ export default {
   computed: {
     isOnlyLink() {
       const { url, thumbnail_url, title, description } = this.embeds.data;
-      return !thumbnail_url && title && description && url;
+      if (!title && !description && !thumbnail_url && url) {
+        return true;
+      }
+      return false;
     },
     isSquareImage() {
       const { thumbnail_width, thumbnail_height } = this.embeds.data;
