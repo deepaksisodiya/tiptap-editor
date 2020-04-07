@@ -190,7 +190,7 @@ export default {
         this.embeds.isError = false;
         try {
           const response = await axios(
-            `${this.options.baseUrl}?url=${this.url}`
+            `${this.options.baseUrl}?url=${this.url.trim()}`
           );
           this.embeds.data = response.data;
           // for copy pasting to work
