@@ -59,7 +59,6 @@ export default {
   },
   mounted() {
     this.$nextTick(() => {
-      this.view.focus();
       this.$el.scrollIntoView(true);
     });
   },

@@ -60,8 +60,8 @@ class Menu {
 
   update(view, lastState) {
     const { state, dom } = view;
-    const isEmpty = state.doc.nodeSize === 9;
     const length = state.doc.content.content.length;
+    const isEmpty = length === 3 && !dom.children[2].textContent;
     const isIos =
       /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
     const isImageNode =
@@ -69,6 +69,7 @@ class Menu {
 
     // Don't do anything if the document/selection didn't change
     if (
+      view.hasFocus() &&
       lastState &&
       lastState.doc.eq(state.doc) &&
       lastState.selection.eq(state.selection)
@@ -109,7 +110,6 @@ class Menu {
             false
           )
         : view.coordsAtPos(state.selection.anchor);
-
     const top =
       cursorBoundings.top -
       editorBoundings.top +
