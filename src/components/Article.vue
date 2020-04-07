@@ -382,7 +382,11 @@ export default {
             }
           }
         } = this.editor;
-        if (content.length === 2 && !this.shouldShowFloatingMenu)
+        if (
+          content.length === 3 &&
+          node.type.name === "paragraph" &&
+          !this.shouldShowFloatingMenu
+        )
           return "Start your content here ...";
       }
       return "";
@@ -508,7 +512,7 @@ export default {
 
 <style lang="scss">
 .editor *.is-empty:nth-child(1)::before,
-.editor *.is-empty:nth-child(2)::before {
+.editor *.is-empty:nth-child(3)::before {
   float: left;
   content: attr(data-empty-text);
   pointer-events: none;
