@@ -61,6 +61,11 @@ class Menu {
   update(view, lastState) {
     const { state, dom } = view;
     const isEmpty = state.doc.nodeSize === 9;
+    const length = state.doc.content.content.length;
+    const isIos =
+      /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+    const isImageNode =
+      isIos && state.doc.content.content[length - 2].type.name === "image";
 
     // Don't do anything if the document/selection didn't change
     if (
@@ -97,11 +102,18 @@ class Menu {
     }
 
     const editorBoundings = parent.getBoundingClientRect();
-    const cursorBoundings = isEmpty
-      ? flattenV(dom.children[2].getBoundingClientRect(), true)
-      : view.coordsAtPos(state.selection.anchor);
+    const cursorBoundings =
+      isEmpty || isImageNode
+        ? flattenV(
+            dom.children[isImageNode ? length - 1 : 2].getBoundingClientRect(),
+            false
+          )
+        : view.coordsAtPos(state.selection.anchor);
 
-    const top = cursorBoundings.top - editorBoundings.top + (isEmpty ? 3.5 : 0);
+    const top =
+      cursorBoundings.top -
+      editorBoundings.top +
+      (isEmpty || isImageNode ? 3.5 : 0);
 
     this.isActive = true;
     this.top = top;

@@ -362,7 +362,7 @@ export default {
           content: [
             {
               type: "title",
-              content: [{ type: "text", text: title }]
+              content: title ? [{ type: "text", text: title }] : []
             }
           ]
         },
