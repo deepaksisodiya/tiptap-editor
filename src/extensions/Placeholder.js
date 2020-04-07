@@ -44,7 +44,7 @@ export default class Placeholder extends Extension {
               const isHeaderNode = node.type.name === "header";
               const isNodeEmpty =
                 node.content.size === 0 ||
-                (isHeaderNode && node.content.size === 3);
+                (isHeaderNode && node.content.size === 2);
               if ((hasAnchor || !this.options.showOnlyCurrent) && isNodeEmpty) {
                 const classes = [this.options.emptyNodeClass];
 

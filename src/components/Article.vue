@@ -11,10 +11,7 @@
         @keydown.enter.prevent="setLinkUrl(editor.commands.link, linkUrl)"
         @keydown.esc="hideLinkMenu"
       />
-      <i
-        class="toolbar-close-icon"
-        @click="setLinkUrl(editor.commands.link, linkUrl)"
-      ></i>
+      <i class="toolbar-close-icon" @click="setLinkUrl(editor.commands.link, linkUrl)"></i>
     </div>
     <editor-menu-bubble
       :editor="editor"
@@ -40,16 +37,10 @@
 
         <li @click="commands.italic" v-if="!linkMenuIsActive">
           <button>
-            <i
-              class="italic-icon"
-              :class="{ 'is-active': isActive.italic() }"
-            ></i>
+            <i class="italic-icon" :class="{ 'is-active': isActive.italic() }"></i>
           </button>
         </li>
-        <li
-          v-if="!linkMenuIsActive"
-          @click="showLinkMenu(getMarkAttrs('link'))"
-        >
+        <li v-if="!linkMenuIsActive" @click="showLinkMenu(getMarkAttrs('link'))">
           <button>
             <i class="link-icon" :class="{ 'is-active': isActive.link() }"></i>
             <!--
@@ -70,10 +61,7 @@
           v-if="!linkMenuIsActive"
         >
           <button>
-            <i
-              class="large-heading-icon"
-              :class="{ 'is-active': isActive.heading({ level: 3 }) }"
-            ></i>
+            <i class="large-heading-icon" :class="{ 'is-active': isActive.heading({ level: 3 }) }"></i>
           </button>
         </li>
 
@@ -83,23 +71,13 @@
           v-if="!linkMenuIsActive"
         >
           <button>
-            <i
-              class="small-heading-icon"
-              :class="{ 'is-active': isActive.heading({ level: 5 }) }"
-            ></i>
+            <i class="small-heading-icon" :class="{ 'is-active': isActive.heading({ level: 5 }) }"></i>
           </button>
         </li>
 
-        <li
-          class="menububble__button"
-          @click="commands.blockquote"
-          v-if="!linkMenuIsActive"
-        >
+        <li class="menububble__button" @click="commands.blockquote" v-if="!linkMenuIsActive">
           <button>
-            <i
-              class="quote-icon"
-              :class="{ 'is-active': isActive.blockquote() }"
-            ></i>
+            <i class="quote-icon" :class="{ 'is-active': isActive.blockquote() }"></i>
           </button>
         </li>
       </ul>
@@ -135,10 +113,7 @@
           />
           <ul class="kitchensink">
             <li @click="toggleFloatingMenu">
-              <i
-                class="add-icon"
-                :class="{ 'close-icon': shouldShowFloatingMenu }"
-              ></i>
+              <i class="add-icon" :class="{ 'close-icon': shouldShowFloatingMenu }"></i>
             </li>
             <li v-if="shouldShowTooltip" class="popover right-popover">
               <div class="popover-content">
@@ -152,11 +127,7 @@
                 </button>
               </div>
             </li>
-            <li
-              class="menubar__button"
-              @click="onClickImage()"
-              v-if="shouldShowFloatingMenu"
-            >
+            <li class="menubar__button" @click="onClickImage()" v-if="shouldShowFloatingMenu">
               <i class="image-icon"></i>
             </li>
 
@@ -345,7 +316,7 @@ export default {
               headerContent[0].content &&
               headerContent[0].content[0] &&
               headerContent[0].content[0].text;
-            newData.content[0].content.shift();
+            newData.content.shift();
           }
           newData.content.forEach(block => {
             if (block.type === "image" && block.attrs.src.includes("data:")) {
@@ -389,12 +360,17 @@ export default {
     addTitle(data, title) {
       if (data.content.length === 0) return;
       let newData = data;
-      newData.content[0].content = [
+      newData.content = [
         {
-          type: "title",
-          content: title ? [{ type: "text", text: title }] : []
+          type: "header",
+          content: [
+            {
+              type: "title",
+              content: title ? [{ type: "text", text: title }] : []
+            }
+          ]
         },
-        data.content[0].content[0]
+        ...newData.content
       ];
       return newData;
     },
