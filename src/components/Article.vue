@@ -252,6 +252,11 @@ export default {
       type: Boolean,
       required: false,
       default: () => false
+    },
+    hideTitleError: {
+      type: Function,
+      required: false,
+      default: Function.prototype
     }
   },
   components: {
@@ -261,7 +266,6 @@ export default {
   },
   data() {
     return {
-      displayTitleError: this.showTitleError,
       shouldShowTooltip: !localStorage.getItem("editorTour"),
       data: this.content,
       imageSrc: "",
@@ -463,13 +467,10 @@ export default {
       this.shouldShowTooltip = false;
     },
     closeTitleError() {
-      this.displayTitleError = false;
+      this.hideTitleError();
     }
   },
   watch: {
-    showTitleError() {
-      this.displayTitleError = this.showTitleError;
-    },
     content(newValue) {
       if (newValue) {
         const newContent = this.addTitle(newValue, this.title);
@@ -500,6 +501,9 @@ export default {
         this.editor.view.state.doc,
         this.editor.schema.nodes.lock
       );
+    },
+    displayTitleError() {
+      return this.showTitleError;
     }
   }
 };
