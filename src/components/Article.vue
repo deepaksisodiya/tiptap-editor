@@ -297,7 +297,7 @@ export default {
               headerContent[0].content &&
               headerContent[0].content[0] &&
               headerContent[0].content[0].text;
-            newData.content[0].content.shift();
+            newData.content.shift();
           }
           newData.content.forEach(block => {
             if (block.type === "image" && block.attrs.src.includes("data:")) {
@@ -341,12 +341,17 @@ export default {
     addTitle(data, title) {
       if (data.content.length === 0) return;
       let newData = data;
-      newData.content[0].content = [
+      newData.content = [
         {
-          type: "title",
-          content: [{ type: "text", text: title }]
+          type: "header",
+          content: [
+            {
+              type: "title",
+              content: [{ type: "text", text: title }]
+            }
+          ]
         },
-        data.content[0].content[0]
+        ...newData.content
       ];
       return newData;
     },

@@ -98,7 +98,7 @@ class Menu {
 
     const editorBoundings = parent.getBoundingClientRect();
     const cursorBoundings = isEmpty
-      ? flattenV(dom.children[1].getBoundingClientRect(), true)
+      ? flattenV(dom.children[2].getBoundingClientRect(), true)
       : view.coordsAtPos(state.selection.anchor);
 
     const top = cursorBoundings.top - editorBoundings.top + (isEmpty ? 3.5 : 0);
