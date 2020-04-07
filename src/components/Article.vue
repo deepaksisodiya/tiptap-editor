@@ -11,7 +11,10 @@
         @keydown.enter.prevent="setLinkUrl(editor.commands.link, linkUrl)"
         @keydown.esc="hideLinkMenu"
       />
-      <i class="toolbar-close-icon" @click="setLinkUrl(editor.commands.link, linkUrl)"></i>
+      <i
+        class="toolbar-close-icon"
+        @click="setLinkUrl(editor.commands.link, linkUrl)"
+      ></i>
     </div>
     <editor-menu-bubble
       :editor="editor"
@@ -37,10 +40,16 @@
 
         <li @click="commands.italic" v-if="!linkMenuIsActive">
           <button>
-            <i class="italic-icon" :class="{ 'is-active': isActive.italic() }"></i>
+            <i
+              class="italic-icon"
+              :class="{ 'is-active': isActive.italic() }"
+            ></i>
           </button>
         </li>
-        <li v-if="!linkMenuIsActive" @click="showLinkMenu(getMarkAttrs('link'))">
+        <li
+          v-if="!linkMenuIsActive"
+          @click="showLinkMenu(getMarkAttrs('link'))"
+        >
           <button>
             <i class="link-icon" :class="{ 'is-active': isActive.link() }"></i>
             <!--
@@ -61,7 +70,10 @@
           v-if="!linkMenuIsActive"
         >
           <button>
-            <i class="large-heading-icon" :class="{ 'is-active': isActive.heading({ level: 3 }) }"></i>
+            <i
+              class="large-heading-icon"
+              :class="{ 'is-active': isActive.heading({ level: 3 }) }"
+            ></i>
           </button>
         </li>
 
@@ -71,13 +83,23 @@
           v-if="!linkMenuIsActive"
         >
           <button>
-            <i class="small-heading-icon" :class="{ 'is-active': isActive.heading({ level: 5 }) }"></i>
+            <i
+              class="small-heading-icon"
+              :class="{ 'is-active': isActive.heading({ level: 5 }) }"
+            ></i>
           </button>
         </li>
 
-        <li class="menububble__button" @click="commands.blockquote" v-if="!linkMenuIsActive">
+        <li
+          class="menububble__button"
+          @click="commands.blockquote"
+          v-if="!linkMenuIsActive"
+        >
           <button>
-            <i class="quote-icon" :class="{ 'is-active': isActive.blockquote() }"></i>
+            <i
+              class="quote-icon"
+              :class="{ 'is-active': isActive.blockquote() }"
+            ></i>
           </button>
         </li>
       </ul>
@@ -86,7 +108,7 @@
 
     <article>
       <!-- Message-bar -->
-      <div v-if="displayTitleError" class="message-bar with-icon error">
+      <div v-if="shouldDisplayTitleError" class="message-bar with-icon error">
         <p>You need to add a title to your post before continuing.</p>
         <div class="close-message-bar">
           <i @click="closeTitleError" class="close-icon"></i>
@@ -113,7 +135,10 @@
           />
           <ul class="kitchensink">
             <li @click="toggleFloatingMenu">
-              <i class="add-icon" :class="{ 'close-icon': shouldShowFloatingMenu }"></i>
+              <i
+                class="add-icon"
+                :class="{ 'close-icon': shouldShowFloatingMenu }"
+              ></i>
             </li>
             <li v-if="shouldShowTooltip" class="popover right-popover">
               <div class="popover-content">
@@ -127,7 +152,11 @@
                 </button>
               </div>
             </li>
-            <li class="menubar__button" @click="onClickImage()" v-if="shouldShowFloatingMenu">
+            <li
+              class="menubar__button"
+              @click="onClickImage()"
+              v-if="shouldShowFloatingMenu"
+            >
               <i class="image-icon"></i>
             </li>
 
@@ -248,10 +277,15 @@ export default {
       type: String,
       required: false
     },
-    showTitleError: {
+    shouldShowTitleError: {
       type: Boolean,
       required: false,
       default: () => false
+    },
+    hideTitleError: {
+      type: Function,
+      required: false,
+      default: Function.prototype
     }
   },
   components: {
@@ -261,7 +295,6 @@ export default {
   },
   data() {
     return {
-      displayTitleError: this.showTitleError,
       shouldShowTooltip: !localStorage.getItem("editorTour"),
       data: this.content,
       imageSrc: "",
@@ -468,13 +501,10 @@ export default {
       this.shouldShowTooltip = false;
     },
     closeTitleError() {
-      this.displayTitleError = false;
+      this.hideTitleError();
     }
   },
   watch: {
-    showTitleError() {
-      this.displayTitleError = this.showTitleError;
-    },
     content(newValue) {
       if (newValue) {
         const newContent = this.addTitle(newValue, this.title);
@@ -505,6 +535,9 @@ export default {
         this.editor.view.state.doc,
         this.editor.schema.nodes.lock
       );
+    },
+    shouldDisplayTitleError() {
+      return this.shouldShowTitleError;
     }
   }
 };
