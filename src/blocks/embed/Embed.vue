@@ -64,7 +64,7 @@
           <div class="link-embed">
             <i class="embed-link-icon"></i>
           </div>
-          <span>kdelaney.com/a/12232F/</span>
+          <span>{{ embeds.data.url }}</span>
         </div>
         <i class="right-arrow"></i>
       </div>
