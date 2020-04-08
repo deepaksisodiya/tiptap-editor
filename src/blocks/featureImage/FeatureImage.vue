@@ -1,6 +1,11 @@
 <template>
   <div :class="{ 'upload-picture-block': !dataUrl }" @click="addImage">
-    <input type="file" ref="fileInput" style="display:none" @change="previewFiles()" />
+    <input
+      type="file"
+      ref="fileInput"
+      style="display:none"
+      @change="previewFiles()"
+    />
     <template v-if="!dataUrl">
       <i class="upload-icon"></i>
       <span>Upload feature image (optional)</span>
@@ -20,11 +25,10 @@
 
 <script>
 import { TextSelection } from "tiptap";
-import axios from "axios";
 
 export default {
   name: "Image",
-  props: ["node", "updateAttrs", "view", "getPos"],
+  props: ["node", "updateAttrs", "view", "getPos", "options"],
   data() {
     return {
       dataUrl: this.node.attrs.src
@@ -94,11 +98,7 @@ export default {
           const formData = new FormData();
           formData.append(file.name, file);
           // TODO handle image loading here later
-          const response = await axios.post("/api/w/images", formData, {
-            headers: {
-              "Content-Type": "multipart/form-data"
-            }
-          });
+          const response = await this.options.postImage(formData);
           this.src = response.data.url;
         };
         reader.readAsDataURL(file);

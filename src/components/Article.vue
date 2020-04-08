@@ -11,7 +11,10 @@
         @keydown.enter.prevent="setLinkUrl(editor.commands.link, linkUrl)"
         @keydown.esc="hideLinkMenu"
       />
-      <i class="toolbar-close-icon" @click="setLinkUrl(editor.commands.link, linkUrl)"></i>
+      <i
+        class="toolbar-close-icon"
+        @click="setLinkUrl(editor.commands.link, linkUrl)"
+      ></i>
     </div>
     <editor-menu-bubble
       :editor="editor"
@@ -37,10 +40,16 @@
 
         <li @click="commands.italic" v-if="!linkMenuIsActive">
           <button>
-            <i class="italic-icon" :class="{ 'is-active': isActive.italic() }"></i>
+            <i
+              class="italic-icon"
+              :class="{ 'is-active': isActive.italic() }"
+            ></i>
           </button>
         </li>
-        <li v-if="!linkMenuIsActive" @click="showLinkMenu(getMarkAttrs('link'))">
+        <li
+          v-if="!linkMenuIsActive"
+          @click="showLinkMenu(getMarkAttrs('link'))"
+        >
           <button>
             <i class="link-icon" :class="{ 'is-active': isActive.link() }"></i>
             <!--
@@ -61,7 +70,10 @@
           v-if="!linkMenuIsActive"
         >
           <button>
-            <i class="large-heading-icon" :class="{ 'is-active': isActive.heading({ level: 3 }) }"></i>
+            <i
+              class="large-heading-icon"
+              :class="{ 'is-active': isActive.heading({ level: 3 }) }"
+            ></i>
           </button>
         </li>
 
@@ -71,13 +83,23 @@
           v-if="!linkMenuIsActive"
         >
           <button>
-            <i class="small-heading-icon" :class="{ 'is-active': isActive.heading({ level: 5 }) }"></i>
+            <i
+              class="small-heading-icon"
+              :class="{ 'is-active': isActive.heading({ level: 5 }) }"
+            ></i>
           </button>
         </li>
 
-        <li class="menububble__button" @click="commands.blockquote" v-if="!linkMenuIsActive">
+        <li
+          class="menububble__button"
+          @click="commands.blockquote"
+          v-if="!linkMenuIsActive"
+        >
           <button>
-            <i class="quote-icon" :class="{ 'is-active': isActive.blockquote() }"></i>
+            <i
+              class="quote-icon"
+              :class="{ 'is-active': isActive.blockquote() }"
+            ></i>
           </button>
         </li>
       </ul>
@@ -113,7 +135,10 @@
           />
           <ul class="kitchensink">
             <li @click="toggleFloatingMenu">
-              <i class="add-icon" :class="{ 'close-icon': shouldShowFloatingMenu }"></i>
+              <i
+                class="add-icon"
+                :class="{ 'close-icon': shouldShowFloatingMenu }"
+              ></i>
             </li>
             <li v-if="shouldShowTooltip" class="popover right-popover">
               <div class="popover-content">
@@ -127,7 +152,11 @@
                 </button>
               </div>
             </li>
-            <li class="menubar__button" @click="onClickImage()" v-if="shouldShowFloatingMenu">
+            <li
+              class="menubar__button"
+              @click="onClickImage()"
+              v-if="shouldShowFloatingMenu"
+            >
               <i class="image-icon"></i>
             </li>
 
@@ -214,7 +243,6 @@ import {
 import { contains } from "prosemirror-utils";
 // import VueJsonPretty from "vue-json-pretty";
 import _debounce from "lodash.debounce";
-import axios from "axios";
 
 import {
   Embed,
@@ -257,6 +285,14 @@ export default {
       type: Function,
       required: false,
       default: Function.prototype
+    },
+    postImage: {
+      type: Function,
+      required: true
+    },
+    getEmbeds: {
+      type: Function,
+      required: true
     }
   },
   components: {
@@ -299,9 +335,11 @@ export default {
             notAfter: ["paragraph"]
           }),
           new Image(),
-          new FeatureImage(),
+          new FeatureImage({
+            postImage: this.postImage
+          }),
           new Embed({
-            baseUrl: "/api/w/embeds/metadata"
+            getEmbeds: this.getEmbeds
           }),
           new HorizontalRule(),
           new Lock()
@@ -448,11 +486,7 @@ export default {
               const formData = new FormData();
               formData.append(file.name, file);
               // TODO handle image loading here later
-              const response = await axios.post("/api/w/images", formData, {
-                headers: {
-                  "Content-Type": "multipart/form-data"
-                }
-              });
+              const response = await this.postImage(formData);
               window.imageInstance.src = response.data.url;
               window.imageInstance = null;
             }

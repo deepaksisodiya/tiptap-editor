@@ -82,7 +82,6 @@
 
 <script>
 import { TextSelection } from "tiptap";
-import axios from "axios";
 
 export default {
   name: "Embed",
@@ -192,9 +191,7 @@ export default {
         this.embeds.isLoading = true;
         this.embeds.isError = false;
         try {
-          const response = await axios(
-            `${this.options.baseUrl}?url=${this.url.trim()}`
-          );
+          const response = await this.options.getEmbeds(this.url);
           this.embeds.data = response.data;
           // for copy pasting to work
           this.updateAttrs({
