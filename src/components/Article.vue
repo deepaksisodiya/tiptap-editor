@@ -444,7 +444,12 @@ export default {
           });
 
           window.imageInstance.$refs.img.onload = async e => {
-            if (e.path[0].src.includes("data:")) {
+            window.imageInstance.caption = " ";
+            window.imageInstance.$nextTick(() => {
+              window.imageInstance.caption = "";
+            });
+            if (window.imageInstance && e.path[0].src.includes("data:")) {
+              const imageInstance = window.imageInstance;
               const formData = new FormData();
               formData.append(file.name, file);
               // TODO handle image loading here later
@@ -453,7 +458,7 @@ export default {
                   "Content-Type": "multipart/form-data"
                 }
               });
-              window.imageInstance.src = response.data.url;
+              imageInstance.src = response.data.url;
               window.imageInstance = null;
             }
           };
