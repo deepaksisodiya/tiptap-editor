@@ -34,7 +34,6 @@ export default class Placeholder extends Extension {
             const active = editable || !this.options.showOnlyWhenEditable;
             const { anchor } = selection;
             const decorations = [];
-            const isEditorEmpty = doc.textContent.length === 0;
             if (!active) {
               return false;
             }
@@ -42,15 +41,17 @@ export default class Placeholder extends Extension {
             doc.descendants((node, pos) => {
               const hasAnchor = anchor >= pos && anchor <= pos + node.nodeSize;
               const isHeaderNode = node.type.name === "header";
+              const isPlaceHolderNode =
+                isHeaderNode || node.type.name === "paragraph";
               const isNodeEmpty =
                 node.content.size === 0 ||
                 (isHeaderNode && node.content.size === 2);
-              if ((hasAnchor || !this.options.showOnlyCurrent) && isNodeEmpty) {
+              if (
+                (hasAnchor || !this.options.showOnlyCurrent) &&
+                isNodeEmpty &&
+                isPlaceHolderNode
+              ) {
                 const classes = [this.options.emptyNodeClass];
-
-                if (isEditorEmpty) {
-                  classes.push(this.options.emptyEditorClass);
-                }
 
                 const from = isHeaderNode ? pos + 1 : pos;
                 const to = isHeaderNode

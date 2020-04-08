@@ -261,6 +261,23 @@ import "@/assets/scss/base.scss";
 import "@/assets/scss/editor.scss";
 import "@/assets/scss/article.scss";
 
+const defaultContent = {
+  type: "doc",
+  content: [
+    {
+      type: "featureimage",
+      attrs: {
+        src: "",
+        caption: "",
+        alt: ""
+      }
+    },
+    {
+      type: "paragraph"
+    }
+  ]
+};
+
 export default {
   name: "Article",
   props: {
@@ -270,7 +287,8 @@ export default {
     },
     content: {
       type: Object,
-      required: false
+      default: defaultContent,
+      required: true
     },
     title: {
       type: String,
@@ -385,10 +403,11 @@ export default {
     }
 
     // init data
-    if (this.content) {
-      const newContent = this.addTitle(this.content, this.title);
-      this.editor.setContent(newContent, false);
-    }
+    const newContent = this.addTitle(
+      this.content || defaultContent,
+      this.title
+    );
+    this.editor.setContent(newContent, false);
   },
   methods: {
     showLinkMenu(attrs) {
@@ -482,12 +501,18 @@ export default {
           });
 
           window.imageInstance.$refs.img.onload = async e => {
-            if (e.path[0].src.includes("data:")) {
+            window.imageInstance.caption = " ";
+            window.imageInstance.$nextTick(() => {
+              window.imageInstance.caption = "";
+            });
+            if (window.imageInstance && e.path[0].src.includes("data:")) {
+              const imageInstance = window.imageInstance;
               const formData = new FormData();
               formData.append(file.name, file);
               // TODO handle image loading here later
+
               const response = await this.postImage(formData);
-              window.imageInstance.src = response.data.url;
+              imageInstance.src = response.data.url;
               window.imageInstance = null;
             }
           };
