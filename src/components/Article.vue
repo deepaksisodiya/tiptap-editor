@@ -405,6 +405,9 @@ export default {
       this.$refs.menububble.menu.isActive = true;
     },
     toggleFloatingMenu() {
+      if (!localStorage.getItem("editorTour")) {
+        this.onClickOk();
+      }
       this.shouldShowFloatingMenu = !this.shouldShowFloatingMenu;
       this.editor.setOptions({});
     },
