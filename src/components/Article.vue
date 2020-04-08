@@ -88,8 +88,8 @@
       <!-- Message-bar -->
       <div v-if="shouldDisplayTitleError" class="message-bar with-icon error">
         <p>You need to add a title to your post before continuing.</p>
-        <div class="close-message-bar">
-          <i @click="closeTitleError" class="close-icon"></i>
+        <div @click="closeTitleError" class="close-message-bar">
+          <i class="close-icon"></i>
         </div>
       </div>
       <!-- End of message-bar -->
@@ -391,7 +391,7 @@ export default {
           node.type.name === "paragraph" &&
           !this.shouldShowFloatingMenu
         )
-          return "Start your content here ...";
+          return "Start writing here";
       }
       return "";
     },
