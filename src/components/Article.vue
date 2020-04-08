@@ -233,6 +233,23 @@ import "@/assets/scss/base.scss";
 import "@/assets/scss/editor.scss";
 import "@/assets/scss/article.scss";
 
+const defaultContent = {
+  type: "doc",
+  content: [
+    {
+      type: "featureimage",
+      attrs: {
+        src: "",
+        caption: "",
+        alt: ""
+      }
+    },
+    {
+      type: "paragraph"
+    }
+  ]
+};
+
 export default {
   name: "Article",
   props: {
@@ -242,7 +259,8 @@ export default {
     },
     content: {
       type: Object,
-      required: false
+      default: defaultContent,
+      required: true
     },
     title: {
       type: String,
@@ -347,10 +365,11 @@ export default {
     }
 
     // init data
-    if (this.content) {
-      const newContent = this.addTitle(this.content, this.title);
-      this.editor.setContent(newContent, false);
-    }
+    const newContent = this.addTitle(
+      this.content || defaultContent,
+      this.title
+    );
+    this.editor.setContent(newContent, false);
   },
   methods: {
     showLinkMenu(attrs) {
