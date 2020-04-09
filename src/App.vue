@@ -4,7 +4,7 @@
     <Article
       :onUpdatePost="onUpdatePost"
       :content="content"
-      :postImage="postImage"
+      :uploadImage="uploadImage"
       :getEmbeds="getEmbeds"
     />
   </div>
@@ -12,7 +12,7 @@
 
 <script>
 import Article from "./components/Article.vue";
-import { postImage, getEmbeds } from "./api";
+import { uploadImage, getEmbeds } from "./api";
 
 export default {
   name: "App",
@@ -28,7 +28,7 @@ export default {
     Article
   },
   methods: {
-    postImage,
+    uploadImage,
     getEmbeds,
     onUpdatePost(preData, newData, title) {
       console.log(preData, newData, title);

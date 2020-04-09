@@ -304,7 +304,7 @@ export default {
       required: false,
       default: Function.prototype
     },
-    postImage: {
+    uploadImage: {
       type: Function,
       required: true
     },
@@ -354,7 +354,7 @@ export default {
           }),
           new Image(),
           new FeatureImage({
-            postImage: this.postImage
+            uploadImage: this.uploadImage
           }),
           new Embed({
             getEmbeds: this.getEmbeds
@@ -511,7 +511,7 @@ export default {
               formData.append(file.name, file);
               // TODO handle image loading here later
 
-              const response = await this.postImage(formData);
+              const response = await this.uploadImage(formData);
               imageInstance.src = response.data.url;
               window.imageInstance = null;
             }
