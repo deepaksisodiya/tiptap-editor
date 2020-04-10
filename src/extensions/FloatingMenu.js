@@ -12,9 +12,9 @@ class Menu {
       ...{
         resizeObserver: true,
         element: null,
-        onUpdate: () => false
+        onUpdate: () => false,
       },
-      ...options
+      ...options,
     };
     this.preventHide = false;
     this.editorView = editorView;
@@ -24,7 +24,7 @@ class Menu {
     // the mousedown event is fired before blur so we can prevent it
     this.mousedownHandler = this.handleClick.bind(this);
     this.options.element.addEventListener("mousedown", this.mousedownHandler, {
-      capture: true
+      capture: true,
     });
 
     this.focusHandler = ({ view }) => {
@@ -65,7 +65,8 @@ class Menu {
     const isIos =
       /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
     const isImageNode =
-      isIos && state.doc.content.content[length - 2].type.name === "image";
+      isIos &&
+      state.doc.content.content[length - 2].type.name.includes("image");
 
     // Don't do anything if the document/selection didn't change
     if (
@@ -124,7 +125,7 @@ class Menu {
   sendUpdate() {
     this.options.onUpdate({
       isActive: this.isActive,
-      top: this.top
+      top: this.top,
     });
   }
 
@@ -162,6 +163,6 @@ export default function(options) {
     key: new PluginKey("floating_menu"),
     view(editorView) {
       return new Menu({ editorView, options });
-    }
+    },
   });
 }

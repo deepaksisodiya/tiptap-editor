@@ -1,17 +1,17 @@
 <template>
-  <div :class="{ 'upload-picture-block': !dataUrl }" @click="addImage">
-    <input
-      type="file"
-      ref="fileInput"
-      style="display:none"
-      @change="previewFiles()"
-    />
+  <div :class="{ 'upload-picture-block': !dataUrl }" style="position: relative;">
     <template v-if="!dataUrl">
       <i class="upload-icon"></i>
       <span>Upload feature image (optional)</span>
+      <input
+        type="file"
+        ref="fileInput"
+        style="position: absolute; opacity: 0; top: 0px; left: 0px; height: 100%; width: 100%; margin-top: 0px; margin-bottom: 0px"
+        @change="previewFiles()"
+      />
     </template>
     <figure v-if="dataUrl" class="featured-image">
-      <img :src="dataUrl" />
+      <img :src="dataUrl" @load="onImageLoad" />
       <figcaption>
         <input
           v-model="caption"
@@ -105,10 +105,12 @@ export default {
       } else {
         console.log("File not supported!");
       }
-      // this.$refs.fileInput.value = "";
     },
-    addImage() {
-      if (!this.src) this.$refs.fileInput.click();
+    onImageLoad() {
+      this.caption = " ";
+      this.$nextTick(() => {
+        this.caption = "";
+      });
     }
   }
 };
