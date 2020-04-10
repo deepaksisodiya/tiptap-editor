@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export const postImage = formData =>
+export const uploadImage = formData =>
   axios.post("https://deepak.scrollstack.com/api/w/images", formData, {
     headers: {
       "Content-Type": "multipart/form-data"

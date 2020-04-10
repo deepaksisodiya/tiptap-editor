@@ -98,7 +98,7 @@ export default {
           const formData = new FormData();
           formData.append(file.name, file);
           // TODO handle image loading here later
-          const response = await this.options.postImage(formData);
+          const response = await this.options.uploadImage(formData);
           this.src = response.data.url;
         };
         reader.readAsDataURL(file);
