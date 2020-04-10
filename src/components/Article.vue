@@ -2,7 +2,7 @@
   <div class="editor">
     <!-- on hover it will show bold, italic and code -->
     <!-- menububble start -->
-    <div ref="linkInput" v-if="linkMenuIsActive" class="highlight-menu-input">
+    <div ref="linkDiv" v-show="linkMenuIsActive" class="highlight-menu-input">
       <input
         type="text"
         v-model="linkUrl"
@@ -11,10 +11,7 @@
         @keydown.enter.prevent="setLinkUrl(editor.commands.link, linkUrl)"
         @keydown.esc="hideLinkMenu"
       />
-      <i
-        class="toolbar-close-icon"
-        @click="setLinkUrl(editor.commands.link, linkUrl)"
-      ></i>
+      <i class="toolbar-close-icon" @click="setLinkUrl(editor.commands.link, linkUrl)"></i>
     </div>
     <editor-menu-bubble
       :editor="editor"
@@ -40,16 +37,10 @@
 
         <li @click="commands.italic" v-if="!linkMenuIsActive">
           <button>
-            <i
-              class="italic-icon"
-              :class="{ 'is-active': isActive.italic() }"
-            ></i>
+            <i class="italic-icon" :class="{ 'is-active': isActive.italic() }"></i>
           </button>
         </li>
-        <li
-          v-if="!linkMenuIsActive"
-          @click="showLinkMenu(getMarkAttrs('link'))"
-        >
+        <li v-if="!linkMenuIsActive" @click="showLinkMenu(getMarkAttrs('link'))">
           <button>
             <i class="link-icon" :class="{ 'is-active': isActive.link() }"></i>
             <!--
@@ -70,10 +61,7 @@
           v-if="!linkMenuIsActive"
         >
           <button>
-            <i
-              class="large-heading-icon"
-              :class="{ 'is-active': isActive.heading({ level: 3 }) }"
-            ></i>
+            <i class="large-heading-icon" :class="{ 'is-active': isActive.heading({ level: 3 }) }"></i>
           </button>
         </li>
 
@@ -83,23 +71,13 @@
           v-if="!linkMenuIsActive"
         >
           <button>
-            <i
-              class="small-heading-icon"
-              :class="{ 'is-active': isActive.heading({ level: 5 }) }"
-            ></i>
+            <i class="small-heading-icon" :class="{ 'is-active': isActive.heading({ level: 5 }) }"></i>
           </button>
         </li>
 
-        <li
-          class="menububble__button"
-          @click="commands.blockquote"
-          v-if="!linkMenuIsActive"
-        >
+        <li class="menububble__button" @click="commands.blockquote" v-if="!linkMenuIsActive">
           <button>
-            <i
-              class="quote-icon"
-              :class="{ 'is-active': isActive.blockquote() }"
-            ></i>
+            <i class="quote-icon" :class="{ 'is-active': isActive.blockquote() }"></i>
           </button>
         </li>
       </ul>
@@ -135,10 +113,7 @@
           />
           <ul class="kitchensink">
             <li @click="toggleFloatingMenu">
-              <i
-                class="add-icon"
-                :class="{ 'close-icon': shouldShowFloatingMenu }"
-              ></i>
+              <i class="add-icon" :class="{ 'close-icon': shouldShowFloatingMenu }"></i>
             </li>
             <li v-if="shouldShowTooltip" class="popover right-popover">
               <div class="popover-content">
@@ -152,11 +127,7 @@
                 </button>
               </div>
             </li>
-            <li
-              class="menubar__button"
-              @click="onClickImage()"
-              v-if="shouldShowFloatingMenu"
-            >
+            <li class="menubar__button" @click="onClickImage()" v-if="shouldShowFloatingMenu">
               <i class="image-icon"></i>
             </li>
 
@@ -485,7 +456,6 @@ export default {
       this.shouldShowFloatingMenu = false;
     },
     previewFiles(command) {
-      this.editor.focus();
       const file = this.$refs.fileInput.files[0];
 
       const imageType = /image.*/;
@@ -525,9 +495,9 @@ export default {
     },
     fixMenubarforIos() {
       const menuUl = this.$refs.menuUl;
-      const linkInput = this.$refs.linkInput;
+      const linkDiv = this.$refs.linkDiv;
       const pageTop = window.visualViewport.pageTop;
-      linkInput.style.top = `${pageTop}px`;
+      linkDiv.style.top = `${pageTop}px`;
       menuUl.style.top = `${pageTop}px`;
     },
     onClickOk() {
