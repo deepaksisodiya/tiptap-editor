@@ -23,7 +23,7 @@
         class="highlight-menu"
         :class="{
           'link-menu-active': linkMenuIsActive,
-          'is-active': menu.isActive,
+          'is-active': menu.isActive && !isTitleSelected(),
           ios: isIOS,
           'sticky-highlight-menu': !isIOS
         }"
@@ -452,6 +452,16 @@ export default {
       this.$refs.fileInput.click();
       this.hideFloatingMenu();
     },
+    isTitleSelected() {
+      const {
+        state: {
+          tr: { doc, selection }
+        }
+      } = this.editor.view;
+      const nodeAtStart = doc.resolve(selection.from).parent.type.name;
+      const nodeAtEnd = doc.resolve(selection.to).parent.type.name;
+      return nodeAtStart === "title" && nodeAtEnd === "title";
+    },
     hideFloatingMenu() {
       this.shouldShowFloatingMenu = false;
     },
@@ -483,6 +493,7 @@ export default {
 
               const response = await this.uploadImage(formData);
               imageInstance.src = response.data.url;
+
               window.imageInstance = null;
             }
           };
