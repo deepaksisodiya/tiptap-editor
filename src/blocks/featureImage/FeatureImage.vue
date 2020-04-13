@@ -65,6 +65,7 @@ export default {
     this.$nextTick(() => {
       this.$el.scrollIntoView(true);
     });
+    this.view.featureImageInstance = this;
   },
   methods: {
     handleKeyup(event) {

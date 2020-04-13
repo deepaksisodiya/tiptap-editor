@@ -33,7 +33,7 @@ export default class Title extends Node {
         );
         return dispatch(tr.setSelection(textSelection));
       },
-      Backspace: (state, dispatch) => {
+      Backspace: (state, dispatch, { featureImageInstance }) => {
         let {
           tr,
           selection: { anchor }
@@ -45,6 +45,8 @@ export default class Title extends Node {
           currentNode !== "title" &&
           tr.doc.resolve(anchor - 3).parent.type.name === "header"
         ) {
+          featureImageInstance.dataUrl = "";
+          featureImageInstance.src = "";
           let textSelection = TextSelection.create(
             tr.doc,
             anchor - 4,
