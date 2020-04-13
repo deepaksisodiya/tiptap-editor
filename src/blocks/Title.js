@@ -45,8 +45,12 @@ export default class Title extends Node {
           currentNode !== "title" &&
           tr.doc.resolve(anchor - 3).parent.type.name === "header"
         ) {
-          featureImageInstance.dataUrl = "";
-          featureImageInstance.src = "";
+          if (featureImageInstance.dataUrl) {
+            featureImageInstance.dataUrl = "";
+            featureImageInstance.$nextTick(
+              () => (featureImageInstance.src = "")
+            );
+          }
           let textSelection = TextSelection.create(
             tr.doc,
             anchor - 4,
