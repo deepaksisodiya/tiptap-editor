@@ -371,6 +371,8 @@ export default {
         }
       });
 
+      this.$refs.linkDiv.style.position = "absolute";
+
       window.setInterval(() => this.fixMenubarforIos(), 100);
     }
 
@@ -509,8 +511,11 @@ export default {
       const menuUl = this.$refs.menuUl;
       const linkDiv = this.$refs.linkDiv;
       const pageTop = window.visualViewport.pageTop;
-      linkDiv.style.top = `${pageTop}px`;
-      menuUl.style.top = `${pageTop}px`;
+      const articleRect = document
+        .getElementsByTagName("article")[0]
+        .getBoundingClientRect();
+      linkDiv.style.top = `${pageTop - articleRect.top}px`;
+      menuUl.style.top = `${pageTop - articleRect.top}px`;
     },
     onClickOk() {
       localStorage.setItem("editorTour", true);
