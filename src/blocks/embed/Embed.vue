@@ -31,15 +31,7 @@
       v-if="embeds.data.url && embeds.data.type === 'video'"
       class="videoWrapper"
     >
-      <figure>
-        <iframe
-          allowfullscreen
-          frameborder="0"
-          width="560"
-          height="349"
-          :src="embedUrl(embeds.data)"
-        ></iframe>
-      </figure>
+      <figure v-html="embeds.data.html"></figure>
     </div>
     <figcaption v-if="embeds.data.url && embeds.data.type === 'video'">
       <input
@@ -52,31 +44,8 @@
     </figcaption>
     <div
       v-if="embeds.data.url && embeds.data.type === 'link'"
-      class="embed-link-block"
-      :class="{
-        'no-image': !embeds.data.thumbnail_url,
-        'full-width-image': !isSquareImage,
-        'link-only': isOnlyLink
-      }"
-    >
-      <div v-if="isOnlyLink" class="content">
-        <div class="embed-source">
-          <div class="link-embed">
-            <i class="embed-link-icon"></i>
-          </div>
-          <span>{{ embeds.data.url }}</span>
-        </div>
-        <i class="right-arrow"></i>
-      </div>
-      <div v-else class="content">
-        <h1 v-if="embeds.data.title">{{ embeds.data.title }}</h1>
-        <p v-if="embeds.data.description">{{ embeds.data.description }}</p>
-        <span>{{ embeds.data.url }}</span>
-      </div>
-      <figure v-if="embeds.data.thumbnail_url">
-        <img :src="embeds.data.thumbnail_url" alt="Trulli" />
-      </figure>
-    </div>
+      v-html="embeds.data.html"
+    ></div>
   </div>
 </template>
 
@@ -95,13 +64,12 @@ export default {
         data: {
           title: "",
           description: "",
-          author_name: "",
           type: "",
           url: "",
           thumbnail_url: "",
           thumbnail_width: 0,
           thumbnail_height: 0,
-          provider_name: "",
+          provider: "",
           html: ""
         }
       }
@@ -112,14 +80,14 @@ export default {
       const data = {
         title: this.node.attrs.title,
         url: this.node.attrs.url,
-        author_name: this.node.attrs.author_name,
         thumbnail_url: this.node.attrs.thumbnail_url,
         thumbnail_width: this.node.attrs.thumbnail_width,
         thumbnail_height: this.node.attrs.thumbnail_height,
-        provider_name: this.node.attrs.provider_name,
+        provider: this.node.attrs.provider,
         type: this.node.attrs.type,
         html: this.node.attrs.html,
-        description: this.node.attrs.description
+        description: this.node.attrs.description,
+        caption: this.node.attrs.caption
       };
       this.embeds.data = data;
     } else {
@@ -138,17 +106,6 @@ export default {
     }
   },
   computed: {
-    isOnlyLink() {
-      const { url, thumbnail_url, title, description } = this.embeds.data;
-      if (!title && !description && !thumbnail_url && url) {
-        return true;
-      }
-      return false;
-    },
-    isSquareImage() {
-      const { thumbnail_width, thumbnail_height } = this.embeds.data;
-      return thumbnail_width === thumbnail_height;
-    },
     url: {
       get() {
         return this.node.attrs.url;
@@ -184,6 +141,9 @@ export default {
     async onClickAdd() {
       if (!this.url) return;
       const isUrl = this.validURL(this.url);
+      this.updateAttrs({
+        url: this.url.replace("http://", "https://")
+      });
 
       if (!isUrl) {
         this.createAndMovetoNextParagraph();
@@ -192,20 +152,20 @@ export default {
         this.embeds.isError = false;
         try {
           const response = await this.options.getEmbeds(this.url);
-          this.embeds.data = response.data;
+          this.embeds.data = {
+            title: response.data.attrs.title,
+            description: response.data.attrs.description,
+            url: response.data.attrs.url,
+            provider: response.data.attrs.provider,
+            type: response.data.attrs.type,
+            html: response.data.content[0].html,
+            thumbnail_url: response.data.attrs.thumbnail.url,
+            thumbnail_width: response.data.attrs.thumbnail.width,
+            thumbnail_height: response.data.attrs.thumbnail.height
+          };
+
           // for copy pasting to work
-          this.updateAttrs({
-            title: response.data.title,
-            description: response.data.description,
-            author_name: response.data.author_name,
-            url: response.data.url,
-            thumbnail_url: response.data.thumbnail_url,
-            thumbnail_width: response.data.thumbnail_width,
-            thumbnail_height: response.data.thumbnail_height,
-            provider_name: response.data.provider_name,
-            type: response.data.type,
-            html: response.data.html
-          });
+          this.updateAttrs(this.embeds.data);
         } catch (error) {
           this.embeds.isError = true;
         } finally {
@@ -255,14 +215,6 @@ export default {
         "i"
       ); // fragment locator
       return !!pattern.test(str);
-    },
-    embedUrl(data) {
-      if (data.provider_name !== "YouTube") return data.url;
-
-      const div = document.createElement("div");
-      div.innerHTML = data.html;
-      const iframeNode = div.getElementsByTagName("iframe")[0];
-      return iframeNode.src;
     },
     handleKeyup(event) {
       let {
