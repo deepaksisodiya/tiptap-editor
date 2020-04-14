@@ -195,9 +195,10 @@
 </template>
 
 <script>
-import { Editor, EditorContent, EditorMenuBubble } from "tiptap";
+import { Editor, EditorContent } from "tiptap";
 
 import EditorFloatingMenu from "./EditorFloatingMenu";
+import EditorMenuBubble from "./EditorMenuBubble";
 
 import {
   Blockquote,
@@ -601,8 +602,8 @@ figcaption > span.is-empty {
 //     color: white;
 //   }
 // }
-.sticky-highlight-menu {
-  position: sticky;
+.highlight-menu-input {
+  z-index: 1001;
 }
 
 .link-menu-active {
