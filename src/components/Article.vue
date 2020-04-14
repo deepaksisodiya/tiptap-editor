@@ -195,9 +195,10 @@
 </template>
 
 <script>
-import { Editor, EditorContent, EditorMenuBubble } from "tiptap";
+import { Editor, EditorContent } from "tiptap";
 
 import EditorFloatingMenu from "./EditorFloatingMenu";
+import EditorMenuBubble from "./EditorMenuBubble";
 
 import {
   Blockquote,
@@ -370,6 +371,8 @@ export default {
         }
       });
 
+      this.$refs.linkDiv.style.position = "absolute";
+
       window.setInterval(() => this.fixMenubarforIos(), 100);
     }
 
@@ -508,8 +511,11 @@ export default {
       const menuUl = this.$refs.menuUl;
       const linkDiv = this.$refs.linkDiv;
       const pageTop = window.visualViewport.pageTop;
-      linkDiv.style.top = `${pageTop}px`;
-      menuUl.style.top = `${pageTop}px`;
+      const articleRect = document
+        .getElementsByTagName("article")[0]
+        .getBoundingClientRect();
+      linkDiv.style.top = `${pageTop - articleRect.top}px`;
+      menuUl.style.top = `${pageTop - articleRect.top}px`;
     },
     onClickOk() {
       localStorage.setItem("editorTour", true);
@@ -601,8 +607,8 @@ figcaption > span.is-empty {
 //     color: white;
 //   }
 // }
-.sticky-highlight-menu {
-  position: sticky;
+.highlight-menu-input {
+  z-index: 1001;
 }
 
 .link-menu-active {
