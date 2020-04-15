@@ -22,13 +22,16 @@ export default class EmbedNode extends Node {
         description: {
           default: ""
         },
-        author_name: {
-          default: ""
-        },
         type: {
           default: ""
         },
         url: {
+          default: ""
+        },
+        provider: {
+          default: ""
+        },
+        html: {
           default: ""
         },
         thumbnail_url: {
@@ -40,14 +43,8 @@ export default class EmbedNode extends Node {
         thumbnail_height: {
           default: ""
         },
-        provider_name: {
-          default: ""
-        },
         caption: {
           default: null
-        },
-        html: {
-          default: ""
         }
       },
       group: "block",
@@ -59,16 +56,15 @@ export default class EmbedNode extends Node {
           getAttrs: dom => {
             return {
               title: dom.getAttribute("title"),
-              author_name: dom.getAttribute("author_name"),
+              description: dom.getAttribute("description"),
               type: dom.getAttribute("type"),
               url: dom.getAttribute("url"),
+              provider: dom.getAttribute("provider"),
+              html: dom.getAttribute("html"),
               thumbnail_url: dom.getAttribute("thumbnail_url"),
               thumbnail_width: dom.getAttribute("thumbnail_width"),
               thumbnail_height: dom.getAttribute("thumbnail_height"),
-              provider_name: dom.getAttribute("provider_name"),
-              caption: dom.getAttribute("caption"),
-              html: dom.getAttribute("html"),
-              description: dom.getAttribute("description")
+              caption: dom.getAttribute("caption")
             };
           }
         }
