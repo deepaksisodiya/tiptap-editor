@@ -5,7 +5,7 @@ import ImageComponent from "./FeatureImage.vue";
 
 export default class ImageNode extends TiptapImage {
   get name() {
-    return "featureimage";
+    return "featuredimage";
   }
 
   get schema() {

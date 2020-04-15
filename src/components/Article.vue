@@ -237,7 +237,7 @@ const defaultContent = {
   type: "doc",
   content: [
     {
-      type: "featureimage",
+      type: "featuredimage",
       attrs: {
         src: "",
         caption: "",
@@ -292,7 +292,7 @@ export default {
   },
   data() {
     return {
-      shouldShowTooltip: !localStorage.getItem("editorTour"),
+      shouldShowTooltip: localStorage && !localStorage.getItem("editorTour"),
       data: this.content,
       imageSrc: "",
       shouldShowFloatingMenu: false,
@@ -439,7 +439,7 @@ export default {
       this.$refs.menububble.menu.isActive = true;
     },
     toggleFloatingMenu() {
-      if (!localStorage.getItem("editorTour")) {
+      if (localStorage && !localStorage.getItem("editorTour")) {
         this.onClickOk();
       }
       this.shouldShowFloatingMenu = !this.shouldShowFloatingMenu;
@@ -508,7 +508,7 @@ export default {
       } else {
         console.log("File not supported!");
       }
-      // this.$refs.fileInput.value = "";
+      this.$refs.fileInput.value = "";
     },
     fixMenubarforIos() {
       const menuUl = this.$refs.menuUl;
@@ -520,6 +520,7 @@ export default {
       menuUl.style.top = `${pageTop - article.offsetTop}px`;
     },
     onClickOk() {
+      if (!localStorage) return;
       localStorage.setItem("editorTour", true);
       this.shouldShowTooltip = false;
     },
