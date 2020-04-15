@@ -292,7 +292,7 @@ export default {
   },
   data() {
     return {
-      shouldShowTooltip: !localStorage.getItem("editorTour"),
+      shouldShowTooltip: localStorage && !localStorage.getItem("editorTour"),
       data: this.content,
       imageSrc: "",
       shouldShowFloatingMenu: false,
@@ -436,7 +436,7 @@ export default {
       this.$refs.menububble.menu.isActive = true;
     },
     toggleFloatingMenu() {
-      if (!localStorage.getItem("editorTour")) {
+      if (localStorage && !localStorage.getItem("editorTour")) {
         this.onClickOk();
       }
       this.shouldShowFloatingMenu = !this.shouldShowFloatingMenu;
@@ -517,6 +517,7 @@ export default {
       menuUl.style.top = `${pageTop - article.offsetTop}px`;
     },
     onClickOk() {
+      if (!localStorage) return;
       localStorage.setItem("editorTour", true);
       this.shouldShowTooltip = false;
     },
