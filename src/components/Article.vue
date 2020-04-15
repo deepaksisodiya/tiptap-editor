@@ -489,7 +489,7 @@ export default {
             imageInstance.$nextTick(() => {
               imageInstance.caption = "";
             });
-            if (imageInstance && imageInstance.src.includes("data:")) {
+            if (imageInstance && imageInstance.dataUrl.includes("data:")) {
               const formData = new FormData();
               formData.append(file.name, file);
               // TODO handle image loading here later
