@@ -3,7 +3,7 @@ import { Doc } from "tiptap";
 export default class CustomDoc extends Doc {
   get schema() {
     return {
-      content: "header featureimage block+"
+      content: "header featuredimage block+"
     };
   }
 }

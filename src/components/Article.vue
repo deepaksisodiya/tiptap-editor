@@ -237,7 +237,7 @@ const defaultContent = {
   type: "doc",
   content: [
     {
-      type: "featureimage",
+      type: "featuredimage",
       attrs: {
         src: "",
         caption: "",

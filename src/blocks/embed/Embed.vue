@@ -141,9 +141,6 @@ export default {
     async onClickAdd() {
       if (!this.url) return;
       const isUrl = this.validURL(this.url);
-      this.updateAttrs({
-        url: this.url.replace("http://", "https://")
-      });
 
       if (!isUrl) {
         this.createAndMovetoNextParagraph();
