@@ -483,13 +483,13 @@ export default {
             addImageAt: this.addImageAt
           });
 
-          window.imageInstance.$refs.img.onload = async e => {
-            window.imageInstance.caption = " ";
-            window.imageInstance.$nextTick(() => {
+          window.imageInstance.$refs.img.onload = async () => {
+            const imageInstance = window.imageInstance;
+            imageInstance.caption = " ";
+            imageInstance.$nextTick(() => {
               window.imageInstance.caption = "";
             });
-            if (window.imageInstance && e.path[0].src.includes("data:")) {
-              const imageInstance = window.imageInstance;
+            if (window.imageInstance && imageInstance.src.includes("data:")) {
               const formData = new FormData();
               formData.append(file.name, file);
               // TODO handle image loading here later
