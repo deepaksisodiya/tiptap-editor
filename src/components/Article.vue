@@ -505,7 +505,7 @@ export default {
       } else {
         console.log("File not supported!");
       }
-      // this.$refs.fileInput.value = "";
+      this.$refs.fileInput.value = "";
     },
     fixMenubarforIos() {
       const menuUl = this.$refs.menuUl;
