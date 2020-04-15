@@ -511,11 +511,10 @@ export default {
       const menuUl = this.$refs.menuUl;
       const linkDiv = this.$refs.linkDiv;
       const pageTop = window.visualViewport.pageTop;
-      const articleRect = document
-        .getElementsByTagName("article")[0]
-        .getBoundingClientRect();
-      linkDiv.style.top = `${pageTop - articleRect.top}px`;
-      menuUl.style.top = `${pageTop - articleRect.top}px`;
+      const article = document.getElementsByClassName("editor")[0];
+
+      linkDiv.style.top = `${pageTop - article.offsetTop}px`;
+      menuUl.style.top = `${pageTop - article.offsetTop}px`;
     },
     onClickOk() {
       localStorage.setItem("editorTour", true);
