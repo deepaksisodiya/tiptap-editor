@@ -108,23 +108,18 @@
 
     <article>
       <!-- Message-bar -->
-      <div v-if="shouldDisplayTitleError" class="message-bar with-icon error">
-        <p>You need to add a title to your post before continuing.</p>
-        <div @click="closeTitleError" class="close-message-bar">
-          <i class="close-icon"></i>
-        </div>
-      </div>
-
+      <error-message
+        :onClickClose="closeTitleError"
+        :hasError="shouldDisplayTitleError"
+        errorMessage="You need to add a title to your post before continuing."
+      />
       <!-- Make common component for this later -->
-      <div v-if="showImageLargeError" class="message-bar with-icon error">
-        <p>
-          The image you are trying to upload is too big. Please resize it so
-          that it is under 25MB.
-        </p>
-        <div @click="closeImageLargeError" class="close-message-bar">
-          <i class="close-icon"></i>
-        </div>
-      </div>
+      <error-message
+        :onClickClose="closeImageLargeError"
+        :hasError="showImageLargeError"
+        errorMessage="The image you are trying to upload is too big. Please resize it so
+          that it is under 25MB."
+      />
       <!-- End of message-bar -->
 
       <editor-floating-menu
@@ -239,6 +234,7 @@ import { Editor, EditorContent } from "tiptap";
 
 import EditorFloatingMenu from "./EditorFloatingMenu";
 import EditorMenuBubble from "./EditorMenuBubble";
+import ErrorMessage from "ErrorMessage.vue";
 
 import {
   Blockquote,
@@ -326,6 +322,7 @@ export default {
     }
   },
   components: {
+    ErrorMessage,
     EditorContent,
     EditorFloatingMenu,
     EditorMenuBubble
