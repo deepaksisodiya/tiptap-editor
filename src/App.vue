@@ -22,7 +22,7 @@ export default {
         type: "doc",
         content: [
           {
-            type: "featureimage",
+            type: "featuredimage",
             attrs: {
               src: "",
               alt: "",
