@@ -373,7 +373,7 @@ export default {
 
       this.$refs.linkDiv.style.position = "absolute";
 
-      window.setInterval(() => this.fixMenubarforIos(), 100);
+      this.menuBarTimer = setInterval(() => this.fixMenubarforIos(), 100);
     }
 
     // init data
@@ -382,6 +382,9 @@ export default {
       this.title
     );
     this.editor.setContent(newContent, false);
+  },
+  beforeDestroy() {
+    if (this.menuBarTimer) clearInterval(this.menuBarTimer);
   },
   methods: {
     showLinkMenu(attrs) {
