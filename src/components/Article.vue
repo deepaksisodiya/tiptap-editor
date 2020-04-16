@@ -11,7 +11,10 @@
         @keydown.enter.prevent="setLinkUrl(editor.commands.link, linkUrl)"
         @keydown.esc="hideLinkMenu"
       />
-      <i class="toolbar-close-icon" @click="setLinkUrl(editor.commands.link, linkUrl)"></i>
+      <i
+        class="toolbar-close-icon"
+        @click="setLinkUrl(editor.commands.link, linkUrl)"
+      ></i>
     </div>
     <editor-menu-bubble
       :editor="editor"
@@ -37,10 +40,16 @@
 
         <li @click="commands.italic" v-if="!linkMenuIsActive">
           <button>
-            <i class="italic-icon" :class="{ 'is-active': isActive.italic() }"></i>
+            <i
+              class="italic-icon"
+              :class="{ 'is-active': isActive.italic() }"
+            ></i>
           </button>
         </li>
-        <li v-if="!linkMenuIsActive" @click="showLinkMenu(getMarkAttrs('link'))">
+        <li
+          v-if="!linkMenuIsActive"
+          @click="showLinkMenu(getMarkAttrs('link'))"
+        >
           <button>
             <i class="link-icon" :class="{ 'is-active': isActive.link() }"></i>
             <!--
@@ -61,7 +70,10 @@
           v-if="!linkMenuIsActive"
         >
           <button>
-            <i class="large-heading-icon" :class="{ 'is-active': isActive.heading({ level: 3 }) }"></i>
+            <i
+              class="large-heading-icon"
+              :class="{ 'is-active': isActive.heading({ level: 3 }) }"
+            ></i>
           </button>
         </li>
 
@@ -71,13 +83,23 @@
           v-if="!linkMenuIsActive"
         >
           <button>
-            <i class="small-heading-icon" :class="{ 'is-active': isActive.heading({ level: 5 }) }"></i>
+            <i
+              class="small-heading-icon"
+              :class="{ 'is-active': isActive.heading({ level: 5 }) }"
+            ></i>
           </button>
         </li>
 
-        <li class="menububble__button" @click="commands.blockquote" v-if="!linkMenuIsActive">
+        <li
+          class="menububble__button"
+          @click="commands.blockquote"
+          v-if="!linkMenuIsActive"
+        >
           <button>
-            <i class="quote-icon" :class="{ 'is-active': isActive.blockquote() }"></i>
+            <i
+              class="quote-icon"
+              :class="{ 'is-active': isActive.blockquote() }"
+            ></i>
           </button>
         </li>
       </ul>
@@ -89,6 +111,17 @@
       <div v-if="shouldDisplayTitleError" class="message-bar with-icon error">
         <p>You need to add a title to your post before continuing.</p>
         <div @click="closeTitleError" class="close-message-bar">
+          <i class="close-icon"></i>
+        </div>
+      </div>
+
+      <!-- Make common component for this later -->
+      <div v-if="showImageLargeError" class="message-bar with-icon error">
+        <p>
+          The image you are trying to upload is too big. Please resize it so
+          that it is under 25MB.
+        </p>
+        <div @click="closeImageLargeError" class="close-message-bar">
           <i class="close-icon"></i>
         </div>
       </div>
@@ -113,7 +146,10 @@
           />
           <ul class="kitchensink">
             <li @click="toggleFloatingMenu">
-              <i class="add-icon" :class="{ 'close-icon': shouldShowFloatingMenu }"></i>
+              <i
+                class="add-icon"
+                :class="{ 'close-icon': shouldShowFloatingMenu }"
+              ></i>
             </li>
             <li v-if="shouldShowTooltip" class="popover right-popover">
               <div class="popover-content">
@@ -127,7 +163,11 @@
                 </button>
               </div>
             </li>
-            <li class="menubar__button" @click="onClickImage()" v-if="shouldShowFloatingMenu">
+            <li
+              class="menubar__button"
+              @click="onClickImage()"
+              v-if="shouldShowFloatingMenu"
+            >
               <i class="image-icon"></i>
             </li>
 
@@ -292,6 +332,12 @@ export default {
   },
   data() {
     return {
+      showImageLargeError: false,
+      image: {
+        isLoading: false,
+        isError: false,
+        data: null
+      },
       shouldShowTooltip: localStorage && !localStorage.getItem("editorTour"),
       data: this.content,
       imageSrc: "",
@@ -495,12 +541,26 @@ export default {
             if (imageInstance && imageInstance.dataUrl.includes("data:")) {
               const formData = new FormData();
               formData.append(file.name, file);
-              // TODO handle image loading here later
 
-              const response = await this.uploadImage(formData);
-              imageInstance.src = response.data.url;
-
-              window.imageInstance = null;
+              this.image.isLoading = true;
+              this.image.isError = false;
+              this.image.data = null;
+              let response;
+              try {
+                response = await this.uploadImage(formData);
+                if (response.status === 200) {
+                  imageInstance.src = response.data.url;
+                  window.imageInstance = null;
+                }
+                console.log("response ", response);
+              } catch (error) {
+                this.image.isError = true;
+                if (error.response.status) {
+                  this.showImageLargeError = true;
+                }
+              } finally {
+                this.image.isLoading = false;
+              }
             }
           };
         };
@@ -526,6 +586,9 @@ export default {
     },
     closeTitleError() {
       this.hideTitleError();
+    },
+    closeImageLargeError() {
+      this.showImageLargeError = false;
     }
   },
   watch: {
