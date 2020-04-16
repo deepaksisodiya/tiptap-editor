@@ -552,10 +552,9 @@ export default {
                   imageInstance.src = response.data.url;
                   window.imageInstance = null;
                 }
-                console.log("response ", response);
               } catch (error) {
                 this.image.isError = true;
-                if (error.response.status) {
+                if (error.response.status === 413) {
                   this.showImageLargeError = true;
                 }
               } finally {
