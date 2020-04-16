@@ -545,9 +545,8 @@ export default {
               this.image.isLoading = true;
               this.image.isError = false;
               this.image.data = null;
-              let response;
               try {
-                response = await this.uploadImage(formData);
+                const response = await this.uploadImage(formData);
                 if (response.status === 200) {
                   imageInstance.src = response.data.url;
                   window.imageInstance = null;
@@ -556,6 +555,7 @@ export default {
                 this.image.isError = true;
                 if (error.response.status === 413) {
                   this.showImageLargeError = true;
+                  window.imageInstance.deleteNode();
                 }
               } finally {
                 this.image.isLoading = false;
