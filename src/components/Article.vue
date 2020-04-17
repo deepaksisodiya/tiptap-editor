@@ -638,7 +638,6 @@ export default {
   watch: {
     content(newValue) {
       if (newValue) {
-        console.log("abcd");
         const newContent = this.addTitle(newValue, this.title);
         this.editor.setContent(newContent, false);
       }
