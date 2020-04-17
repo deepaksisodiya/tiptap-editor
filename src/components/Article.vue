@@ -223,7 +223,9 @@
       <div class="ios-test-fix">empt</div>
     </article>
 
+    <!--
     <vue-json-pretty :path="'res'" :data="data"> </vue-json-pretty>
+    -->
   </div>
 </template>
 
@@ -248,7 +250,7 @@ import {
   TrailingNode
 } from "tiptap-extensions";
 import { contains } from "prosemirror-utils";
-import VueJsonPretty from "vue-json-pretty";
+// import VueJsonPretty from "vue-json-pretty";
 import _debounce from "lodash.debounce";
 
 import {
@@ -321,7 +323,6 @@ export default {
     }
   },
   components: {
-    VueJsonPretty,
     ErrorMessage,
     EditorContent,
     EditorFloatingMenu,
