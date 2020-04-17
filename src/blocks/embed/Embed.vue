@@ -147,7 +147,6 @@ export default {
       } else {
         this.embeds.isLoading = true;
         this.embeds.isError = false;
-        this.embeds.data = null;
         try {
           const response = await this.options.getEmbeds(this.url);
           this.embeds.data = {
