@@ -156,19 +156,18 @@ export default {
             provider: response.data.attrs.provider,
             type: response.data.attrs.type,
             html: response.data.content[0].html,
-            thumbnail_url: response.data.attrs.thumbnail.url,
-            thumbnail_width: response.data.attrs.thumbnail.width,
-            thumbnail_height: response.data.attrs.thumbnail.height
+            thumbnail_url: response.data.attrs.thumbnail_url,
+            thumbnail_width: response.data.attrs.thumbnail_width,
+            thumbnail_height: response.data.attrs.thumbnail_height
           };
-
           // for copy pasting to work
           this.updateAttrs(this.embeds.data);
         } catch (error) {
           this.embeds.isError = true;
         } finally {
+          this.embeds.isLoading = false;
           // move cursor to new paragraph
           const pos = this.getPos();
-          this.embeds.isLoading = false;
           let tr = this.view.state.tr;
           let textSelection = TextSelection.create(tr.doc, pos + 1, pos + 1);
           tr = tr.setSelection(textSelection);
