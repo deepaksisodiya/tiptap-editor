@@ -108,23 +108,18 @@
 
     <article>
       <!-- Message-bar -->
-      <div v-if="shouldDisplayTitleError" class="message-bar with-icon error">
-        <p>You need to add a title to your post before continuing.</p>
-        <div @click="closeTitleError" class="close-message-bar">
-          <i class="close-icon"></i>
-        </div>
-      </div>
-
+      <error-message
+        :onClickClose="closeTitleError"
+        :hasError="shouldDisplayTitleError"
+        errorMessage="You need to add a title to your post before continuing."
+      />
       <!-- Make common component for this later -->
-      <div v-if="showImageLargeError" class="message-bar with-icon error">
-        <p>
-          The image you are trying to upload is too big. Please resize it so
-          that it is under 25MB.
-        </p>
-        <div @click="closeImageLargeError" class="close-message-bar">
-          <i class="close-icon"></i>
-        </div>
-      </div>
+      <error-message
+        :onClickClose="closeImageLargeError"
+        :hasError="showImageLargeError"
+        errorMessage="The image you are trying to upload is too big. Please resize it so
+          that it is under 25MB."
+      />
       <!-- End of message-bar -->
 
       <editor-floating-menu
@@ -228,9 +223,7 @@
       <div class="ios-test-fix">empt</div>
     </article>
 
-    <!--
     <vue-json-pretty :path="'res'" :data="data"> </vue-json-pretty>
-    -->
   </div>
 </template>
 
@@ -239,6 +232,7 @@ import { Editor, EditorContent } from "tiptap";
 
 import EditorFloatingMenu from "./EditorFloatingMenu";
 import EditorMenuBubble from "./EditorMenuBubble";
+import ErrorMessage from "./ErrorMessage.vue";
 
 import {
   Blockquote,
@@ -253,7 +247,7 @@ import {
   TrailingNode
 } from "tiptap-extensions";
 import { contains } from "prosemirror-utils";
-// import VueJsonPretty from "vue-json-pretty";
+import VueJsonPretty from "vue-json-pretty";
 import _debounce from "lodash.debounce";
 
 import {
@@ -326,6 +320,8 @@ export default {
     }
   },
   components: {
+    VueJsonPretty,
+    ErrorMessage,
     EditorContent,
     EditorFloatingMenu,
     EditorMenuBubble
@@ -545,18 +541,17 @@ export default {
               this.image.isLoading = true;
               this.image.isError = false;
               this.image.data = null;
-              let response;
               try {
-                response = await this.uploadImage(formData);
+                const response = await this.uploadImage(formData);
                 if (response.status === 200) {
                   imageInstance.src = response.data.url;
                   window.imageInstance = null;
                 }
-                console.log("response ", response);
               } catch (error) {
                 this.image.isError = true;
-                if (error.response.status) {
+                if (error.response.status === 413) {
                   this.showImageLargeError = true;
+                  window.imageInstance.deleteNode();
                 }
               } finally {
                 this.image.isLoading = false;

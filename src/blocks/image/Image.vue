@@ -70,6 +70,17 @@ export default {
         this.view.dispatch(tr.setSelection(textSelection));
         this.view.focus();
       }
+    },
+    deleteNode() {
+      let {
+        state: { tr }
+      } = this.view;
+      const pos = this.getPos();
+      let textSelection = TextSelection.create(tr.doc, pos, pos + 1);
+      this.view.dispatch(
+        tr.setSelection(textSelection).deleteSelection(this.src)
+      );
+      this.view.focus();
     }
   }
 };

@@ -1,7 +1,7 @@
 <template>
-  <div v-if="shouldDisplayTitleError" class="message-bar with-icon error">
-    <p>{{ message }}</p>
-    <div @click="closeTitleError" class="close-message-bar">
+  <div v-if="hasError" class="message-bar with-icon error">
+    <p>{{ errorMessage }}</p>
+    <div @click="onClickClose" class="close-message-bar">
       <i class="close-icon"></i>
     </div>
   </div>
@@ -10,15 +10,15 @@
 <script>
 export default {
   props: {
-    closeTitleError: {
+    onClickClose: {
       type: Function,
       required: true
     },
-    shouldDisplayTitleError: {
+    hasError: {
       type: Boolean,
       required: true
     },
-    message: {
+    errorMessage: {
       type: String,
       required: true
     }
