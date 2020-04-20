@@ -138,6 +138,18 @@ export default {
     }
   },
   methods: {
+    getValidUrl(url = "") {
+      let newUrl = window.decodeURIComponent(url);
+      newUrl = newUrl.trim().replace(/\s/g, "");
+
+      if (/^(:\/\/)/.test(newUrl)) {
+        return `https${newUrl}`;
+      }
+      if (!/^(f|ht)tps?:\/\//i.test(newUrl)) {
+        return `https://${newUrl}`;
+      }
+      return newUrl;
+    },
     async onClickAdd() {
       if (!this.url) return;
       const isUrl = this.validURL(this.url);
@@ -145,6 +157,11 @@ export default {
       if (!isUrl) {
         this.createAndMovetoNextParagraph();
       } else {
+        const validURL = this.getValidUrl(this.url);
+        this.updateAttrs({
+          url: validURL
+        });
+
         this.embeds.isLoading = true;
         this.embeds.isError = false;
         try {
