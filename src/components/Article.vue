@@ -106,7 +106,7 @@
     </editor-menu-bubble>
     <!-- menububble end -->
 
-    <article>
+    <article @keyup="handleKeyup">
       <!-- Message-bar -->
       <error-message
         :onClickClose="closeTitleError"
@@ -230,8 +230,7 @@
 </template>
 
 <script>
-import { Editor, EditorContent } from "tiptap";
-import { Fragment } from "prosemirror-model";
+import { Editor, EditorContent, TextSelection } from "tiptap";
 
 import EditorFloatingMenu from "./EditorFloatingMenu";
 import EditorMenuBubble from "./EditorMenuBubble";
@@ -424,7 +423,6 @@ export default {
       this.content || defaultContent,
       this.title
     );
-    this.setJSONFunction();
     this.editor.setContent(newContent, false);
   },
   beforeDestroy() {
@@ -473,6 +471,48 @@ export default {
       }
       return "";
     },
+    handleKeyup() {
+      let {
+        state: {
+          selection: { $cursor },
+          doc
+        }
+      } = this.editor.view;
+      if ($cursor) {
+        const nodeAtCursor = $cursor.parent;
+        // if cursor at embed node and node has some content
+        if (nodeAtCursor.type.name === "embed" && nodeAtCursor.nodeSize > 2) {
+          let embedNodePos = null;
+          // find node posistion
+          doc.descendants((node, pos) => {
+            // verify node using attrs and position of cursor becauase two embeds can have same attrs
+            if (
+              node.attrs.url === nodeAtCursor.attrs.url &&
+              pos + node.nodeSize > $cursor.pos &&
+              $cursor.pos > pos
+            ) {
+              embedNodePos = pos;
+              return false;
+            }
+          });
+          // if cursor at 2 positon from last charecter of content then delete node
+          if (embedNodePos + nodeAtCursor.nodeSize - 1 === $cursor.pos) {
+            let {
+              state: { tr },
+              dispatch
+            } = this.editor.view;
+            // select text content inside node and delete
+            let textSelection = TextSelection.create(
+              tr.doc,
+              embedNodePos + nodeAtCursor.nodeSize,
+              embedNodePos
+            );
+            dispatch(tr.setSelection(textSelection).deleteSelection());
+            this.editor.focus();
+          }
+        }
+      }
+    },
     hideLinkMenu() {
       this.linkUrl = null;
       this.linkMenuIsActive = false;
@@ -501,53 +541,6 @@ export default {
       this.addImageAt = this.editor.view.state.tr.selection.head;
       this.$refs.fileInput.click();
       this.hideFloatingMenu();
-    },
-    setJSONFunction() {
-      const {
-        view: {
-          state: { doc }
-        },
-        schema
-      } = this.editor;
-      doc.__proto__.toJSON = function() {
-        let obj = { type: this.type.name };
-        // eslint-disable-next-line no-unused-vars
-        for (let _ in this.attrs) {
-          obj.attrs = this.attrs;
-          break;
-        }
-        if (this.content.size) obj.content = this.content.toJSON();
-        if (this.marks.length) obj.marks = this.marks.map(n => n.toJSON());
-        if (this.type.name === "embed") {
-          obj.content = {
-            type: "html",
-            html: this.attrs.html
-          };
-        }
-        return obj;
-      };
-      doc.__proto__.fromJSON = function(schema, json) {
-        if (!json) throw new RangeError("Invalid input for Node.fromJSON");
-        let marks = null;
-        if (json.marks) {
-          if (!Array.isArray(json.marks))
-            throw new RangeError("Invalid mark data for Node.fromJSON");
-          marks = json.marks.map(schema.markFromJSON);
-        }
-        if (json.type == "text") {
-          if (typeof json.text != "string")
-            throw new RangeError("Invalid text node in JSON");
-          return schema.text(json.text, marks);
-        }
-        let content = Fragment.fromJSON(
-          schema,
-          json.type === "embed" ? undefined : json.content
-        );
-        return schema.nodeType(json.type).create(json.attrs, content, marks);
-      };
-      schema.nodeFromJSON = function(json) {
-        return doc.__proto__.fromJSON(schema, json);
-      };
     },
     isTitleSelected() {
       const {

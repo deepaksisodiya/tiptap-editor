@@ -31,9 +31,6 @@ export default class EmbedNode extends Node {
         provider: {
           default: ""
         },
-        html: {
-          default: ""
-        },
         thumbnail_url: {
           default: ""
         },
@@ -47,6 +44,8 @@ export default class EmbedNode extends Node {
           default: null
         }
       },
+      content: "inline*",
+      atom: true,
       group: "block",
       selectable: false,
       // parseDOM and toDOM is still required to make copy and paste work
@@ -60,7 +59,6 @@ export default class EmbedNode extends Node {
               type: dom.getAttribute("type"),
               url: dom.getAttribute("url"),
               provider: dom.getAttribute("provider"),
-              html: dom.getAttribute("html"),
               thumbnail_url: dom.getAttribute("thumbnail_url"),
               thumbnail_width: dom.getAttribute("thumbnail_width"),
               thumbnail_height: dom.getAttribute("thumbnail_height"),
@@ -69,7 +67,7 @@ export default class EmbedNode extends Node {
           }
         }
       ],
-      toDOM: node => ["embed", node.attrs]
+      toDOM: node => ["embed", node.attrs, 0]
     };
   }
 

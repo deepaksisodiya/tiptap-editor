@@ -44,7 +44,7 @@
     </figcaption>
     <div
       v-if="embeds.data.url && embeds.data.type === 'link'"
-      v-html="embeds.data.html"
+      v-html="node.textContent"
     ></div>
   </div>
 </template>
@@ -85,7 +85,6 @@ export default {
         thumbnail_height: this.node.attrs.thumbnail_height,
         provider: this.node.attrs.provider,
         type: this.node.attrs.type,
-        html: this.node.attrs.html,
         description: this.node.attrs.description,
         caption: this.node.attrs.caption
       };
@@ -155,25 +154,36 @@ export default {
             url: response.data.attrs.url,
             provider: response.data.attrs.provider,
             type: response.data.attrs.type,
-            html: response.data.content[0].html,
             thumbnail_url: response.data.attrs.thumbnail_url,
             thumbnail_width: response.data.attrs.thumbnail_width,
             thumbnail_height: response.data.attrs.thumbnail_height
           };
           // for copy pasting to work
           this.updateAttrs(this.embeds.data);
+          // update content
+          this.$nextTick(() => {
+            let start = this.getPos() + 1;
+            let tr = this.view.state.tr.replaceWith(
+              start,
+              start,
+              this.view.state.schema.text(response.data.content[0].html)
+            );
+            this.view.dispatch(tr);
+          });
         } catch (error) {
           this.embeds.isError = true;
         } finally {
           this.embeds.isLoading = false;
           // move cursor to new paragraph
-          const pos = this.getPos();
           let tr = this.view.state.tr;
-          let textSelection = TextSelection.create(tr.doc, pos + 1, pos + 1);
+          const pos = this.getPos();
+          let textSelection = TextSelection.create(
+            tr.doc,
+            pos + this.node.nodeSize + 1,
+            pos + this.node.nodeSize + 1
+          );
           tr = tr.setSelection(textSelection);
           this.view.dispatch(tr);
-          // focus the editor
-          this.view.focus();
         }
       }
     },
