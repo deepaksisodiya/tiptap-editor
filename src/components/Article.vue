@@ -121,6 +121,13 @@
           that it is under 25MB."
       />
       <!-- End of message-bar -->
+      <!-- Make common component for this later -->
+      <error-message
+        :onClickClose="closeImageError"
+        :hasError="image.isError"
+        errorMessage="Something went wrong while uploading the image. Please try again."
+      />
+      <!-- End of message-bar -->
 
       <editor-floating-menu
         :editor="editor"
@@ -590,11 +597,12 @@ export default {
                   window.imageInstance = null;
                 }
               } catch (error) {
-                this.image.isError = true;
-                if (error.response.status === 413) {
+                if (error.response && error.response.status === 413) {
                   this.showImageLargeError = true;
-                  window.imageInstance.deleteNode();
+                } else {
+                  this.image.isError = true;
                 }
+                window.imageInstance.deleteNode();
               } finally {
                 this.image.isLoading = false;
               }
@@ -626,6 +634,9 @@ export default {
     },
     closeImageLargeError() {
       this.showImageLargeError = false;
+    },
+    closeImageError() {
+      this.image.isError = false;
     }
   },
   watch: {
