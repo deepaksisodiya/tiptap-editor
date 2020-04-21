@@ -106,7 +106,7 @@
     </editor-menu-bubble>
     <!-- menububble end -->
 
-    <article @keyup="handleKeyup">
+    <article>
       <!-- Message-bar -->
       <error-message
         :onClickClose="closeTitleError"
@@ -230,14 +230,12 @@
       <div class="ios-test-fix">empt</div>
     </article>
 
-    <!--
     <vue-json-pretty :path="'res'" :data="data"> </vue-json-pretty>
-    -->
   </div>
 </template>
 
 <script>
-import { Editor, EditorContent, TextSelection } from "tiptap";
+import { Editor, EditorContent } from "tiptap";
 
 import EditorFloatingMenu from "./EditorFloatingMenu";
 import EditorMenuBubble from "./EditorMenuBubble";
@@ -256,7 +254,7 @@ import {
   TrailingNode
 } from "tiptap-extensions";
 import { contains } from "prosemirror-utils";
-// import VueJsonPretty from "vue-json-pretty";
+import VueJsonPretty from "vue-json-pretty";
 import _debounce from "lodash.debounce";
 
 import {
@@ -329,6 +327,7 @@ export default {
     }
   },
   components: {
+    VueJsonPretty,
     ErrorMessage,
     EditorContent,
     EditorFloatingMenu,
@@ -477,48 +476,6 @@ export default {
           return "Start writing here";
       }
       return "";
-    },
-    handleKeyup() {
-      let {
-        state: {
-          selection: { $cursor },
-          doc
-        }
-      } = this.editor.view;
-      if ($cursor) {
-        const nodeAtCursor = $cursor.parent;
-        // if cursor at embed node and node has some content
-        if (nodeAtCursor.type.name === "embed" && nodeAtCursor.nodeSize > 2) {
-          let embedNodePos = null;
-          // find node posistion
-          doc.descendants((node, pos) => {
-            // verify node using attrs and position of cursor becauase two embeds can have same attrs
-            if (
-              node.attrs.url === nodeAtCursor.attrs.url &&
-              pos + node.nodeSize > $cursor.pos &&
-              $cursor.pos > pos
-            ) {
-              embedNodePos = pos;
-              return false;
-            }
-          });
-          // if cursor at 2 positon from last charecter of content then delete node
-          if (embedNodePos + nodeAtCursor.nodeSize - 1 === $cursor.pos) {
-            let {
-              state: { tr },
-              dispatch
-            } = this.editor.view;
-            // select text content inside node and delete
-            let textSelection = TextSelection.create(
-              tr.doc,
-              embedNodePos + nodeAtCursor.nodeSize,
-              embedNodePos
-            );
-            dispatch(tr.setSelection(textSelection).deleteSelection());
-            this.editor.focus();
-          }
-        }
-      }
     },
     hideLinkMenu() {
       this.linkUrl = null;
