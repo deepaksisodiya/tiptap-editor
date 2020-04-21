@@ -7,12 +7,6 @@ export default class EmbedNode extends Node {
     return "embed";
   }
 
-  get defaultOptions() {
-    return {
-      type: "video"
-    };
-  }
-
   get schema() {
     return {
       attrs: {
@@ -40,12 +34,13 @@ export default class EmbedNode extends Node {
         thumbnail_height: {
           default: ""
         },
+        html: {
+          default: ""
+        },
         caption: {
           default: null
         }
       },
-      content: "inline*",
-      atom: true,
       group: "block",
       selectable: false,
       // parseDOM and toDOM is still required to make copy and paste work
@@ -62,12 +57,13 @@ export default class EmbedNode extends Node {
               thumbnail_url: dom.getAttribute("thumbnail_url"),
               thumbnail_width: dom.getAttribute("thumbnail_width"),
               thumbnail_height: dom.getAttribute("thumbnail_height"),
-              caption: dom.getAttribute("caption")
+              caption: dom.getAttribute("caption"),
+              html: dom.getAttribute("html")
             };
           }
         }
       ],
-      toDOM: node => ["embed", node.attrs, 0]
+      toDOM: node => ["embed", node.attrs]
     };
   }
 

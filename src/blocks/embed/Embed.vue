@@ -44,7 +44,7 @@
     </figcaption>
     <div
       v-if="embeds.data.url && embeds.data.type === 'link'"
-      v-html="node.textContent"
+      v-html="embeds.data.html"
     ></div>
   </div>
 </template>
@@ -70,7 +70,8 @@ export default {
           thumbnail_width: 0,
           thumbnail_height: 0,
           provider: "",
-          html: ""
+          html: "",
+          caption: ""
         }
       }
     };
@@ -86,7 +87,7 @@ export default {
         provider: this.node.attrs.provider,
         type: this.node.attrs.type,
         description: this.node.attrs.description,
-        caption: this.node.attrs.caption
+        html: this.node.attrs.html
       };
       this.embeds.data = data;
     } else {
@@ -170,23 +171,14 @@ export default {
             description: response.data.attrs.description,
             url: response.data.attrs.url,
             provider: response.data.attrs.provider,
-            type: response.data.attrs.type,
             thumbnail_url: response.data.attrs.thumbnail_url,
             thumbnail_width: response.data.attrs.thumbnail_width,
-            thumbnail_height: response.data.attrs.thumbnail_height
+            thumbnail_height: response.data.attrs.thumbnail_height,
+            html: response.data.attrs.html,
+            type: response.data.attrs.type
           };
           // for copy pasting to work
           this.updateAttrs(this.embeds.data);
-          // update content
-          this.$nextTick(() => {
-            let start = this.getPos() + 1;
-            let tr = this.view.state.tr.replaceWith(
-              start,
-              start,
-              this.view.state.schema.text(response.data.content[0].html)
-            );
-            this.view.dispatch(tr);
-          });
         } catch (error) {
           this.embeds.isError = true;
         } finally {
@@ -194,11 +186,7 @@ export default {
           // move cursor to new paragraph
           let tr = this.view.state.tr;
           const pos = this.getPos();
-          let textSelection = TextSelection.create(
-            tr.doc,
-            pos + this.node.nodeSize + 1,
-            pos + this.node.nodeSize + 1
-          );
+          let textSelection = TextSelection.create(tr.doc, pos + 1, pos + 1);
           tr = tr.setSelection(textSelection);
           this.view.dispatch(tr);
         }
