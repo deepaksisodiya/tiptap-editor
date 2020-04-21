@@ -167,15 +167,15 @@ export default {
         try {
           const response = await this.options.getEmbeds(validURL);
           this.embeds.data = {
-            title: response.data.title,
-            description: response.data.description,
-            url: response.data.url,
-            provider: response.data.provider,
-            type: response.data.type,
-            thumbnail_url: response.data.thumbnail_url,
-            thumbnail_width: response.data.thumbnail_width,
-            thumbnail_height: response.data.thumbnail_height,
-            html: response.data.html
+            title: response.data.attrs.title,
+            description: response.data.attrs.description,
+            url: response.data.attrs.url,
+            provider: response.data.attrs.provider,
+            thumbnail_url: response.data.attrs.thumbnail_url,
+            thumbnail_width: response.data.attrs.thumbnail_width,
+            thumbnail_height: response.data.attrs.thumbnail_height,
+            html: response.data.attrs.html,
+            type: response.data.attrs.type
           };
           // for copy pasting to work
           this.updateAttrs(this.embeds.data);
