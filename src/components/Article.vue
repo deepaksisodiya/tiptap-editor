@@ -110,7 +110,7 @@
       <!-- Message-bar -->
       <error-message
         :onClickClose="onClickCloseError"
-        :hasError="error.hasError"
+        :hasError="error.occurred"
         :errorMessage="error.message"
       />
       <!-- End of message-bar -->
@@ -325,7 +325,7 @@ export default {
       error: {
         hasError: false,
         message: "",
-        type: ""
+        name: ""
       },
       shouldShowTooltip: localStorage && !localStorage.getItem("editorTour"),
       data: this.content,
@@ -537,16 +537,16 @@ export default {
                   window.imageInstance = null;
                 }
               } catch (error) {
-                if (this.error.type === "title") this.hideTitleError();
+                if (this.error.name === "title") this.hideTitleError();
                 this.error.hasError = true;
                 if (error.response && error.response.status === 413) {
                   this.error.message =
                     "The image you are trying to upload is too big. Please resize it so that it is under 25MB.";
-                  this.error.type = "imageToBig";
+                  this.error.name = "imageToBig";
                 } else {
                   this.error.message =
                     "Something went wrong while uploading the image. Please try again.";
-                  this.error.type = "imageError";
+                  this.error.name = "imageError";
                 }
                 window.imageInstance.deleteNode();
               }
@@ -574,9 +574,9 @@ export default {
       this.shouldShowTooltip = false;
     },
     onClickCloseError() {
-      this.error.hasError = false;
+      this.error.occurred = false;
       this.error.message = "";
-      if (this.error.type === "title") {
+      if (this.error.name === "title") {
         this.hideTitleError();
       }
     }
@@ -607,10 +607,10 @@ export default {
     },
     shouldDisplayTitleError() {
       if (this.shouldShowTitleError) {
-        this.error.hasError = true;
+        this.error.occurred = true;
         this.error.message =
           "You need to add a title to your post before continuing.";
-        this.error.type = "title";
+        this.error.name = "title";
       }
     }
   },
