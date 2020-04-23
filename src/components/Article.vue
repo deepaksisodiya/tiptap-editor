@@ -111,7 +111,7 @@
       <error-message
         :onClickClose="onClickCloseError"
         :hasError="error.hasError"
-        :errorMessage="error.errorMessage"
+        :errorMessage="error.message"
       />
       <!-- End of message-bar -->
 
@@ -324,7 +324,7 @@ export default {
     return {
       error: {
         hasError: false,
-        errorMessage: "",
+        message: "",
         type: ""
       },
       shouldShowTooltip: localStorage && !localStorage.getItem("editorTour"),
@@ -540,11 +540,11 @@ export default {
                 if (this.error.type === "title") this.hideTitleError();
                 this.error.hasError = true;
                 if (error.response && error.response.status === 413) {
-                  this.error.errorMessage =
+                  this.error.message =
                     "The image you are trying to upload is too big. Please resize it so that it is under 25MB.";
                   this.error.type = "imageToBig";
                 } else {
-                  this.error.errorMessage =
+                  this.error.message =
                     "Something went wrong while uploading the image. Please try again.";
                   this.error.type = "imageError";
                 }
@@ -575,7 +575,7 @@ export default {
     },
     onClickCloseError() {
       this.error.hasError = false;
-      this.error.errorMessage = "";
+      this.error.message = "";
       if (this.error.type === "title") {
         this.hideTitleError();
       }
@@ -608,7 +608,7 @@ export default {
     shouldDisplayTitleError() {
       if (this.shouldShowTitleError) {
         this.error.hasError = true;
-        this.error.errorMessage =
+        this.error.message =
           "You need to add a title to your post before continuing.";
         this.error.type = "title";
       }
