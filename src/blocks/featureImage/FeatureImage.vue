@@ -1,5 +1,8 @@
 <template>
-  <div :class="{ 'upload-picture-block': !dataUrl }" style="position: relative;">
+  <div
+    :class="{ 'upload-picture-block': !dataUrl }"
+    style="position: relative;"
+  >
     <template v-if="!dataUrl">
       <i class="upload-icon"></i>
       <span>Upload feature image (optional)</span>
@@ -108,6 +111,7 @@ export default {
       }
     },
     onImageLoad() {
+      if (this.caption) return;
       this.caption = " ";
       this.$nextTick(() => {
         this.caption = "";
