@@ -109,23 +109,9 @@
     <article>
       <!-- Message-bar -->
       <error-message
-        :onClickClose="closeTitleError"
-        :hasError="shouldDisplayTitleError"
-        errorMessage="You need to add a title to your post before continuing."
-      />
-      <!-- Make common component for this later -->
-      <error-message
-        :onClickClose="closeImageLargeError"
-        :hasError="showImageLargeError"
-        errorMessage="The image you are trying to upload is too big. Please resize it so
-          that it is under 25MB."
-      />
-      <!-- End of message-bar -->
-      <!-- Make common component for this later -->
-      <error-message
-        :onClickClose="closeImageError"
-        :hasError="image.isError"
-        errorMessage="Something went wrong while uploading the image. Please try again."
+        :onClickClose="onClickCloseError"
+        :hasError="error.hasError"
+        :errorMessage="error.errorMessage"
       />
       <!-- End of message-bar -->
 
@@ -336,11 +322,10 @@ export default {
   },
   data() {
     return {
-      showImageLargeError: false,
-      image: {
-        isLoading: false,
-        isError: false,
-        data: null
+      error: {
+        hasError: false,
+        errorMessage: "",
+        type: ""
       },
       shouldShowTooltip: localStorage && !localStorage.getItem("editorTour"),
       data: this.content,
@@ -545,9 +530,6 @@ export default {
               const formData = new FormData();
               formData.append(file.name, file);
 
-              this.image.isLoading = true;
-              this.image.isError = false;
-              this.image.data = null;
               try {
                 const response = await this.uploadImage(formData);
                 if (response.status === 200) {
@@ -555,14 +537,17 @@ export default {
                   window.imageInstance = null;
                 }
               } catch (error) {
+                this.error.hasError = true;
                 if (error.response && error.response.status === 413) {
-                  this.showImageLargeError = true;
+                  this.error.errorMessage =
+                    "The image you are trying to upload is too big. Please resize it so that it is under 25MB.";
+                  this.error.type = "imageToBig";
                 } else {
-                  this.image.isError = true;
+                  this.error.errorMessage =
+                    "Something went wrong while uploading the image. Please try again.";
+                  this.error.type = "imageError";
                 }
                 window.imageInstance.deleteNode();
-              } finally {
-                this.image.isLoading = false;
               }
             }
           };
@@ -587,14 +572,13 @@ export default {
       localStorage.setItem("editorTour", true);
       this.shouldShowTooltip = false;
     },
-    closeTitleError() {
-      this.hideTitleError();
-    },
-    closeImageLargeError() {
-      this.showImageLargeError = false;
-    },
-    closeImageError() {
-      this.image.isError = false;
+    onClickCloseError() {
+      this.error.hasError = false;
+      this.error.errorMessage = "";
+      if (this.error.type === "title") {
+        this.hideTitleError();
+      }
+      this.error.type = "";
     }
   },
   watch: {
@@ -619,6 +603,18 @@ export default {
       } = this.editor;
       if (content.length === 2) {
         this.editor.setOptions({});
+      }
+    },
+    shouldDisplayTitleError() {
+      if (this.shouldShowTitleError) {
+        this.error.hasError = true;
+        this.error.errorMessage =
+          "You need to add a title to your post before continuing.";
+        this.error.type = "title";
+      } else {
+        this.error.hasError = false;
+        this.error.errorMessage = "";
+        this.error.type = "";
       }
     }
   },
