@@ -152,44 +152,39 @@ export default {
     },
     async onClickAdd() {
       if (!this.url) return;
-      const isUrl = this.validURL(this.url);
 
-      if (!isUrl) {
-        this.createAndMovetoNextParagraph();
-      } else {
-        const validURL = this.getValidUrl(this.url);
-        this.updateAttrs({
-          url: validURL
-        });
+      const validURL = this.getValidUrl(this.url);
+      this.updateAttrs({
+        url: validURL
+      });
 
-        this.embeds.isLoading = true;
-        this.embeds.isError = false;
-        try {
-          const response = await this.options.getEmbeds(validURL);
-          this.embeds.data = {
-            title: response.data.attrs.title,
-            description: response.data.attrs.description,
-            url: response.data.attrs.url,
-            provider: response.data.attrs.provider,
-            thumbnail_url: response.data.attrs.thumbnail_url,
-            thumbnail_width: response.data.attrs.thumbnail_width,
-            thumbnail_height: response.data.attrs.thumbnail_height,
-            html: response.data.attrs.html,
-            type: response.data.attrs.type
-          };
-          // for copy pasting to work
-          this.updateAttrs(this.embeds.data);
-        } catch (error) {
-          this.embeds.isError = true;
-        } finally {
-          this.embeds.isLoading = false;
-          // move cursor to new paragraph
-          let tr = this.view.state.tr;
-          const pos = this.getPos();
-          let textSelection = TextSelection.create(tr.doc, pos + 1, pos + 1);
-          tr = tr.setSelection(textSelection);
-          this.view.dispatch(tr);
-        }
+      this.embeds.isLoading = true;
+      this.embeds.isError = false;
+      try {
+        const response = await this.options.getEmbeds(validURL);
+        this.embeds.data = {
+          title: response.data.attrs.title,
+          description: response.data.attrs.description,
+          url: response.data.attrs.url,
+          provider: response.data.attrs.provider,
+          thumbnail_url: response.data.attrs.thumbnail_url,
+          thumbnail_width: response.data.attrs.thumbnail_width,
+          thumbnail_height: response.data.attrs.thumbnail_height,
+          html: response.data.attrs.html,
+          type: response.data.attrs.type
+        };
+        // for copy pasting to work
+        this.updateAttrs(this.embeds.data);
+      } catch (error) {
+        this.embeds.isError = true;
+      } finally {
+        this.embeds.isLoading = false;
+        // move cursor to new paragraph
+        let tr = this.view.state.tr;
+        const pos = this.getPos();
+        let textSelection = TextSelection.create(tr.doc, pos + 1, pos + 1);
+        tr = tr.setSelection(textSelection);
+        this.view.dispatch(tr);
       }
     },
     createAndMovetoNextParagraph() {
