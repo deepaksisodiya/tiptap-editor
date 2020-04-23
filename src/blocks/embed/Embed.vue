@@ -138,6 +138,7 @@ export default {
     }
   },
   methods: {
+    // https://stackoverflow.com/questions/11300906/check-if-a-string-starts-with-http-using-javascript
     getValidUrl(url = "") {
       let newUrl = window.decodeURIComponent(url);
       newUrl = newUrl.trim().replace(/\s/g, "");
