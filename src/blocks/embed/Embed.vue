@@ -8,8 +8,8 @@
         ref="embedInput"
         :placeholder="placeholderText"
         @paste.stop
-        type="url"
-        v-model="input"
+        type="text"
+        v-model="url"
         :disabled="!view.editable"
       />
       <button
