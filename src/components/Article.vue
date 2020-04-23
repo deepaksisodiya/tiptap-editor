@@ -537,6 +537,7 @@ export default {
                   window.imageInstance = null;
                 }
               } catch (error) {
+                if (this.error.type === "title") this.hideTitleError();
                 this.error.hasError = true;
                 if (error.response && error.response.status === 413) {
                   this.error.errorMessage =
@@ -578,7 +579,6 @@ export default {
       if (this.error.type === "title") {
         this.hideTitleError();
       }
-      this.error.type = "";
     }
   },
   watch: {
@@ -611,10 +611,6 @@ export default {
         this.error.errorMessage =
           "You need to add a title to your post before continuing.";
         this.error.type = "title";
-      } else {
-        this.error.hasError = false;
-        this.error.errorMessage = "";
-        this.error.type = "";
       }
     }
   },
