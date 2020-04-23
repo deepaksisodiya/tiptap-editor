@@ -9,7 +9,7 @@
         :placeholder="placeholderText"
         @paste.stop
         type="url"
-        v-model="url"
+        v-model="input"
         :disabled="!view.editable"
       />
       <button
