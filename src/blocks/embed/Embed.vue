@@ -164,7 +164,8 @@ export default {
       this.embeds.isLoading = true;
       this.embeds.isError = false;
       try {
-        const response = await this.options.getEmbeds(validURL);
+        const url = encodeURIComponent(validURL.trim());
+        const response = await this.options.getEmbeds(url);
         // TODO: refactor here and similar code in mounted hook
         this.embeds.data = {
           title: response.data.attrs.title,
