@@ -14,8 +14,7 @@
       />
     </template>
     <figure v-if="dataUrl" class="featured-image">
-      <!-- data-featured has beed added so that we can use in image copy paste (check getAttrs() in image.js) -->
-      <img :src="dataUrl" @load="onImageLoad" data-featured="true" />
+      <img :src="dataUrl" @load="onImageLoad" />
       <figcaption>
         <input
           v-model="caption"

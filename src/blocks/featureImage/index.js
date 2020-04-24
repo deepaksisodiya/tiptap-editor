@@ -23,7 +23,7 @@ export default class ImageNode extends TiptapImage {
       },
       group: "block",
       selectable: false,
-      toDOM: node => ["img", node.attrs]
+      toDOM: node => ["img", { ...node.attrs, "data-featured-image": true }]
     };
   }
 
