@@ -162,7 +162,8 @@ export default {
       this.embeds.isLoading = true;
       this.embeds.isError = false;
       try {
-        const response = await this.options.getEmbeds(validURL);
+        const url = encodeURIComponent(validURL.trim());
+        const response = await this.options.getEmbeds(url);
         this.embeds.data = {
           title: response.data.attrs.title,
           description: response.data.attrs.description,
