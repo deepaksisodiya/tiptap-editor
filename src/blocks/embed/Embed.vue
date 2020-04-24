@@ -90,6 +90,7 @@ export default {
         html: this.node.attrs.html
       };
       this.embeds.data = data;
+      if (this.embeds.data.type === "link") this.$nextTick(this.disableLink);
     } else {
       this.$nextTick(() => {
         this.$refs.embedInput.focus();
@@ -164,6 +165,7 @@ export default {
       try {
         const url = encodeURIComponent(validURL.trim());
         const response = await this.options.getEmbeds(url);
+        // TODO: refactor here and similar code in mounted hook
         this.embeds.data = {
           title: response.data.attrs.title,
           description: response.data.attrs.description,
@@ -177,6 +179,7 @@ export default {
         };
         // for copy pasting to work
         this.updateAttrs(this.embeds.data);
+        if (this.embeds.data.type === "link") this.$nextTick(this.disableLink);
       } catch (error) {
         this.embeds.isError = true;
       } finally {
@@ -240,6 +243,9 @@ export default {
         this.view.dispatch(tr.setSelection(textSelection));
         this.view.focus();
       }
+    },
+    disableLink() {
+      this.$el.querySelector("a").onclick = e => e.preventDefault();
     }
   }
 };
