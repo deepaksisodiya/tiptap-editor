@@ -90,8 +90,7 @@ export default {
         html: this.node.attrs.html
       };
       this.embeds.data = data;
-      if (this.embeds.data.type === "link")
-        this.$nextTick(this.addTragetToLink);
+      if (this.embeds.data.type === "link") this.$nextTick(this.disableLink);
     } else {
       this.$nextTick(() => {
         this.$refs.embedInput.focus();
@@ -180,8 +179,7 @@ export default {
         };
         // for copy pasting to work
         this.updateAttrs(this.embeds.data);
-        if (this.embeds.data.type === "link")
-          this.$nextTick(this.addTragetToLink);
+        if (this.embeds.data.type === "link") this.$nextTick(this.disableLink);
       } catch (error) {
         this.embeds.isError = true;
       } finally {
@@ -246,8 +244,8 @@ export default {
         this.view.focus();
       }
     },
-    addTragetToLink() {
-      this.$el.querySelector("a").setAttribute("target", "_blank");
+    disableLink() {
+      this.$el.querySelector("a").onclick = e => e.preventDefault();
     }
   }
 };
