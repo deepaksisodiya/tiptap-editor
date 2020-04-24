@@ -22,11 +22,15 @@ export default class ImageNode extends TiptapImage {
       parseDOM: [
         {
           tag: "img[src]",
-          getAttrs: dom => ({
-            src: dom.getAttribute("src"),
-            alt: dom.getAttribute("alt"),
-            caption: dom.getAttribute("caption")
-          })
+          getAttrs: dom => {
+            // to distinguish b/w featured and normal image
+            if (dom.getAttribute("data-featured")) return false;
+            return {
+              src: dom.getAttribute("src"),
+              alt: dom.getAttribute("alt"),
+              caption: dom.getAttribute("caption")
+            };
+          }
         }
       ],
       toDOM: node => ["img", node.attrs]
