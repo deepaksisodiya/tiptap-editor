@@ -386,7 +386,8 @@ export default {
               block.attrs.src = "";
             }
           });
-          this.onUpdatePost(newData, title);
+          const payload = { blocks: newData, title };
+          this.onUpdatePost(payload);
         }, 300)
       })
     };
