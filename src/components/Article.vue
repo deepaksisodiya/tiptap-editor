@@ -249,7 +249,7 @@ import {
   Embed,
   Image,
   FeatureImage,
-  Lock,
+  // Lock,
   Doc,
   Title,
   HorizontalRule,
@@ -366,8 +366,8 @@ export default {
           new Embed({
             getEmbeds: this.getEmbeds
           }),
-          new HorizontalRule(),
-          new Lock()
+          new HorizontalRule()
+          // new Lock()
         ],
         onUpdate: _debounce(({ getJSON }) => {
           this.data = getJSON();
