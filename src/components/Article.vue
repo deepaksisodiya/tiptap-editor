@@ -200,10 +200,11 @@
             <!--
               For now disable the lock icon from floating menu kitchsink for pre-alpha relese
               later do like :style="`display: ${hasLock ? 'none' : 'inline'}`"
+              :style="`display: ${hasLock ? 'none' : 'none'}`"
             -->
             <li
               v-if="shouldShowFloatingMenu"
-              :style="`display: ${hasLock ? 'none' : 'none'}`"
+              stype="display:none"
               :class="{ 'is-active': isActive.lock() }"
               @click="onClickMenuItem(commands.lock)"
             >
