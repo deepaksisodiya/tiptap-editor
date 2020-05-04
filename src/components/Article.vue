@@ -202,14 +202,14 @@
               later do like :style="`display: ${hasLock ? 'none' : 'inline'}`"
               :style="`display: ${hasLock ? 'none' : 'none'}`"
             -->
-            <li
+            <!-- <li
               v-if="shouldShowFloatingMenu"
-              stype="display:none"
+              :style="`display: ${hasLock ? 'none' : 'none'}`"
               :class="{ 'is-active': isActive.lock() }"
               @click="onClickMenuItem(commands.lock)"
             >
               <i class="lock-icon"></i>
-            </li>
+            </li> -->
           </ul>
         </div>
       </editor-floating-menu>

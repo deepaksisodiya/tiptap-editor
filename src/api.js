@@ -10,5 +10,10 @@ export const uploadImage = formData =>
 
 export const getEmbeds = url =>
   axios.get(
-    `https://deepak.scrollstack.com/api/w/embedos/metadata?url=${url.trim()}`
+    `https://deepak.scrollstack.com/api/w/embeds/metadata?url=${url.trim()}`,
+    {
+      headers: {
+        Authorization: "oWn7jKY6TFSVEHN7p-2jmwAc5-2EIDjWo29DWzQLUco"
+      }
+    }
   );
