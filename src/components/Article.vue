@@ -399,14 +399,14 @@ export default {
     });
 
     if (this.isIOS) {
-      this.$refs.floatingMenu.$watch("menu.top", newValue => {
-        if (
-          newValue + 13 >=
-          window.visualViewport.pageTop + window.visualViewport.height
-        ) {
-          this.$refs.floatingMenuElement.scrollIntoView(true);
-        }
-      });
+      // this.$refs.floatingMenu.$watch("menu.top", newValue => {
+      //   if (
+      //     newValue + 13 >=
+      //     window.visualViewport.pageTop + window.visualViewport.height
+      //   ) {
+      //     this.$refs.floatingMenuElement.scrollIntoView(true);
+      //   }
+      // });
 
       this.$refs.linkDiv.style.position = "absolute";
 
