@@ -586,8 +586,7 @@ export default {
   },
   watch: {
     content(newValue, oldValue) {
-      if (newValue) {
-        console.log(_isEqual(oldValue, defaultContent));
+      if (_isEqual(oldValue, defaultContent)) {
         const newContent = this.addTitle(newValue, this.title);
         this.editor.setContent(newContent, false);
       }
