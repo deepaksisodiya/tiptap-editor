@@ -245,7 +245,6 @@ import {
 import { contains } from "prosemirror-utils";
 // import VueJsonPretty from "vue-json-pretty";
 import _debounce from "lodash.debounce";
-import _isEqual from "lodash.isequal";
 
 import {
   Embed,
@@ -585,8 +584,8 @@ export default {
     }
   },
   watch: {
-    content(newValue, oldValue) {
-      if (_isEqual(oldValue, defaultContent)) {
+    content(newValue) {
+      if (newValue) {
         const newContent = this.addTitle(newValue, this.title);
         this.editor.setContent(newContent, false);
       }
