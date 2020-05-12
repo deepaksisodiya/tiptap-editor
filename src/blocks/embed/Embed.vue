@@ -29,19 +29,19 @@
     </div>
     <div
       v-if="embeds.data.url && embeds.data.type === 'video'"
-      class="videoWrapper"
+      class="video-wrapper"
     >
       <figure v-html="embeds.data.html"></figure>
+      <figcaption v-if="embeds.data.url && embeds.data.type === 'video'">
+        <input
+          type="text"
+          v-model="caption"
+          :disabled="!view.editable"
+          @keyup="handleKeyup"
+          placeholder="write caption (optional)"
+        />
+      </figcaption>
     </div>
-    <figcaption v-if="embeds.data.url && embeds.data.type === 'video'">
-      <input
-        type="text"
-        v-model="caption"
-        :disabled="!view.editable"
-        @keyup="handleKeyup"
-        placeholder="write caption (optional)"
-      />
-    </figcaption>
     <div
       v-if="embeds.data.url && embeds.data.type === 'link'"
       v-html="embeds.data.html"
@@ -252,13 +252,7 @@ export default {
 </script>
 
 <style scoped>
-.videoWrapper {
-  position: relative;
-  padding-bottom: 56.25%; /* 16:9 */
-  padding-top: 25px;
-  height: 0;
-}
-.videoWrapper iframe {
+.video-wrapper iframe {
   position: absolute;
   top: 0;
   left: 0;
