@@ -32,16 +32,16 @@
       class="video-wrapper"
     >
       <figure v-html="embeds.data.html"></figure>
+      <figcaption v-if="embeds.data.url && embeds.data.type === 'video'">
+        <input
+          type="text"
+          v-model="caption"
+          :disabled="!view.editable"
+          @keyup="handleKeyup"
+          placeholder="write caption (optional)"
+        />
+      </figcaption>
     </div>
-    <figcaption v-if="embeds.data.url && embeds.data.type === 'video'">
-      <input
-        type="text"
-        v-model="caption"
-        :disabled="!view.editable"
-        @keyup="handleKeyup"
-        placeholder="write caption (optional)"
-      />
-    </figcaption>
     <div
       v-if="embeds.data.url && embeds.data.type === 'link'"
       v-html="embeds.data.html"
