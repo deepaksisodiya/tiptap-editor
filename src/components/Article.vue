@@ -362,7 +362,8 @@ export default {
           }),
           new Image(),
           new FeatureImage({
-            uploadImage: this.uploadImage
+            uploadImage: this.uploadImage,
+            handleError: this.handleError
           }),
           new Embed({
             getEmbeds: this.getEmbeds
@@ -494,6 +495,19 @@ export default {
       this.$refs.fileInput.click();
       this.hideFloatingMenu();
     },
+    handleError(apiError) {
+      if (this.error.name === "title") this.hideTitleError();
+      this.error.hasError = true;
+      if (apiError.response && apiError.response.status === 413) {
+        this.error.message =
+          "The image you are trying to upload is too big. Please resize it so that it is under 25MB.";
+        this.error.name = "imageToBig";
+      } else {
+        this.error.message =
+          "Something went wrong while uploading the image. Please try again.";
+        this.error.name = "imageError";
+      }
+    },
     isTitleSelected() {
       const {
         state: {
@@ -539,17 +553,7 @@ export default {
                   window.imageInstance = null;
                 }
               } catch (error) {
-                if (this.error.name === "title") this.hideTitleError();
-                this.error.hasError = true;
-                if (error.response && error.response.status === 413) {
-                  this.error.message =
-                    "The image you are trying to upload is too big. Please resize it so that it is under 25MB.";
-                  this.error.name = "imageToBig";
-                } else {
-                  this.error.message =
-                    "Something went wrong while uploading the image. Please try again.";
-                  this.error.name = "imageError";
-                }
+                this.handleError(error);
                 window.imageInstance.deleteNode();
               }
             }
