@@ -9,6 +9,7 @@
         :placeholder="placeholderText"
         @paste.stop
         type="text"
+        @keyup.enter="onClickAdd"
         v-model="url"
         :disabled="!view.editable"
       />
