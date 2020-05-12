@@ -8,9 +8,7 @@
         ref="embedInput"
         :placeholder="placeholderText"
         @paste.stop
-        @keyup="handleKeyup"
         type="text"
-        name="embed"
         v-model="url"
         :disabled="!view.editable"
       />
@@ -37,7 +35,6 @@
       <figcaption v-if="embeds.data.url && embeds.data.type === 'video'">
         <input
           type="text"
-          name="caption"
           v-model="caption"
           :disabled="!view.editable"
           @keyup="handleKeyup"
@@ -230,25 +227,21 @@ export default {
       ); // fragment locator
       return !!pattern.test(str);
     },
-    handleKeyup({ key, target: { name } }) {
+    handleKeyup(event) {
       let {
         state: { tr }
       } = this.view;
       const pos = this.getPos();
-      if (name === "caption" && key === "Backspace" && !this.caption) {
+      if (event.key === "Backspace" && !this.caption) {
         let textSelection = TextSelection.create(tr.doc, pos, pos + 1);
         this.view.dispatch(
           tr.setSelection(textSelection).deleteSelection(this.url)
         );
         this.view.focus();
-      } else if (key === "Enter") {
-        if (name === "caption") {
-          let textSelection = TextSelection.create(tr.doc, pos + 2, pos + 2);
-          this.view.dispatch(tr.setSelection(textSelection));
-          this.view.focus();
-        } else if (name === "embed") {
-          this.onClickAdd();
-        }
+      } else if (event.key === "Enter") {
+        let textSelection = TextSelection.create(tr.doc, pos + 2, pos + 2);
+        this.view.dispatch(tr.setSelection(textSelection));
+        this.view.focus();
       }
     },
     disableLink() {
