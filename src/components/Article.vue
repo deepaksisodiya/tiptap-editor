@@ -324,7 +324,7 @@ export default {
   data() {
     return {
       error: {
-        hasError: false,
+        occurred: false,
         message: "",
         name: ""
       },
@@ -497,7 +497,7 @@ export default {
     },
     handleError(apiError) {
       if (this.error.name === "title") this.hideTitleError();
-      this.error.hasError = true;
+      this.error.occurred = true;
       if (apiError.response && apiError.response.status === 413) {
         this.error.message =
           "The image you are trying to upload is too big. Please resize it so that it is under 25MB.";
