@@ -6,6 +6,7 @@
         v-model="caption"
         placeholder="Type caption for image (optional)"
         @keyup="handleKeyup"
+        @paste.stop
       />
     </figcaption>
   </figure>
