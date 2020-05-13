@@ -1,28 +1,30 @@
 <template>
-  <div
-    :class="{ 'upload-picture-block': !dataUrl }"
-    style="position: relative;"
-  >
-    <template v-if="!dataUrl">
-      <i class="upload-icon"></i>
-      <span>Upload feature image (optional)</span>
-      <input
-        type="file"
-        ref="fileInput"
-        style="position: absolute; opacity: 0; top: 0px; left: 0px; height: 100%; width: 100%; margin-top: 0px; margin-bottom: 0px"
-        @change="previewFiles()"
-      />
-    </template>
-    <figure v-if="dataUrl" class="featured-image">
-      <img :src="dataUrl" @load="onImageLoad" />
-      <figcaption>
+  <div>
+    <div
+      :class="{ 'upload-picture-block': !dataUrl }"
+      style="position: relative;"
+    >
+      <template v-if="!dataUrl">
+        <i class="upload-icon"></i>
+        <span>Upload feature image (optional)</span>
         <input
-          v-model="caption"
-          placeholder="Type caption for image (optional)"
-          @keyup="handleKeyup"
+          type="file"
+          ref="fileInput"
+          style="position: absolute; opacity: 0; top: 0px; left: 0px; height: 100%; width: 100%; margin-top: 0px; margin-bottom: 0px"
+          @change="previewFiles()"
         />
-      </figcaption>
-    </figure>
+      </template>
+      <figure v-if="dataUrl" class="featured-image">
+        <img :src="dataUrl" @load="onImageLoad" />
+        <figcaption>
+          <input
+            v-model="caption"
+            placeholder="Type caption for image (optional)"
+            @keyup="handleKeyup"
+          />
+        </figcaption>
+      </figure>
+    </div>
   </div>
 </template>
 
@@ -34,13 +36,13 @@ export default {
   props: ["node", "updateAttrs", "view", "getPos", "options"],
   data() {
     return {
-      dataUrl: this.node.attrs.src
+      dataUrl: this.node.attrs.src,
     };
   },
   watch: {
     "node.attrs.src"(newValue) {
       if (!this.dataUrl) this.dataUrl = newValue;
-    }
+    },
   },
   computed: {
     src: {
@@ -49,9 +51,9 @@ export default {
       },
       set(src) {
         this.updateAttrs({
-          src
+          src,
         });
-      }
+      },
     },
     caption: {
       get() {
@@ -59,10 +61,10 @@ export default {
       },
       set(caption) {
         this.updateAttrs({
-          caption
+          caption,
         });
-      }
-    }
+      },
+    },
   },
   mounted() {
     this.$nextTick(() => {
@@ -73,7 +75,7 @@ export default {
   methods: {
     handleKeyup(event) {
       let {
-        state: { tr }
+        state: { tr },
       } = this.view;
       const pos = this.getPos();
       if (event.key === "Backspace" && !this.caption) {
@@ -122,7 +124,7 @@ export default {
       this.$nextTick(() => {
         this.caption = "";
       });
-    }
-  }
+    },
+  },
 };
 </script>
