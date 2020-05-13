@@ -39,6 +39,7 @@
           v-model="caption"
           :disabled="!view.editable"
           @keyup="handleKeyup"
+          @paste.stop
           placeholder="write caption (optional)"
         />
       </figcaption>
