@@ -45,9 +45,15 @@
       </figcaption>
     </div>
     <div
+      @click="onClickEmbed"
       v-if="embeds.data.url && embeds.data.type === 'link'"
-      v-html="embeds.data.html"
-    ></div>
+      :class="{ selected: shouldShowClose }"
+    >
+      <div class="close-button" @click="deleteNode">
+        <i class="close-icon"></i>
+      </div>
+      <div v-html="embeds.data.html"></div>
+    </div>
   </div>
 </template>
 
@@ -60,6 +66,7 @@ export default {
   data() {
     return {
       isButtonActive: false,
+      shouldShowClose: false,
       embeds: {
         isLoading: false,
         isError: false,
@@ -248,6 +255,20 @@ export default {
     },
     disableLink() {
       this.$el.querySelector("a").onclick = e => e.preventDefault();
+    },
+    onClickEmbed() {
+      this.shouldShowClose = !this.shouldShowClose;
+    },
+    deleteNode() {
+      let {
+        state: { tr }
+      } = this.view;
+      const pos = this.getPos();
+      let textSelection = TextSelection.create(tr.doc, pos, pos + 1);
+      this.view.dispatch(
+        tr.setSelection(textSelection).deleteSelection(this.src)
+      );
+      this.view.focus();
     }
   }
 };
