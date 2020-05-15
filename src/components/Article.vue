@@ -544,7 +544,7 @@ export default {
             });
             if (imageInstance && imageInstance.dataUrl.includes("data:")) {
               const formData = new FormData();
-              formData.append(file.name, file);
+              formData.append("image", file);
 
               try {
                 const response = await this.uploadImage(formData);
