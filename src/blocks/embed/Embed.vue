@@ -260,7 +260,15 @@ export default {
       this.shouldShowClose = !this.shouldShowClose;
     },
     deleteNode() {
-      console.log("delete embeds");
+      let {
+        state: { tr }
+      } = this.view;
+      const pos = this.getPos();
+      let textSelection = TextSelection.create(tr.doc, pos, pos + 1);
+      this.view.dispatch(
+        tr.setSelection(textSelection).deleteSelection(this.src)
+      );
+      this.view.focus();
     }
   }
 };
