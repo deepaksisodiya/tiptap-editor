@@ -1,6 +1,20 @@
 <template>
-  <figure>
-    <img ref="img" :src="dataUrl" :height="height" :width="width" />
+  <figure
+    @click="onImageClick"
+    :class="{ selected: shouldShowClose }"
+  >
+    <div
+      class="close-button"
+      @click="deleteNode"
+    >
+      <i class="close-icon"></i>
+    </div>
+    <img
+      ref="img"
+      :src="dataUrl"
+      :height="height"
+      :width="width"
+    />
     <figcaption>
       <input
         v-model="caption"
@@ -22,7 +36,8 @@ export default {
     return {
       height: "",
       width: "",
-      dataUrl: this.node.attrs.src
+      dataUrl: this.node.attrs.src,
+      shouldShowClose: false
     };
   },
   computed: {
@@ -74,14 +89,17 @@ export default {
     },
     deleteNode() {
       let {
-        state: { tr }
+        state: { tr, schema }
       } = this.view;
       const pos = this.getPos();
+      tr = tr.insert(pos + 1, schema.node("paragraph"));
       let textSelection = TextSelection.create(tr.doc, pos, pos + 1);
-      this.view.dispatch(
-        tr.setSelection(textSelection).deleteSelection(this.src)
-      );
+      tr = tr.setSelection(textSelection).deleteSelection();
+      this.view.dispatch(tr);
       this.view.focus();
+    },
+    onImageClick() {
+      this.shouldShowClose = !this.shouldShowClose;
     }
   }
 };
