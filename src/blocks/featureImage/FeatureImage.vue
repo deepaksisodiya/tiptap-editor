@@ -36,13 +36,13 @@ export default {
   props: ["node", "updateAttrs", "view", "getPos", "options"],
   data() {
     return {
-      dataUrl: this.node.attrs.src,
+      dataUrl: this.node.attrs.src
     };
   },
   watch: {
     "node.attrs.src"(newValue) {
       if (!this.dataUrl) this.dataUrl = newValue;
-    },
+    }
   },
   computed: {
     src: {
@@ -51,9 +51,9 @@ export default {
       },
       set(src) {
         this.updateAttrs({
-          src,
+          src
         });
-      },
+      }
     },
     caption: {
       get() {
@@ -61,10 +61,10 @@ export default {
       },
       set(caption) {
         this.updateAttrs({
-          caption,
+          caption
         });
-      },
-    },
+      }
+    }
   },
   mounted() {
     this.$nextTick(() => {
@@ -75,7 +75,7 @@ export default {
   methods: {
     handleKeyup(event) {
       let {
-        state: { tr },
+        state: { tr }
       } = this.view;
       const pos = this.getPos();
       if (event.key === "Backspace" && !this.caption) {
@@ -102,7 +102,7 @@ export default {
           this.dataUrl = img.src;
 
           const formData = new FormData();
-          formData.append(file.name, file);
+          formData.append("image", file);
           // TODO handle image loading here later
           try {
             const response = await this.options.uploadImage(formData);
@@ -124,7 +124,7 @@ export default {
       this.$nextTick(() => {
         this.caption = "";
       });
-    },
-  },
+    }
+  }
 };
 </script>
