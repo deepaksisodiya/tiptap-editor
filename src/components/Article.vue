@@ -263,6 +263,8 @@ import "@/assets/scss/base.scss";
 import "@/assets/scss/editor.scss";
 import "@/assets/scss/article.scss";
 
+const EVENTS = ["online", "offline"];
+
 const defaultContent = {
   type: "doc",
   content: [
@@ -323,6 +325,7 @@ export default {
   },
   data() {
     return {
+      isOnline: navigator.onLine || false,
       error: {
         occurred: false,
         message: "",
@@ -394,6 +397,11 @@ export default {
       })
     };
   },
+  created() {
+    EVENTS.forEach(event =>
+      window.addEventListener(event, this.updateOnlineStatus)
+    );
+  },
   mounted() {
     this.$refs.menububble.$watch("menu.isActive", newValue => {
       if (!newValue) this.linkMenuIsActive = false;
@@ -422,8 +430,15 @@ export default {
   },
   beforeDestroy() {
     if (this.menuBarTimer) clearInterval(this.menuBarTimer);
+
+    EVENTS.forEach(event =>
+      window.removeEventListener(event, this.updateOnlineStatus)
+    );
   },
   methods: {
+    updateOnlineStatus() {
+      this.isOnline = navigator.onLine;
+    },
     showLinkMenu(attrs) {
       this.linkUrl = attrs.href;
       this.linkMenuIsActive = true;
