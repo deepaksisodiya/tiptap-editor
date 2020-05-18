@@ -112,6 +112,7 @@
         :onClickClose="onClickCloseError"
         :hasError="error.occurred"
         :errorMessage="error.message"
+        :error-name="error.name"
       />
       <!-- End of message-bar -->
 
@@ -403,6 +404,13 @@ export default {
     );
   },
   mounted() {
+    if (!this.isOnline) {
+      this.error.occurred = true;
+      this.error.message =
+        "You appear to be offline. Any changes to your post may not be saved.";
+      this.error.name = "offline";
+    }
+
     this.$refs.menububble.$watch("menu.isActive", newValue => {
       if (!newValue) this.linkMenuIsActive = false;
     });
@@ -632,6 +640,16 @@ export default {
         this.error.message =
           "You need to add a title to your post before continuing.";
         this.error.name = "title";
+      }
+    },
+    isOnline() {
+      if (this.isOnline) {
+        this.error.occurred = false;
+      } else {
+        this.error.occurred = true;
+        this.error.message =
+          "You appear to be offline. Any changes to your post may not be saved.";
+        this.error.name = "offline";
       }
     }
   },
