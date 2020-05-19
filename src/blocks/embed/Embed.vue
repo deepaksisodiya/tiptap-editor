@@ -1,14 +1,14 @@
 <template>
   <div>
-    <ul class="kitchensink">
+    <ul v-if="!embeds.data.url" class="kitchensink">
       <li @click="deleteNode">
         <i class="add-icon close-icon"></i>
       </li>
-      <li class="embed-input" v-if="!embeds.data.url && embeds.isLoading === true">
+      <li class="embed-input" v-if="embeds.isLoading === true">
         <i class="loading-icon"></i>
         <span>{{ loadingText }}</span>
       </li>
-      <li v-if="!embeds.data.url && embeds.isLoading === false" class="embed-input">
+      <li v-if="embeds.isLoading === false" class="embed-input">
         <input
           ref="embedInput"
           :placeholder="placeholderText"
