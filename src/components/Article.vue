@@ -112,6 +112,7 @@
         :onClickClose="onClickCloseError"
         :hasError="error.occurred"
         :errorMessage="error.message"
+        :error-name="error.name"
       />
       <!-- End of message-bar -->
 
@@ -263,6 +264,8 @@ import "@/assets/scss/base.scss";
 import "@/assets/scss/editor.scss";
 import "@/assets/scss/article.scss";
 
+const EVENTS = ["online", "offline"];
+
 const defaultContent = {
   type: "doc",
   content: [
@@ -323,6 +326,7 @@ export default {
   },
   data() {
     return {
+      isOnline: navigator.onLine || true,
       error: {
         occurred: false,
         message: "",
@@ -394,7 +398,19 @@ export default {
       })
     };
   },
+  created() {
+    EVENTS.forEach(event =>
+      window.addEventListener(event, this.updateOnlineStatus)
+    );
+  },
   mounted() {
+    if (!this.isOnline) {
+      this.error.occurred = true;
+      this.error.message =
+        "You appear to be offline. Any changes to your post may not be saved.";
+      this.error.name = "offline";
+    }
+
     this.$refs.menububble.$watch("menu.isActive", newValue => {
       if (!newValue) this.linkMenuIsActive = false;
     });
@@ -422,8 +438,15 @@ export default {
   },
   beforeDestroy() {
     if (this.menuBarTimer) clearInterval(this.menuBarTimer);
+
+    EVENTS.forEach(event =>
+      window.removeEventListener(event, this.updateOnlineStatus)
+    );
   },
   methods: {
+    updateOnlineStatus() {
+      this.isOnline = navigator.onLine;
+    },
     showLinkMenu(attrs) {
       this.linkUrl = attrs.href;
       this.linkMenuIsActive = true;
@@ -617,6 +640,16 @@ export default {
         this.error.message =
           "You need to add a title to your post before continuing.";
         this.error.name = "title";
+      }
+    },
+    isOnline() {
+      if (this.isOnline) {
+        this.error.occurred = false;
+      } else {
+        this.error.occurred = true;
+        this.error.message =
+          "You appear to be offline. Any changes to your post may not be saved.";
+        this.error.name = "offline";
       }
     }
   },
