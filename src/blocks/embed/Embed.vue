@@ -1,47 +1,31 @@
 <template>
   <div>
-    <div
-      v-if="!embeds.data.url && embeds.isLoading === false"
-      class="embed-input"
-    >
-      <ul
-        class="kitchensink"
-        style="position: absolute; width: 32px; top: -22px;"
-        v-if="!isButtonActive"
-        @click="deleteNode"
-      >
-        <li>
-          <i class="add-icon close-icon"></i>
-        </li>
-      </ul>
-      <input
-        ref="embedInput"
-        :placeholder="placeholderText"
-        @paste.stop
-        type="text"
-        @keyup.enter="onClickAdd"
-        v-model="url"
-        :disabled="!view.editable"
-      />
-      <button
-        :disabled="!isButtonActive"
-        :class="{ active: isButtonActive }"
-        @click="onClickAdd"
-      >
-        Add
-      </button>
-    </div>
-    <div
-      class="embed-input"
-      v-if="!embeds.data.url && embeds.isLoading === true"
-    >
-      <i class="loading-icon"></i>
-      <span>{{ loadingText }}</span>
-    </div>
-    <div
-      v-if="embeds.data.url && embeds.data.type === 'video'"
-      class="video-wrapper"
-    >
+    <ul class="kitchensink">
+      <li @click="deleteNode">
+        <i class="add-icon close-icon"></i>
+      </li>
+      <li class="embed-input" v-if="!embeds.data.url && embeds.isLoading === true">
+        <i class="loading-icon"></i>
+        <span>{{ loadingText }}</span>
+      </li>
+      <li v-if="!embeds.data.url && embeds.isLoading === false" class="embed-input">
+        <input
+          ref="embedInput"
+          :placeholder="placeholderText"
+          type="text"
+          @paste.stop
+          @keyup.enter="onClickAdd"
+          v-model="url"
+          :disabled="!view.editable"
+        />
+        <button
+          :disabled="!isButtonActive"
+          :class="{ active: isButtonActive }"
+          @click="onClickAdd"
+        >Add</button>
+      </li>
+    </ul>
+    <div v-if="embeds.data.url && embeds.data.type === 'video'" class="video-wrapper">
       <figure v-html="embeds.data.html"></figure>
       <figcaption v-if="embeds.data.url && embeds.data.type === 'video'">
         <input
