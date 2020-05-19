@@ -326,7 +326,7 @@ export default {
   },
   data() {
     return {
-      isOnline: navigator.onLine || false,
+      isOnline: navigator.onLine || true,
       error: {
         occurred: false,
         message: "",
