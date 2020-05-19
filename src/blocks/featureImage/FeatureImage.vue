@@ -14,7 +14,15 @@
           @change="previewFiles()"
         />
       </template>
-      <figure v-if="dataUrl" class="featured-image">
+      <figure
+        v-if="dataUrl"
+        class="featured-image"
+        @click="onImageClick"
+        :class="{ selected: shouldShowClose }"
+      >
+        <div class="close-button" @click="removeImage">
+          <i class="close-icon"></i>
+        </div>
         <img :src="dataUrl" @load="onImageLoad" />
         <figcaption>
           <input
@@ -36,7 +44,8 @@ export default {
   props: ["node", "updateAttrs", "view", "getPos", "options"],
   data() {
     return {
-      dataUrl: this.node.attrs.src
+      dataUrl: this.node.attrs.src,
+      shouldShowClose: false
     };
   },
   watch: {
@@ -124,6 +133,13 @@ export default {
       this.$nextTick(() => {
         this.caption = "";
       });
+    },
+    removeImage() {
+      this.src = "";
+      this.dataUrl = "";
+    },
+    onImageClick() {
+      this.shouldShowClose = !this.shouldShowClose;
     }
   }
 };
