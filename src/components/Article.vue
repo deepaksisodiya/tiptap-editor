@@ -326,7 +326,7 @@ export default {
   },
   data() {
     return {
-      isOnline: navigator.onLine || true,
+      isOnline: navigator.onLine || false,
       error: {
         occurred: false,
         message: "",
@@ -611,12 +611,6 @@ export default {
     }
   },
   watch: {
-    content(newValue) {
-      if (newValue) {
-        const newContent = this.addTitle(newValue, this.title);
-        this.editor.setContent(newContent, false);
-      }
-    },
     editable() {
       this.editor.setOptions({
         editable: this.editable
