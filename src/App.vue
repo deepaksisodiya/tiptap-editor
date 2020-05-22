@@ -11,6 +11,10 @@
 </template>
 
 <script>
+import "@/assets/scss/base.scss";
+import "@/assets/scss/editor.scss";
+import "@/assets/scss/article.scss";
+
 import Article from "./components/Article.vue";
 import { uploadImage, getEmbeds } from "./api";
 
