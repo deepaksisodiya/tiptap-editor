@@ -11,10 +11,7 @@
         @keydown.enter.prevent="setLinkUrl(editor.commands.link, linkUrl)"
         @keydown.esc="hideLinkMenu"
       />
-      <i
-        class="toolbar-close-icon"
-        @click="setLinkUrl(editor.commands.link, linkUrl)"
-      ></i>
+      <i class="toolbar-close-icon" @click="setLinkUrl(editor.commands.link, linkUrl)"></i>
     </div>
     <editor-menu-bubble
       :editor="editor"
@@ -40,16 +37,10 @@
 
         <li @click="commands.italic" v-if="!linkMenuIsActive">
           <button>
-            <i
-              class="italic-icon"
-              :class="{ 'is-active': isActive.italic() }"
-            ></i>
+            <i class="italic-icon" :class="{ 'is-active': isActive.italic() }"></i>
           </button>
         </li>
-        <li
-          v-if="!linkMenuIsActive"
-          @click="showLinkMenu(getMarkAttrs('link'))"
-        >
+        <li v-if="!linkMenuIsActive" @click="showLinkMenu(getMarkAttrs('link'))">
           <button>
             <i class="link-icon" :class="{ 'is-active': isActive.link() }"></i>
             <!--
@@ -70,10 +61,7 @@
           v-if="!linkMenuIsActive"
         >
           <button>
-            <i
-              class="large-heading-icon"
-              :class="{ 'is-active': isActive.heading({ level: 3 }) }"
-            ></i>
+            <i class="large-heading-icon" :class="{ 'is-active': isActive.heading({ level: 3 }) }"></i>
           </button>
         </li>
 
@@ -83,23 +71,13 @@
           v-if="!linkMenuIsActive"
         >
           <button>
-            <i
-              class="small-heading-icon"
-              :class="{ 'is-active': isActive.heading({ level: 5 }) }"
-            ></i>
+            <i class="small-heading-icon" :class="{ 'is-active': isActive.heading({ level: 5 }) }"></i>
           </button>
         </li>
 
-        <li
-          class="menububble__button"
-          @click="commands.blockquote"
-          v-if="!linkMenuIsActive"
-        >
+        <li class="menububble__button" @click="commands.blockquote" v-if="!linkMenuIsActive">
           <button>
-            <i
-              class="quote-icon"
-              :class="{ 'is-active': isActive.blockquote() }"
-            ></i>
+            <i class="quote-icon" :class="{ 'is-active': isActive.blockquote() }"></i>
           </button>
         </li>
       </ul>
@@ -135,10 +113,7 @@
           />
           <ul class="kitchensink">
             <li @click="toggleFloatingMenu">
-              <i
-                class="add-icon"
-                :class="{ 'close-icon': shouldShowFloatingMenu }"
-              ></i>
+              <i class="add-icon" :class="{ 'close-icon': shouldShowFloatingMenu }"></i>
             </li>
             <li v-if="shouldShowTooltip" class="popover right-popover">
               <div class="popover-content">
@@ -152,11 +127,7 @@
                 </button>
               </div>
             </li>
-            <li
-              class="menubar__button"
-              @click="onClickImage()"
-              v-if="shouldShowFloatingMenu"
-            >
+            <li class="menubar__button" @click="onClickImage()" v-if="shouldShowFloatingMenu">
               <i class="image-icon"></i>
             </li>
 
@@ -197,30 +168,12 @@
             <li v-if="shouldShowFloatingMenu" style="display:none">
               <i class="kitchensink-divider"></i>
             </li>
-
-            <!--
-              For now disable the lock icon from floating menu kitchsink for pre-alpha relese
-              later do like :style="`display: ${hasLock ? 'none' : 'inline'}`"
-              :style="`display: ${hasLock ? 'none' : 'none'}`"
-            -->
-            <!-- <li
-              v-if="shouldShowFloatingMenu"
-              :style="`display: ${hasLock ? 'none' : 'none'}`"
-              :class="{ 'is-active': isActive.lock() }"
-              @click="onClickMenuItem(commands.lock)"
-            >
-              <i class="lock-icon"></i>
-            </li> -->
           </ul>
         </div>
       </editor-floating-menu>
       <editor-content id="editor" class="editor__content" :editor="editor" />
       <div class="ios-test-fix">empt</div>
     </article>
-
-    <!--
-    <vue-json-pretty :path="'res'" :data="data"> </vue-json-pretty>
-    -->
   </div>
 </template>
 
@@ -244,14 +197,12 @@ import {
   TrailingNode
 } from "tiptap-extensions";
 import { contains } from "prosemirror-utils";
-// import VueJsonPretty from "vue-json-pretty";
 import _debounce from "lodash.debounce";
 
 import {
   Embed,
   Image,
   FeatureImage,
-  // Lock,
   Doc,
   Title,
   HorizontalRule,
@@ -259,10 +210,6 @@ import {
 } from "./../blocks";
 
 import Placeholder from "./../extensions/Placeholder";
-
-import "@/assets/scss/base.scss";
-import "@/assets/scss/editor.scss";
-import "@/assets/scss/article.scss";
 
 const EVENTS = ["online", "offline"];
 
@@ -416,15 +363,6 @@ export default {
     });
 
     if (this.isIOS) {
-      // this.$refs.floatingMenu.$watch("menu.top", newValue => {
-      //   if (
-      //     newValue + 13 >=
-      //     window.visualViewport.pageTop + window.visualViewport.height
-      //   ) {
-      //     this.$refs.floatingMenuElement.scrollIntoView(true);
-      //   }
-      // });
-
       this.$refs.linkDiv.style.position = "absolute";
 
       this.menuBarTimer = setInterval(() => this.fixMenubarforIos(), 100);
@@ -670,11 +608,6 @@ export default {
   height: 0;
 }
 
-figcaption > span.is-empty {
-  display: inline-block;
-  text-align: left;
-}
-
 .dot {
   height: 15px;
   width: 15px;
@@ -691,19 +624,6 @@ figcaption > span.is-empty {
   white-space: pre-wrap;
 }
 
-// .menububble3 {
-//   &__form {
-//     display: flex;
-//     align-items: center;
-//   }
-
-//   &__input {
-//     font: inherit;
-//     border: none;
-//     background: transparent;
-//     color: white;
-//   }
-// }
 .highlight-menu-input {
   z-index: 1001;
 }
