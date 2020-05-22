@@ -217,10 +217,6 @@
       <editor-content id="editor" class="editor__content" :editor="editor" />
       <div class="ios-test-fix">empt</div>
     </article>
-
-    <!--
-    <vue-json-pretty :path="'res'" :data="data"> </vue-json-pretty>
-    -->
   </div>
 </template>
 
@@ -244,7 +240,6 @@ import {
   TrailingNode
 } from "tiptap-extensions";
 import { contains } from "prosemirror-utils";
-// import VueJsonPretty from "vue-json-pretty";
 import _debounce from "lodash.debounce";
 
 import {
@@ -259,10 +254,6 @@ import {
 } from "./../blocks";
 
 import Placeholder from "./../extensions/Placeholder";
-
-import "@/assets/scss/base.scss";
-import "@/assets/scss/editor.scss";
-import "@/assets/scss/article.scss";
 
 const EVENTS = ["online", "offline"];
 
@@ -416,15 +407,6 @@ export default {
     });
 
     if (this.isIOS) {
-      // this.$refs.floatingMenu.$watch("menu.top", newValue => {
-      //   if (
-      //     newValue + 13 >=
-      //     window.visualViewport.pageTop + window.visualViewport.height
-      //   ) {
-      //     this.$refs.floatingMenuElement.scrollIntoView(true);
-      //   }
-      // });
-
       this.$refs.linkDiv.style.position = "absolute";
 
       this.menuBarTimer = setInterval(() => this.fixMenubarforIos(), 100);
@@ -670,11 +652,6 @@ export default {
   height: 0;
 }
 
-figcaption > span.is-empty {
-  display: inline-block;
-  text-align: left;
-}
-
 .dot {
   height: 15px;
   width: 15px;
@@ -691,19 +668,6 @@ figcaption > span.is-empty {
   white-space: pre-wrap;
 }
 
-// .menububble3 {
-//   &__form {
-//     display: flex;
-//     align-items: center;
-//   }
-
-//   &__input {
-//     font: inherit;
-//     border: none;
-//     background: transparent;
-//     color: white;
-//   }
-// }
 .highlight-menu-input {
   z-index: 1001;
 }

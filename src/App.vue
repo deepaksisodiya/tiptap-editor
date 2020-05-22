@@ -7,10 +7,19 @@
       :uploadImage="uploadImage"
       :getEmbeds="getEmbeds"
     />
+    <!--
+    <vue-json-pretty :path="'res'" :data="data"> </vue-json-pretty>
+    -->
   </div>
 </template>
 
 <script>
+import "@/assets/scss/base.scss";
+import "@/assets/scss/editor.scss";
+import "@/assets/scss/article.scss";
+
+// import VueJsonPretty from "vue-json-pretty";
+
 import Article from "./components/Article.vue";
 import { uploadImage, getEmbeds } from "./api";
 
