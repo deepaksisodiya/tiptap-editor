@@ -197,6 +197,20 @@
             <li v-if="shouldShowFloatingMenu" style="display:none">
               <i class="kitchensink-divider"></i>
             </li>
+
+            <!--
+              For now disable the lock icon from floating menu kitchsink for pre-alpha relese
+              later do like :style="`display: ${hasLock ? 'none' : 'inline'}`"
+              :style="`display: ${hasLock ? 'none' : 'none'}`"
+            -->
+            <!-- <li
+              v-if="shouldShowFloatingMenu"
+              :style="`display: ${hasLock ? 'none' : 'none'}`"
+              :class="{ 'is-active': isActive.lock() }"
+              @click="onClickMenuItem(commands.lock)"
+            >
+              <i class="lock-icon"></i>
+            </li> -->
           </ul>
         </div>
       </editor-floating-menu>
@@ -232,6 +246,7 @@ import {
   Embed,
   Image,
   FeatureImage,
+  // Lock,
   Doc,
   Title,
   HorizontalRule,
