@@ -22,10 +22,15 @@
           :disabled="!isButtonActive"
           :class="{ active: isButtonActive }"
           @click="onClickAdd"
-        >Add</button>
+        >
+          Add
+        </button>
       </li>
     </ul>
-    <div v-if="embeds.data.url && embeds.data.type === 'video'" class="video-wrapper">
+    <div
+      v-if="embeds.data.url && embeds.data.type === 'video'"
+      class="video-wrapper"
+    >
       <figure v-html="embeds.data.html"></figure>
       <figcaption v-if="embeds.data.url && embeds.data.type === 'video'">
         <input
