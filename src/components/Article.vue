@@ -565,8 +565,6 @@ export default {
           };
         };
         reader.readAsDataURL(file);
-      } else {
-        console.log("File not supported!");
       }
       this.$refs.fileInput.value = "";
     },
