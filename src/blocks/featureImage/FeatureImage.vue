@@ -123,8 +123,6 @@ export default {
           }
         };
         reader.readAsDataURL(file);
-      } else {
-        console.log("File not supported!");
       }
     },
     onImageLoad() {
