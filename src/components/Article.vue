@@ -222,11 +222,6 @@
 
 <script>
 import { Editor, EditorContent } from "tiptap";
-
-import EditorFloatingMenu from "./EditorFloatingMenu";
-import EditorMenuBubble from "./EditorMenuBubble";
-import ErrorMessage from "./ErrorMessage.vue";
-
 import {
   Blockquote,
   HardBreak,
@@ -242,6 +237,9 @@ import {
 import { contains } from "prosemirror-utils";
 import _debounce from "lodash.debounce";
 
+import ErrorMessage from "./ErrorMessage.vue";
+import EditorFloatingMenu from "./../EditorFloatingMenu";
+import EditorMenuBubble from "./../EditorMenuBubble";
 import {
   Embed,
   Image,
@@ -251,8 +249,7 @@ import {
   Title,
   HorizontalRule,
   Header
-} from "./../blocks";
-
+} from "./blocks";
 import Placeholder from "./../extensions/Placeholder";
 
 const EVENTS = ["online", "offline"];
