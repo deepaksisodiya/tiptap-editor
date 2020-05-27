@@ -5,7 +5,8 @@
   "main": "./dist/editor.common.js",
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build --target lib --name editor index.js",
+    "build": "vue-cli-service build",
+    "build:plugin": "vue-cli-service build --target lib --name editor index.js",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
