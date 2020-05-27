@@ -1,4 +1,4 @@
-import MenuBubble from "../extensions/MenuBubble";
+import MenuBubble from "./extensions/MenuBubble";
 
 export default {
   props: {
