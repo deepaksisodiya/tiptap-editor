@@ -6,7 +6,7 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "build:plugin": "vue-cli-service build --target lib --name editor index.js --dest plugin-dist/",
+    "build:plugin": "vue-cli-service build --target lib --name editor src/plugin-entry.js --dest plugin-dist/",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
