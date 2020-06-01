@@ -40,7 +40,7 @@
 import { TextSelection } from "tiptap";
 
 export default {
-  name: "Image",
+  name: "FeatureImage",
   props: ["node", "updateAttrs", "view", "getPos", "options"],
   data() {
     return {
