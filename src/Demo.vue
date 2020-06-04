@@ -2,7 +2,6 @@
   <div>
     <Article
       :onUpdatePost="onUpdatePost"
-      :content="content"
       :uploadImage="uploadImage"
       :getEmbeds="getEmbeds"
     />
@@ -13,7 +12,6 @@
 
 <script>
 import VueJsonPretty from "vue-json-pretty";
-import axios from "axios";
 import Article from "./components/Article.vue";
 
 import "@/assets/scss/base.scss";
@@ -34,24 +32,12 @@ export default {
   },
   methods: {
     uploadImage(formData) {
-      // TODO change it
-      axios.post("https://deepak.scrollstack.com/api/w/images", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          Authorization: "oWn7jKY6TFSVEHN7p-2jmwAc5-2EIDjWo29DWzQLUco"
-        }
-      });
+      // return promise with upload image url
+      console.log(formData);
     },
     getEmbeds(url) {
-      // TODO change it
-      axios.get(
-        `https://deepak.scrollstack.com/api/w/embeds/metadata?url=${url.trim()}`,
-        {
-          headers: {
-            Authorization: "oWn7jKY6TFSVEHN7p-2jmwAc5-2EIDjWo29DWzQLUco"
-          }
-        }
-      );
+      // Should return promise with embed URL data
+      console.log(url);
     },
     onUpdatePost({ blocks, title }) {
       this.blocks = blocks;
