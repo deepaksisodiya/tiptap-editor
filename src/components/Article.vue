@@ -551,7 +551,7 @@ export default {
               try {
                 const response = await this.uploadImage(formData);
                 if (response && response.status === 200) {
-                  imageInstance.src = response.data.url;
+                  imageInstance.src = response.data.image;
                   window.imageInstance = null;
                 }
               } catch (error) {
