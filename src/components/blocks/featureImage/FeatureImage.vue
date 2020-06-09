@@ -115,7 +115,7 @@ export default {
           // TODO handle image loading here later
           try {
             const response = await this.options.uploadImage(formData);
-            if (response) this.src = response.data.url;
+            if (response) this.src = response.data.image;
           } catch (error) {
             this.options.handleError(error);
             this.src = "";
