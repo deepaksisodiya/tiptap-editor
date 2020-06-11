@@ -29,7 +29,7 @@
     </ul>
     <div
       v-if="embeds.data.url && embeds.data.type === 'video'"
-      class="video-wrapper"
+      :class="['embed-wrapper', embedWrapperClass]"
     >
       <figure v-html="embeds.data.html"></figure>
       <figcaption v-if="embeds.data.url && embeds.data.type === 'video'">
@@ -46,7 +46,7 @@
     <div
       @click="onClickEmbed"
       v-if="embeds.data.url && embeds.data.type === 'link'"
-      :class="{ selected: shouldShowClose }"
+      :class="[{ selected: shouldShowClose }, embedWrapperClass]"
     >
       <div class="close-button" @click="deleteNode">
         <i class="close-icon"></i>
@@ -144,6 +144,13 @@ export default {
     loadingText() {
       if (this.node.attrs.type === "link") return "Embedding link…";
       return "Embedding video…";
+    },
+    embedWrapperClass() {
+      if (this.node.attrs.provider) {
+        return `${this.node.attrs.provider.toLowerCase()}-wrapper`;
+      } else {
+        return `standard-link-wrapper`;
+      }
     }
   },
   methods: {
@@ -187,6 +194,8 @@ export default {
         };
         // for copy pasting to work
         this.updateAttrs(this.embeds.data);
+        if (response.data.attrs.provider) {
+        }
         if (this.embeds.data.type === "link") this.$nextTick(this.disableLink);
       } catch (error) {
         this.embeds.isError = true;
