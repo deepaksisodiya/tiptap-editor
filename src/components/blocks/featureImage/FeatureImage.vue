@@ -28,7 +28,7 @@
           <input
             v-model="caption"
             placeholder="Type caption for image (optional)"
-            @keyup="handleKeyup"
+            @keydown="handleKeydown"
           />
         </figcaption>
       </figure>
@@ -82,7 +82,7 @@ export default {
     this.view.featureImageInstance = this;
   },
   methods: {
-    handleKeyup(event) {
+    handleKeydown(event) {
       let {
         state: { tr }
       } = this.view;
