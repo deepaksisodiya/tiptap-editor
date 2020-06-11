@@ -37,7 +37,7 @@
           type="text"
           v-model="caption"
           :disabled="!view.editable"
-          @keyup="handleKeyup"
+          @keydown="handleKeydown"
           @paste.stop
           placeholder="write caption (optional)"
         />
@@ -235,7 +235,7 @@ export default {
       ); // fragment locator
       return !!pattern.test(str);
     },
-    handleKeyup(event) {
+    handleKeydown(event) {
       let {
         state: { tr }
       } = this.view;
