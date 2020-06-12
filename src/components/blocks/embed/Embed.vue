@@ -46,7 +46,11 @@
     <div
       @click="onClickEmbed"
       v-if="embeds.data.url && embeds.data.type === 'link'"
-      :class="[{ selected: shouldShowClose }, embedWrapperClass]"
+      :class="[
+        'embed-wrapper',
+        { selected: shouldShowClose },
+        embedWrapperClass
+      ]"
     >
       <div class="close-button" @click="deleteNode">
         <i class="close-icon"></i>
@@ -194,8 +198,6 @@ export default {
         };
         // for copy pasting to work
         this.updateAttrs(this.embeds.data);
-        if (response.data.attrs.provider) {
-        }
         if (this.embeds.data.type === "link") this.$nextTick(this.disableLink);
       } catch (error) {
         this.embeds.isError = true;
