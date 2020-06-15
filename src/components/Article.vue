@@ -234,7 +234,7 @@ import {
   History,
   TrailingNode
 } from "tiptap-extensions";
-// import { contains } from "prosemirror-utils";
+import { contains } from "prosemirror-utils";
 import _debounce from "lodash.debounce";
 
 import ErrorMessage from "./ErrorMessage.vue";
@@ -625,12 +625,12 @@ export default {
     }
   },
   computed: {
-    // hasLock() {
-    //   return contains(
-    //     this.editor.view.state.doc,
-    //     this.editor.schema.nodes.lock
-    //   );
-    // },
+    hasLock() {
+      return contains(
+        this.editor.view.state.doc,
+        this.editor.schema.nodes.lock
+      );
+    },
     shouldDisplayTitleError() {
       return this.shouldShowTitleError;
     }
