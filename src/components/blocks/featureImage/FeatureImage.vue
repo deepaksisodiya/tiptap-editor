@@ -29,6 +29,7 @@
             v-model="caption"
             placeholder="Type caption for image (optional)"
             @keydown="handleKeydown"
+            @paste.stop
           />
         </figcaption>
       </figure>
