@@ -30,6 +30,9 @@
           ios: isIOS,
           'sticky-highlight-menu': !isIOS
         }"
+        :style="
+          `left: ${menu.left}px; bottom: ${menu.bottom}px; top: unset; position: absolute;`
+        "
         ref="menuUl"
       >
         <li @click="commands.bold" v-if="!linkMenuIsActive">
