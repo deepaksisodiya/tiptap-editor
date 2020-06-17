@@ -138,11 +138,12 @@ class Menu {
       const left = (start.left + end.left) / 2 - box.left;
 
       // Keep the menuBubble in the bounding box of the offsetParent i
-      this.left = Math.round(
-        this.options.keepInBounds
-          ? Math.min(box.width - el.width / 2, Math.max(left, el.width / 2))
-          : left
-      );
+      this.left =
+        Math.round(
+          this.options.keepInBounds
+            ? Math.min(box.width - el.width / 2, Math.max(left, el.width / 2))
+            : left
+        ) - Math.round(el.width / 2);
       this.bottom = Math.round(box.bottom - start.top);
       this.top = Math.round(end.bottom - box.top);
     }

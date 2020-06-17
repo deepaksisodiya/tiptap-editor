@@ -30,6 +30,7 @@
           ios: isIOS,
           'sticky-highlight-menu': !isIOS
         }"
+        :style="getToolbarStyle(menu)"
         ref="menuUl"
       >
         <li @click="commands.bold" v-if="!linkMenuIsActive">
@@ -585,7 +586,12 @@ export default {
       if (this.error.name === "title") {
         this.hideTitleError();
       }
-    }
+    },
+    getToolbarStyle(menu) {
+      return window.screen.width >= 786
+        ? `left: ${menu.left}px; bottom: ${menu.bottom}px;`
+        : "";
+    },
   },
   watch: {
     editable() {
