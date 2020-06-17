@@ -17,13 +17,12 @@
       <figure
         v-if="dataUrl"
         class="featured-image"
-        @click="onImageClick"
         :class="{ selected: shouldShowClose }"
       >
         <div class="close-button" @click="removeImage">
           <i class="close-icon"></i>
         </div>
-        <img :src="dataUrl" @load="onImageLoad" />
+        <img @click="onImageClick" :src="dataUrl" @load="onImageLoad" />
         <figcaption>
           <input
             v-model="caption"

@@ -1,9 +1,15 @@
 <template>
-  <figure @click="onImageClick" :class="{ selected: shouldShowClose }">
+  <figure :class="{ selected: shouldShowClose }">
     <div class="close-button" @click="deleteNode">
       <i class="close-icon"></i>
     </div>
-    <img ref="img" :src="dataUrl" :height="height" :width="width" />
+    <img
+      @click="onImageClick"
+      ref="img"
+      :src="dataUrl"
+      :height="height"
+      :width="width"
+    />
     <figcaption>
       <input
         v-model="caption"
