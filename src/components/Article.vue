@@ -2,108 +2,120 @@
   <div class="editor">
     <!-- on hover it will show bold, italic and code -->
     <!-- menububble start -->
-    <div ref="linkDiv" v-show="linkMenuIsActive" class="highlight-menu-input">
-      <input
-        type="text"
-        v-model="linkUrl"
-        placeholder="Paste or type a link"
-        ref="linkInput"
-        @keydown.enter.prevent="setLinkUrl(editor.commands.link, linkUrl)"
-        @keydown.esc="hideLinkMenu"
-      />
-      <i
-        class="toolbar-close-icon"
-        @click="setLinkUrl(editor.commands.link, linkUrl)"
-      ></i>
-    </div>
     <editor-menu-bubble
       :editor="editor"
       :keep-in-bounds="keepInBounds"
       v-slot="{ commands, isActive, menu, getMarkAttrs }"
       ref="menububble"
     >
-      <ul
-        class="highlight-menu"
-        :class="{
-          'link-menu-active': linkMenuIsActive,
-          'is-active': menu.isActive && !isTitleSelected(),
-          ios: isIOS,
-          'sticky-highlight-menu': !isIOS
-        }"
-        :style="getToolbarStyle(menu)"
-        ref="menuUl"
-      >
-        <li @click="commands.bold" v-if="!linkMenuIsActive">
-          <button>
-            <i class="bold-icon" :class="{ 'is-active': isActive.bold() }"></i>
-          </button>
-        </li>
-
-        <li @click="commands.italic" v-if="!linkMenuIsActive">
-          <button>
-            <i
-              class="italic-icon"
-              :class="{ 'is-active': isActive.italic() }"
-            ></i>
-          </button>
-        </li>
-        <li
+      <div>
+        <ul
+          class="highlight-menu"
           v-if="!linkMenuIsActive"
-          @click="showLinkMenu(getMarkAttrs('link'))"
+          :class="{
+            'is-active': menu.isActive && !isTitleSelected(),
+            ios: isIOS,
+            'sticky-highlight-menu': !isIOS
+          }"
+          :style="getToolbarStyle(menu)"
+          ref="menuUl"
         >
-          <button>
-            <i class="link-icon" :class="{ 'is-active': isActive.link() }"></i>
-            <!--
+          <li @click="commands.bold" v-if="!linkMenuIsActive">
+            <button>
+              <i
+                class="bold-icon"
+                :class="{ 'is-active': isActive.bold() }"
+              ></i>
+            </button>
+          </li>
+
+          <li @click="commands.italic" v-if="!linkMenuIsActive">
+            <button>
+              <i
+                class="italic-icon"
+                :class="{ 'is-active': isActive.italic() }"
+              ></i>
+            </button>
+          </li>
+          <li
+            v-if="!linkMenuIsActive"
+            @click="showLinkMenu(getMarkAttrs('link'))"
+          >
+            <button>
+              <i
+                class="link-icon"
+                :class="{ 'is-active': isActive.link() }"
+              ></i>
+              <!--
           <span>{{ isActive.link() ? "Update Link" : "Add Link" }}</span>
-            -->
-          </button>
-        </li>
+            --></button>
+          </li>
 
-        <li v-if="!linkMenuIsActive">
-          <button>
-            <i class="separator-icon"></i>
-          </button>
-        </li>
+          <li v-if="!linkMenuIsActive">
+            <button>
+              <i class="separator-icon"></i>
+            </button>
+          </li>
 
-        <li
-          class="menubar__button"
-          @click="commands.heading({ level: 3 })"
-          v-if="!linkMenuIsActive"
+          <li
+            class="menubar__button"
+            @click="commands.heading({ level: 3 })"
+            v-if="!linkMenuIsActive"
+          >
+            <button>
+              <i
+                class="large-heading-icon"
+                :class="{ 'is-active': isActive.heading({ level: 3 }) }"
+              ></i>
+            </button>
+          </li>
+
+          <li
+            class="menubar__button"
+            @click="commands.heading({ level: 5 })"
+            v-if="!linkMenuIsActive"
+          >
+            <button>
+              <i
+                class="small-heading-icon"
+                :class="{ 'is-active': isActive.heading({ level: 5 }) }"
+              ></i>
+            </button>
+          </li>
+
+          <li
+            class="menububble__button"
+            @click="commands.blockquote"
+            v-if="!linkMenuIsActive"
+          >
+            <button>
+              <i
+                class="quote-icon"
+                :class="{ 'is-active': isActive.blockquote() }"
+              ></i>
+            </button>
+          </li>
+        </ul>
+        <div
+          ref="linkDiv"
+          v-if="linkMenuIsActive"
+          class="highlight-menu-input"
+          :style="getToolbarStyle(menu)"
         >
-          <button>
-            <i
-              class="large-heading-icon"
-              :class="{ 'is-active': isActive.heading({ level: 3 }) }"
-            ></i>
-          </button>
-        </li>
-
-        <li
-          class="menubar__button"
-          @click="commands.heading({ level: 5 })"
-          v-if="!linkMenuIsActive"
-        >
-          <button>
-            <i
-              class="small-heading-icon"
-              :class="{ 'is-active': isActive.heading({ level: 5 }) }"
-            ></i>
-          </button>
-        </li>
-
-        <li
-          class="menububble__button"
-          @click="commands.blockquote"
-          v-if="!linkMenuIsActive"
-        >
-          <button>
-            <i
-              class="quote-icon"
-              :class="{ 'is-active': isActive.blockquote() }"
-            ></i>
-          </button>
-        </li>
-      </ul>
+          <input
+            type="text"
+            v-model="linkUrl"
+            placeholder="Paste or type a link"
+            ref="linkInput"
+            @keydown.enter.prevent="setLinkUrl(editor.commands.link, linkUrl)"
+            @keydown.esc="hideLinkMenu"
+          />
+          <i
+            class="toolbar-close-icon"
+            @click="setLinkUrl(editor.commands.link, linkUrl)"
+          ></i>
+        </div>
+      </div>
     </editor-menu-bubble>
     <!-- menububble end -->
 
@@ -211,7 +223,7 @@
               @click="onClickMenuItem(commands.lock)"
             >
               <i class="lock-icon"></i>
-            </li> -->
+            </li>-->
           </ul>
         </div>
       </editor-floating-menu>

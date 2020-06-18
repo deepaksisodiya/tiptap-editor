@@ -131,7 +131,7 @@ class Menu {
 
     if (parent) {
       const box = parent.getBoundingClientRect();
-      const el = this.options.element.getBoundingClientRect();
+      const el = this.options.element.firstElementChild.getBoundingClientRect();
 
       // Find a center-ish x position from the selection endpoints (when
       // crossing lines, end may be more to the left)
