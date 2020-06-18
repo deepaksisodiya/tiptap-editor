@@ -99,7 +99,7 @@
         <div
           ref="linkDiv"
           v-if="linkMenuIsActive"
-          class="highlight-menu-input"
+          :class="['highlight-menu-input', isIOS ? 'ios' : '']"
           :style="getToolbarStyle(menu)"
         >
           <input
@@ -417,8 +417,6 @@ export default {
     });
 
     if (this.isIOS) {
-      this.$refs.linkDiv.style.position = "absolute";
-
       this.menuBarTimer = setInterval(() => this.fixMenubarforIos(), 100);
     }
     // init data
@@ -584,8 +582,8 @@ export default {
       const pageTop = window.visualViewport.pageTop;
       const article = document.getElementsByClassName("editor")[0];
 
-      linkDiv.style.top = `${pageTop - article.offsetTop}px`;
-      menuUl.style.top = `${pageTop - article.offsetTop}px`;
+      if (linkDiv) linkDiv.style.top = `${pageTop - article.offsetTop}px`;
+      if (menuUl) menuUl.style.top = `${pageTop - article.offsetTop}px`;
     },
     onClickOk() {
       if (!localStorage) return;
@@ -603,7 +601,7 @@ export default {
       return window.screen.width >= 786
         ? `left: ${menu.left}px; bottom: ${menu.bottom}px;`
         : "";
-    },
+    }
   },
   watch: {
     editable() {
