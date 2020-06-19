@@ -87,13 +87,7 @@ export default {
         state: { tr }
       } = this.view;
       const pos = this.getPos();
-      if (event.key === "Backspace" && !this.caption) {
-        let textSelection = TextSelection.create(tr.doc, pos, pos + 1);
-        this.view.dispatch(
-          tr.setSelection(textSelection).deleteSelection(this.src)
-        );
-        this.view.focus();
-      } else if (event.key === "Enter") {
+      if (event.key === "Enter") {
         let textSelection = TextSelection.create(tr.doc, pos + 2, pos + 2);
         this.view.dispatch(tr.setSelection(textSelection));
         this.view.focus();
