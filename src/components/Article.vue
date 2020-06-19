@@ -489,11 +489,14 @@ export default {
       this.$refs.menububble.menu.isActive = true;
     },
     toggleFloatingMenu(e) {
-      const docPos = this.editor.view.posAtCoords({
-        left: e.clientX + 50,
-        top: e.clientY,
-      });
-      this.editor.setSelection(docPos.pos, docPos.pos);
+      if (!this.shouldShowFloatingMenu) {
+        const menuUl = this.$refs.menuUl;
+        const nodePos = this.editor.view.posAtCoords({
+          left: e.clientX + menuUl.offsetWidth,
+          top: e.clientY,
+        });
+        this.editor.setSelection(nodePos.pos, nodePos.pos);
+      }
       if (localStorage && !localStorage.getItem("editorTour")) {
         this.onClickOk();
       }
