@@ -40,17 +40,19 @@ export default class Title extends Node {
         } = state;
         const currentNode = tr.doc.resolve(anchor).parent.type.name;
 
+        const nodeAt2 = tr.doc.nodeAt(anchor - 2);
+        if (
+          nodeAt2.type.name === "image" ||
+          (nodeAt2.type.name === "embed" && nodeAt2.attrs.type === "link")
+        ) {
+          return true;
+        }
+
         if (
           currentNode !== "header" &&
           currentNode !== "title" &&
           tr.doc.resolve(anchor - 3).parent.type.name === "header"
         ) {
-          if (featureImageInstance.dataUrl) {
-            featureImageInstance.dataUrl = "";
-            featureImageInstance.$nextTick(
-              () => (featureImageInstance.src = "")
-            );
-          }
           let textSelection = TextSelection.create(
             tr.doc,
             anchor - 4,
