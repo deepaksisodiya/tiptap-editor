@@ -488,7 +488,15 @@ export default {
       this.hideLinkMenu();
       this.$refs.menububble.menu.isActive = true;
     },
-    toggleFloatingMenu() {
+    toggleFloatingMenu(e) {
+      if (!this.shouldShowFloatingMenu) {
+        const menuUl = this.$refs.menuUl;
+        const nodePos = this.editor.view.posAtCoords({
+          left: e.clientX + menuUl.offsetWidth,
+          top: e.clientY,
+        });
+        this.editor.setSelection(nodePos.pos, nodePos.pos);
+      }
       if (localStorage && !localStorage.getItem("editorTour")) {
         this.onClickOk();
       }
