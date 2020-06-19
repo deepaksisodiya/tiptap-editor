@@ -490,9 +490,8 @@ export default {
     },
     toggleFloatingMenu(e) {
       if (!this.shouldShowFloatingMenu) {
-        const menuUl = this.$refs.menuUl;
         const nodePos = this.editor.view.posAtCoords({
-          left: e.clientX + menuUl.offsetWidth,
+          left: e.clientX + 100,
           top: e.clientY,
         });
         this.editor.setSelection(nodePos.pos, nodePos.pos);
