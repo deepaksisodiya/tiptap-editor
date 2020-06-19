@@ -488,7 +488,12 @@ export default {
       this.hideLinkMenu();
       this.$refs.menububble.menu.isActive = true;
     },
-    toggleFloatingMenu() {
+    toggleFloatingMenu(e) {
+      const docPos = this.editor.view.posAtCoords({
+        left: e.clientX + 50,
+        top: e.clientY,
+      });
+      this.editor.setSelection(docPos.pos, docPos.pos);
       if (localStorage && !localStorage.getItem("editorTour")) {
         this.onClickOk();
       }
