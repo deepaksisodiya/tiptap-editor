@@ -174,6 +174,13 @@ export default {
     async onClickAdd() {
       if (!this.url) return;
 
+      // move cursor to new paragraph
+      let tr = this.view.state.tr;
+      const pos = this.getPos();
+      let textSelection = TextSelection.create(tr.doc, pos + 1, pos + 1);
+      tr = tr.setSelection(textSelection);
+      this.view.dispatch(tr);
+
       const validURL = this.getValidUrl(this.url);
       this.updateAttrs({
         url: validURL
@@ -203,12 +210,6 @@ export default {
         this.embeds.isError = true;
       } finally {
         this.embeds.isLoading = false;
-        // move cursor to new paragraph
-        let tr = this.view.state.tr;
-        const pos = this.getPos();
-        let textSelection = TextSelection.create(tr.doc, pos + 1, pos + 1);
-        tr = tr.setSelection(textSelection);
-        this.view.dispatch(tr);
       }
     },
     createAndMovetoNextParagraph() {
