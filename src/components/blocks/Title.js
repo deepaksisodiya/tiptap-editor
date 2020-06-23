@@ -42,8 +42,10 @@ export default class Title extends Node {
 
         const nodeAt2 = tr.doc.nodeAt(anchor - 2);
         if (
-          nodeAt2.type.name === "image" ||
-          (nodeAt2.type.name === "embed" && nodeAt2.attrs.type === "link")
+          nodeAt2 &&
+          (nodeAt2.type.name === "image" ||
+            (nodeAt2.type.name === "embed" && nodeAt2.attrs.type === "link") ||
+            featureImageInstance.dataUrl)
         ) {
           return true;
         }
