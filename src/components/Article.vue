@@ -627,7 +627,6 @@ export default {
     handleAfterPaste({ state, dispatch }) {
       const { doc, schema, tr } = state;
       const childAfterCursor = doc.childAfter(state.selection.anchor + 1);
-      debugger;
       if (
         childAfterCursor.node &&
         childAfterCursor.node.type.name === "paragraph" &&
