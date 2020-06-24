@@ -48,7 +48,8 @@
               ></i>
               <!--
           <span>{{ isActive.link() ? "Update Link" : "Add Link" }}</span>
-            --></button>
+              -->
+            </button>
           </li>
 
           <li v-if="!linkMenuIsActive">
@@ -395,7 +396,28 @@ export default {
           });
           const payload = { blocks: newData, title };
           this.onUpdatePost(payload);
-        }, 300)
+        }, 300),
+        editorProps: {
+          handlePaste: (view, event, slice) => {
+            var singleNode =
+              slice.openStart == 0 &&
+              slice.openEnd == 0 &&
+              slice.content.childCount == 1
+                ? slice.content.firstChild
+                : null;
+            var tr = singleNode
+              ? view.state.tr.replaceSelectionWith(singleNode, view.shiftKey)
+              : view.state.tr.replaceSelection(slice);
+            view.dispatch(
+              tr
+                .scrollIntoView()
+                .setMeta("paste", true)
+                .setMeta("uiEvent", "paste")
+            );
+            this.handleAfterPaste(view);
+            return true;
+          }
+        }
       })
     };
   },
@@ -601,6 +623,32 @@ export default {
       return window.screen.width >= 786
         ? `left: ${menu.left}px; bottom: ${menu.bottom}px;`
         : "";
+    },
+    handleAfterPaste({ state, dispatch }) {
+      const { doc, schema, tr } = state;
+      const childAfterCursor = doc.childAfter(state.selection.anchor + 1);
+      debugger;
+      if (
+        childAfterCursor.node &&
+        childAfterCursor.node.type.name === "paragraph" &&
+        childAfterCursor.node.nodeSize === 2
+      ) {
+        this.editor.setSelection(
+          state.selection.anchor + 2,
+          state.selection.anchor + 2
+        );
+      } else if (
+        !childAfterCursor.node &&
+        doc.content.size === state.selection.anchor + 1
+      ) {
+        const type = schema.nodes["paragraph"];
+        const transaction = tr.insert(doc.content.size, type.create());
+        dispatch(transaction);
+        this.editor.setSelection(
+          state.selection.anchor + 2,
+          state.selection.anchor + 2
+        );
+      }
     }
   },
   watch: {
