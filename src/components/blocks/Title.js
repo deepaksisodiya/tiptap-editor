@@ -45,7 +45,7 @@ export default class Title extends Node {
           nodeAt2 &&
           (nodeAt2.type.name === "image" ||
             (nodeAt2.type.name === "embed" && nodeAt2.attrs.type === "link") ||
-            (nodeAt2.type.name === "featureimage" &&
+            (nodeAt2.type.name === "featuredimage" &&
               (featureImageInstance.dataUrl || nodeAt2.attrs.src)))
         ) {
           return true;
