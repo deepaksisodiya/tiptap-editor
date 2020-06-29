@@ -102,7 +102,13 @@ export default {
         html: this.node.attrs.html
       };
       this.embeds.data = data;
-      if (this.embeds.data.type === "link") this.$nextTick(this.disableLink);
+
+      if (this.embeds.data.type === "link") {
+        this.$nextTick(this.disableLink);
+
+        if (this.embeds.data.provider === "Twitter" && window.twttr)
+          window.twttr.widgets.load();
+      }
     } else {
       this.$nextTick(() => {
         this.$refs.embedInput.focus();
