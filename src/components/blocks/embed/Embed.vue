@@ -104,13 +104,14 @@ export default {
       this.embeds.data = data;
 
       if (this.embeds.data.type === "link") {
-        this.$nextTick(this.disableLink);
+        this.$nextTick(() => {
+          this.disableLink();
+          if (this.embeds.data.provider === "Twitter" && window.twttr)
+            window.twttr.widgets.load();
 
-        if (this.embeds.data.provider === "Twitter" && window.twttr)
-          window.twttr.widgets.load();
-
-        if (this.embeds.data.provider === "Instagram" && window.instgrm)
-          window.instgrm.Embeds.process();
+          if (this.embeds.data.provider === "Instagram" && window.instgrm)
+            window.instgrm.Embeds.process();
+        });
       }
     } else {
       this.$nextTick(() => {
