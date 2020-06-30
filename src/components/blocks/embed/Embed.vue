@@ -55,7 +55,14 @@
       <div class="close-button" @click="deleteNode">
         <i class="close-icon"></i>
       </div>
-      <div v-html="embeds.data.html"></div>
+      <div
+        :class="{
+          'embed-container':
+            embeds.data.provider === 'Twitter' &&
+            embeds.data.provider === 'Instagram'
+        }"
+        v-html="embeds.data.html"
+      ></div>
     </div>
   </div>
 </template>
@@ -302,5 +309,18 @@ export default {
   left: 0;
   width: 100%;
   height: 100%;
+}
+
+.embed-container {
+  position: relative;
+}
+.embed-container::before {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 400;
+  content: "";
 }
 </style>
