@@ -108,6 +108,9 @@ export default {
 
         if (this.embeds.data.provider === "Twitter" && window.twttr)
           window.twttr.widgets.load();
+
+        if (this.embeds.data.provider === "Instagram" && window.instgrm)
+          window.instgrm.Embeds.process();
       }
     } else {
       this.$nextTick(() => {
