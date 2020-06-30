@@ -58,7 +58,7 @@
       <div
         :class="{
           'embed-container':
-            embeds.data.provider === 'Twitter' &&
+            embeds.data.provider === 'Twitter' ||
             embeds.data.provider === 'Instagram'
         }"
         v-html="embeds.data.html"
