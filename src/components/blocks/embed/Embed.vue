@@ -113,7 +113,7 @@ export default {
       if (this.embeds.data.type === "link") {
         this.$nextTick(() => {
           this.disableLink();
-          this.loadEmbeds(this.embeds.data.provider);
+          this.loadEmbeds();
         });
       }
     } else {
@@ -208,8 +208,8 @@ export default {
       }
       return newUrl;
     },
-    loadEmbeds(provider) {
-      if (provider === "Twitter") {
+    loadEmbeds() {
+      if (this.embeds.data.provider === "Twitter") {
         if (window.twttr) window.twttr.widgets.load();
         else {
           this.loadScript("https://platform.twitter.com/widgets.js", () => {
@@ -219,7 +219,7 @@ export default {
         }
       }
 
-      if (provider === "Instagram") {
+      if (this.embeds.data.provider === "Instagram") {
         if (window.instgrm) window.instgrm.Embeds.process();
         else {
           this.loadScript("https://www.instagram.com/embed.js", () => {
@@ -267,7 +267,7 @@ export default {
         if (this.embeds.data.type === "link") {
           this.$nextTick(() => {
             this.disableLink();
-            this.loadEmbeds(this.embeds.data.provider);
+            this.loadEmbeds();
           });
         }
       } catch (error) {
