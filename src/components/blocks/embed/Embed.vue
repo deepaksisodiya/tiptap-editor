@@ -176,7 +176,7 @@ export default {
       script.type = "text/javascript";
       if (script.readyState) {
         // only required for IE <9
-        script.onreadystatechange = function() {
+        script.onreadystatechange = () => {
           if (
             script.readyState === "loaded" ||
             script.readyState === "complete"
@@ -187,7 +187,7 @@ export default {
         };
       } else {
         //Others
-        script.onload = function() {
+        script.onload = () => {
           callback();
         };
       }
