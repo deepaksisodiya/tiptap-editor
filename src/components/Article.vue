@@ -265,6 +265,8 @@ import {
   Header
 } from "./blocks";
 import Placeholder from "./../extensions/Placeholder";
+import browser from "../utils/browser";
+import { keyEvent } from "../utils/dom";
 
 const EVENTS = ["online", "offline"];
 
@@ -416,6 +418,49 @@ export default {
             );
             this.handleAfterPaste(view);
             return true;
+          },
+          handleDOMEvents: {
+            beforeinput: (view, event) => {
+              // We should probably do more with beforeinput events, but support
+              // is so spotty that I'm still waiting to see where they are going.
+
+              // Very specific hack to deal with backspace sometimes failing on
+              // Chrome Android when after an uneditable node.
+              if (
+                browser.chrome &&
+                browser.android &&
+                event.inputType == "deleteContentBackward"
+              ) {
+                const cursorBeforeDelete = view.state.selection.$cursor;
+                let { domChangeCount } = view;
+                setTimeout(() => {
+                  if (view.domChangeCount != domChangeCount) return; // Event already had some effect
+                  // This bug tends to close the virtual keyboard, so we refocus
+                  let { $cursor } = view.state.selection;
+                  view.dom.blur();
+                  cursorBeforeDelete.pos !== $cursor.pos
+                    ? this.editor.focus(
+                        cursorBeforeDelete.pos,
+                        cursorBeforeDelete.pos
+                      )
+                    : this.editor.focus();
+                  if (
+                    view.someProp("handleKeyDown", f =>
+                      f(view, keyEvent(8, "Backspace"))
+                    )
+                  )
+                    return;
+                  // Crude approximation of backspace behavior when no command handled it
+                  if ($cursor && $cursor.pos > 0)
+                    view.dispatch(
+                      view.state.tr
+                        .delete($cursor.pos - 1, $cursor.pos)
+                        .scrollIntoView()
+                    );
+                }, 50);
+              }
+              return true;
+            }
           }
         }
       })
