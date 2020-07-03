@@ -57,7 +57,7 @@
       </div>
       <div
         :class="{
-          'embed-container':
+          'embed-content':
             embeds.data.provider === 'Twitter' ||
             embeds.data.provider === 'Instagram'
         }"
@@ -356,18 +356,5 @@ export default {
   left: 0;
   width: 100%;
   height: 100%;
-}
-
-.embed-container {
-  position: relative;
-}
-.embed-container::before {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 400;
-  content: "";
 }
 </style>
