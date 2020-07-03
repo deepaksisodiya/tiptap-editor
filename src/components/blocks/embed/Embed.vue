@@ -106,11 +106,7 @@ export default {
       if (this.embeds.data.type === "link") {
         this.$nextTick(() => {
           this.disableLink();
-          if (this.embeds.data.provider === "Twitter" && window.twttr)
-            window.twttr.widgets.load();
-
-          if (this.embeds.data.provider === "Instagram" && window.instgrm)
-            window.instgrm.Embeds.process();
+          this.loadEmbeds(this.embeds.data.provider);
         });
       }
     } else {
@@ -168,6 +164,30 @@ export default {
     }
   },
   methods: {
+    loadScript(url, callback) {
+      var script = document.createElement("script");
+      script.type = "text/javascript";
+      if (script.readyState) {
+        // only required for IE <9
+        script.onreadystatechange = function() {
+          if (
+            script.readyState === "loaded" ||
+            script.readyState === "complete"
+          ) {
+            script.onreadystatechange = null;
+            callback();
+          }
+        };
+      } else {
+        //Others
+        script.onload = function() {
+          callback();
+        };
+      }
+
+      script.src = url;
+      document.getElementsByTagName("head")[0].appendChild(script);
+    },
     // https://stackoverflow.com/questions/11300906/check-if-a-string-starts-with-http-using-javascript
     getValidUrl(url = "") {
       let newUrl = window.decodeURIComponent(url);
@@ -180,6 +200,27 @@ export default {
         return `https://${newUrl}`;
       }
       return newUrl;
+    },
+    loadEmbeds(provider) {
+      if (provider === "Twitter") {
+        if (window.twttr) window.twttr.widgets.load();
+        else {
+          this.loadScript("https://platform.twitter.com/widgets.js", () => {
+            console.log("twitter script loaded!");
+            window.twttr.widgets.load();
+          });
+        }
+      }
+
+      if (provider === "Instagram") {
+        if (window.instgrm) window.instgrm.Embeds.process();
+        else {
+          this.loadScript("https://www.instagram.com/embed.js", () => {
+            console.log("instagram script loaded!");
+            window.instgrm.Embeds.process();
+          });
+        }
+      }
     },
     async onClickAdd() {
       if (!this.url) return;
@@ -215,7 +256,13 @@ export default {
         };
         // for copy pasting to work
         this.updateAttrs(this.embeds.data);
-        if (this.embeds.data.type === "link") this.$nextTick(this.disableLink);
+
+        if (this.embeds.data.type === "link") {
+          this.$nextTick(() => {
+            this.disableLink();
+            this.loadEmbeds(this.embeds.data.provider);
+          });
+        }
       } catch (error) {
         this.embeds.isError = true;
       } finally {
@@ -302,5 +349,18 @@ export default {
   left: 0;
   width: 100%;
   height: 100%;
+}
+
+.embed-container {
+  position: relative;
+}
+.embed-container::before {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 400;
+  content: "";
 }
 </style>
