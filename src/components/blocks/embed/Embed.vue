@@ -55,7 +55,14 @@
       <div class="close-button" @click="deleteNode">
         <i class="close-icon"></i>
       </div>
-      <div v-html="embeds.data.html"></div>
+      <div
+        :class="{
+          'embed-container':
+            embeds.data.provider === 'Twitter' ||
+            embeds.data.provider === 'Instagram'
+        }"
+        v-html="embeds.data.html"
+      ></div>
     </div>
   </div>
 </template>
