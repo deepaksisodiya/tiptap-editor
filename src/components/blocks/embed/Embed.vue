@@ -55,7 +55,14 @@
       <div class="close-button" @click="deleteNode">
         <i class="close-icon"></i>
       </div>
-      <div v-html="embeds.data.html"></div>
+      <div
+        :class="{
+          'embed-content':
+            embeds.data.provider === 'Twitter' ||
+            embeds.data.provider === 'Instagram'
+        }"
+        v-html="embeds.data.html"
+      ></div>
     </div>
   </div>
 </template>
@@ -102,7 +109,13 @@ export default {
         html: this.node.attrs.html
       };
       this.embeds.data = data;
-      if (this.embeds.data.type === "link") this.$nextTick(this.disableLink);
+
+      if (this.embeds.data.type === "link") {
+        this.$nextTick(() => {
+          this.disableLink();
+          this.loadEmbeds();
+        });
+      }
     } else {
       this.$nextTick(() => {
         this.$refs.embedInput.focus();
@@ -158,6 +171,30 @@ export default {
     }
   },
   methods: {
+    loadScript(url, callback) {
+      var script = document.createElement("script");
+      script.type = "text/javascript";
+      if (script.readyState) {
+        // only required for IE <9
+        script.onreadystatechange = () => {
+          if (
+            script.readyState === "loaded" ||
+            script.readyState === "complete"
+          ) {
+            script.onreadystatechange = null;
+            callback();
+          }
+        };
+      } else {
+        //Others
+        script.onload = () => {
+          callback();
+        };
+      }
+
+      script.src = url;
+      document.getElementsByTagName("head")[0].appendChild(script);
+    },
     // https://stackoverflow.com/questions/11300906/check-if-a-string-starts-with-http-using-javascript
     getValidUrl(url = "") {
       let newUrl = window.decodeURIComponent(url);
@@ -170,6 +207,27 @@ export default {
         return `https://${newUrl}`;
       }
       return newUrl;
+    },
+    loadEmbeds() {
+      if (this.embeds.data.provider === "Twitter") {
+        if (window.twttr) window.twttr.widgets.load();
+        else {
+          this.loadScript("https://platform.twitter.com/widgets.js", () => {
+            console.log("twitter script loaded!");
+            window.twttr.widgets.load();
+          });
+        }
+      }
+
+      if (this.embeds.data.provider === "Instagram") {
+        if (window.instgrm) window.instgrm.Embeds.process();
+        else {
+          this.loadScript("https://www.instagram.com/embed.js", () => {
+            console.log("instagram script loaded!");
+            window.instgrm.Embeds.process();
+          });
+        }
+      }
     },
     async onClickAdd() {
       if (!this.url) return;
@@ -205,7 +263,13 @@ export default {
         };
         // for copy pasting to work
         this.updateAttrs(this.embeds.data);
-        if (this.embeds.data.type === "link") this.$nextTick(this.disableLink);
+
+        if (this.embeds.data.type === "link") {
+          this.$nextTick(() => {
+            this.disableLink();
+            this.loadEmbeds();
+          });
+        }
       } catch (error) {
         this.embeds.isError = true;
       } finally {
