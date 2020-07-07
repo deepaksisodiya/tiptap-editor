@@ -91,6 +91,7 @@ export default {
         let textSelection = TextSelection.create(tr.doc, pos + 2, pos + 2);
         this.view.dispatch(tr.setSelection(textSelection));
         this.view.focus();
+        event.preventDefault();
       }
     },
     previewFiles() {
