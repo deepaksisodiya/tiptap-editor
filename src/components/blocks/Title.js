@@ -36,7 +36,7 @@ export default class Title extends Node {
       Backspace: (state, dispatch, { featureImageInstance }) => {
         let {
           tr,
-          selection: { anchor }
+          selection: { anchor, empty }
         } = state;
         const currentNode = tr.doc.resolve(anchor).parent.type.name;
 
@@ -52,6 +52,7 @@ export default class Title extends Node {
         }
 
         if (
+          empty &&
           currentNode !== "header" &&
           currentNode !== "title" &&
           tr.doc.resolve(anchor - 3).parent.type.name === "header"
