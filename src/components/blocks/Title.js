@@ -15,7 +15,7 @@ export default class Title extends Node {
         }
       ],
       toDOM: () => ["h1", 0],
-      marks: "bold italic"
+      marks: ""
     };
   }
   keys() {
