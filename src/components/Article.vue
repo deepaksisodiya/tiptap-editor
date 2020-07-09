@@ -235,7 +235,7 @@
 </template>
 
 <script>
-import { Editor, EditorContent } from "tiptap";
+import { Editor, EditorContent, TextSelection } from "tiptap";
 import {
   Blockquote,
   HardBreak,
@@ -248,7 +248,7 @@ import {
   History,
   TrailingNode
 } from "tiptap-extensions";
-import { contains } from "prosemirror-utils";
+import { contains, findChildren } from "prosemirror-utils";
 import _debounce from "lodash.debounce";
 
 import ErrorMessage from "./ErrorMessage.vue";
@@ -401,15 +401,36 @@ export default {
         }, 300),
         editorProps: {
           handlePaste: (view, event, slice) => {
-            var singleNode =
+            const singleNode =
               slice.openStart == 0 &&
               slice.openEnd == 0 &&
               slice.content.childCount == 1
                 ? slice.content.firstChild
                 : null;
-            var tr = singleNode
+            let tr = singleNode
               ? view.state.tr.replaceSelectionWith(singleNode, view.shiftKey)
               : view.state.tr.replaceSelection(slice);
+            // current cursor position
+            const anchor = tr.selection.anchor;
+            // find featured image blocks
+            const nodes = findChildren(
+              tr.doc,
+              child => child.type.name === "featuredimage",
+              false
+            );
+            // if multiple featured image blocks
+            if (nodes.length > 1) {
+              let textSelection = TextSelection.create(
+                tr.doc,
+                nodes[1].pos,
+                nodes[1].pos + 1
+              );
+              // select and delete block
+              tr = tr.setSelection(textSelection).deleteSelection();
+              // keep cursor and last anchor positoin
+              textSelection = TextSelection.create(tr.doc, anchor, anchor);
+              tr = tr.setSelection(textSelection);
+            }
             view.dispatch(
               tr
                 .scrollIntoView()
@@ -559,7 +580,7 @@ export default {
       if (!this.shouldShowFloatingMenu) {
         const nodePos = this.editor.view.posAtCoords({
           left: e.clientX + 100,
-          top: e.clientY,
+          top: e.clientY
         });
         this.editor.setSelection(nodePos.pos, nodePos.pos);
       }
