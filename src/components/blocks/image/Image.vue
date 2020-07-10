@@ -9,6 +9,7 @@
       :src="dataUrl"
       :height="height"
       :width="width"
+      @load="loaded"
     />
     <figcaption>
       <input
@@ -26,7 +27,7 @@ import { TextSelection } from "tiptap";
 
 export default {
   name: "ImageBlock",
-  props: ["node", "updateAttrs", "view", "getPos"],
+  props: ["node", "updateAttrs", "view", "getPos", "options"],
   data() {
     return {
       height: "",
@@ -62,7 +63,6 @@ export default {
       this.view.focus();
       this.$el.scrollIntoView(true);
     });
-    window.imageInstance = this;
   },
   methods: {
     handleKeydown(event) {
@@ -89,6 +89,25 @@ export default {
     },
     onImageClick() {
       this.shouldShowClose = !this.shouldShowClose;
+    },
+    async loaded() {
+      this.caption = "";
+      if (this.dataUrl.includes("data:")) {
+        const file = document.getElementById("fileInput").files[0];
+        const formData = new FormData();
+        formData.append("image", file);
+
+        try {
+          const response = await this.options.uploadImage(formData);
+          if (response && response.status === 200)
+            this.src = response.data.image;
+        } catch (error) {
+          this.options.handleError(error);
+          this.deleteNode();
+        } finally {
+          document.getElementById("fileInput").value = "";
+        }
+      }
     }
   }
 };

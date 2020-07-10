@@ -143,6 +143,7 @@
         >
           <input
             type="file"
+            id="fileInput"
             ref="fileInput"
             style="display:none"
             @change="previewFiles(commands.image)"
@@ -368,7 +369,10 @@ export default {
             node: "paragraph",
             notAfter: ["paragraph"]
           }),
-          new Image(),
+          new Image({
+            uploadImage: this.uploadImage,
+            handleError: this.handleError
+          }),
           new FeatureImage({
             uploadImage: this.uploadImage,
             handleError: this.handleError
@@ -559,7 +563,7 @@ export default {
       if (!this.shouldShowFloatingMenu) {
         const nodePos = this.editor.view.posAtCoords({
           left: e.clientX + 100,
-          top: e.clientY,
+          top: e.clientY
         });
         this.editor.setSelection(nodePos.pos, nodePos.pos);
       }
@@ -622,33 +626,9 @@ export default {
             src: this.imageSrc,
             addImageAt: this.addImageAt
           });
-
-          window.imageInstance.$refs.img.onload = async () => {
-            const imageInstance = window.imageInstance;
-            imageInstance.caption = " ";
-            imageInstance.$nextTick(() => {
-              imageInstance.caption = "";
-            });
-            if (imageInstance && imageInstance.dataUrl.includes("data:")) {
-              const formData = new FormData();
-              formData.append("image", file);
-
-              try {
-                const response = await this.uploadImage(formData);
-                if (response && response.status === 200) {
-                  imageInstance.src = response.data.image;
-                  window.imageInstance = null;
-                }
-              } catch (error) {
-                this.handleError(error);
-                window.imageInstance.deleteNode();
-              }
-            }
-          };
         };
         reader.readAsDataURL(file);
       }
-      this.$refs.fileInput.value = "";
     },
     fixMenubarforIos() {
       const menuUl = this.$refs.menuUl;
