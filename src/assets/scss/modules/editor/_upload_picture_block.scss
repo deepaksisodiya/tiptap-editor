@@ -1,78 +1,76 @@
 .editor {
-    .upload-picture-block {
-		display: block;
-		background-color: $lightest-gray;
-		border: 1px dashed $gray;
-		padding: 20px;
-		margin: 45px 0;
-		border-radius: 6px;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		cursor: pointer;
-		span {
-			@include Sans();
-			font-size: 16px;
-			line-height: 20px;
-			font-weight: 400;
-			opacity: .3;
-		}
-		i {
-			display: inline-block;
-			position: relative;
-			vertical-align: middle;
-			background-image: url($stack-sprite);
-			&.upload-icon {
-				background-position: -208px -640px;
-				width: 24px;
-				height: 17px;
-				margin-right: 8px;
-			}
-		}
-	}
+  .upload-picture-block {
+    display: block;
+    background-color: $lightest-gray;
+    border: 1px dashed $gray;
+    padding: 20px;
+    margin: 45px 0;
+    border-radius: 6px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    span {
+      @include Sans();
+      font-size: 16px;
+      line-height: 20px;
+      font-weight: 400;
+      opacity: 0.3;
+    }
+    i {
+      display: inline-block;
+      position: relative;
+      vertical-align: middle;
+      background-image: url($stack-sprite);
+      &.upload-icon {
+        background-position: -208px -640px;
+        width: 24px;
+        height: 17px;
+        margin-right: 8px;
+      }
+    }
+  }
 }
 
 @media only screen and (max-width: 767px) {
-    .editor {
-        .upload-picture-block {
-			padding: 13px 23px;
-			margin: 35px 0;
-			span {
-				font-size: 15px;
-				line-height: 19px;
-			}
-		}
+  .editor {
+    .upload-picture-block {
+      padding: 13px 23px;
+      margin: 35px 0;
+      span {
+        font-size: 15px;
+        line-height: 19px;
+      }
     }
+  }
 }
 
 // Retina (2x)
 
-@media
-only screen and (-webkit-min-device-pixel-ratio: 2),
-only screen and (   min--moz-device-pixel-ratio: 2),
-only screen and (min-device-pixel-ratio: 2) {
-	.editor {
-		.upload-picture-block i {
-			background-image: url($stack-sprite-2x);
-			background-size: 900px 900px;
-			-webkit-background-size: 900px 900px;
-			-moz-background-size: 900px 900px;
-		}
-	}
+@media only screen and (-webkit-min-device-pixel-ratio: 2),
+  only screen and (min--moz-device-pixel-ratio: 2),
+  only screen and (min-device-pixel-ratio: 2) {
+  .editor {
+    .upload-picture-block i {
+      background-image: url($stack-sprite-2x);
+      background-size: 900px 900px;
+      -webkit-background-size: 900px 900px;
+      -moz-background-size: 900px 900px;
+    }
+  }
 }
 
 // Retina (3x)
 
-@media
-only screen and (-webkit-min-device-pixel-ratio: 3),
-only screen and (   min--moz-device-pixel-ratio: 3),
-only screen and (min-device-pixel-ratio: 3) {
-	.editor {
-		.upload-picture-block i {
-			background-image: url($stack-sprite-3x);
-			background-size: 900px 900px;
-			-webkit-background-size: 900px 900px;
-			-moz-background-size: 900px 900px;
-		}
-	}
+@media only screen and (-webkit-min-device-pixel-ratio: 3),
+  only screen and (min--moz-device-pixel-ratio: 3),
+  only screen and (min-device-pixel-ratio: 3) {
+  .editor {
+    .upload-picture-block i {
+      background-image: url($stack-sprite-3x);
+      background-size: 900px 900px;
+      -webkit-background-size: 900px 900px;
+      -moz-background-size: 900px 900px;
+    }
+  }
 }

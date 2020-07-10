@@ -1,53 +1,78 @@
-@import './modules/common/mixin';
-@import './modules/editor/_highlight_menu';
-@import './modules/editor/_highlight_link_composer';
-@import './modules/editor/_kitchensink';
-@import './modules/editor/_upload_picture_block';
+@import "./modules/common/mixin";
+@import "./modules/editor/_highlight_menu";
+@import "./modules/editor/_highlight_link_composer";
+@import "./modules/editor/_kitchensink";
+@import "./modules/editor/_upload_picture_block";
 
 .editor {
-	position: relative;
-	
-	article {
-		figcaption input {
-			@include Sans();
-			width: 100%;
-			font-size: 14px;
-			line-height: 19px;
-			text-align: center;
-			border: none;
-			opacity: 1;
-			margin: 0;
-			-webkit-tap-highlight-color: transparent;
-		}
-	}
+  position: relative;
+
+  article {
+    figcaption input {
+      @include Sans();
+      width: 100%;
+      font-size: 14px;
+      line-height: 19px;
+      text-align: center;
+      border: none;
+      opacity: 1;
+      margin: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .video-wrapper {
+      position: relative;
+      padding-top: 56.25%;
+      margin: 45px auto 70px;
+      figure {
+        margin: 0 auto;
+      }
+      figcaption {
+        position: absolute;
+        width: 100%;
+      }
+      iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        width: 100%;
+        height: 100%;
+      }
+    }
+  }
 }
 
 .overlay {
-	&.dark-overlay {
-		background-color: rgba(0, 0, 0, 0.85);
-		height: 100vh;
-	}
+  &.dark-overlay {
+    background-color: rgba(0, 0, 0, 0.85);
+    height: 100vh;
+  }
 }
 
 @media only screen and (max-width: 767px) {
-	.editor {
-		article {
-			padding: 0 30px 0 50px;
-		}
-		figure {
-			&.featured-image {
-				margin-left: -10px;
-			}
-		}
-	}
+  .editor {
+    article {
+      padding: 0 30px 0 50px;
+      .video-wrapper {
+        figure {
+          margin: 0 auto;
+        }
+      }
+    }
+    figure {
+      &.featured-image {
+        margin-left: -10px;
+      }
+    }
+  }
 }
 
 @supports (-webkit-backdrop-filter: blur(0px)) or (backdrop-filter: blur(0px)) {
-	.overlay {
-		&.dark-overlay {
-			background-color: rgba(0, 0, 0, 0.4);
-			backdrop-filter: blur(10px);
-			-webkit-backdrop-filter: blur(10px);
-		}
-	}
+  .overlay {
+    &.dark-overlay {
+      background-color: rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+  }
 }

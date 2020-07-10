@@ -35,7 +35,8 @@ button {
 		background-color: $white;
 		color: $black;
 	}
-	&.disabled-button {
+	&.disabled-button,
+	&.disabled {
 		background-color: $white;
 		span {
 			color: rgba($black, 0.2);
@@ -93,13 +94,15 @@ button {
 					font-size: 10px;
 					line-height: 13px;
 					letter-spacing: 0.08px;
+					opacity: 1;
 				}
 			}
 			span {
 				opacity: 1;
 			}
 		}
-		h4 {
+		h4,
+		span {
 			@include Sans();
 			font-size: 15px;
 			line-height: 18px;
@@ -108,6 +111,9 @@ button {
 			margin: 0;
 			margin-left: auto;
 			color: rgba($white, 1);
+		}
+		span {
+			margin: 0;
 		}
 		&.disabled {
 			background-color: $white;

@@ -1,132 +1,130 @@
 .editor {
-	.highlight-link-composer {
-		display: flex;
-		flex-direction: column;
-		box-sizing: border-box;
-		background-color: #0F1F3D;
-		position: fixed;
-		left: 0;
-		right: 0;
-		width: max-content;
-	    padding: 20px;
-	    margin: 20px auto;
-	    border-radius: 12px;
-		.highlight-link-composer-input {
-			position: relative;
-			input {
-				background-color: transparent;
-				width: 100%;
-				box-sizing : border-box;
-				min-width: 285px;
-				color: #ffffff;
-				font-size: 16px;
-				line-height: 19px;
-				border: none;
-				border-bottom: 1px solid rgba($gray,.5);
-				padding-right: 25px;
-				&:focus {
-					border-bottom: 1px solid rgba($gray,1);
-				}
-				&::placeholder {
-				  	color: $white;
-				  	opacity: .5;
-				}
-				&:-ms-input-placeholder {
-				 	color: $white;
-				}
+  .highlight-link-composer {
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    background-color: #0f1f3d;
+    position: fixed;
+    left: 0;
+    right: 0;
+    width: max-content;
+    padding: 20px;
+    margin: 20px auto;
+    border-radius: 12px;
+    .highlight-link-composer-input {
+      position: relative;
+      input {
+        background-color: transparent;
+        width: 100%;
+        box-sizing: border-box;
+        min-width: 285px;
+        color: #ffffff;
+        font-size: 16px;
+        line-height: 19px;
+        border: none;
+        border-bottom: 1px solid rgba($gray, 0.5);
+        padding-right: 25px;
+        &:focus {
+          border-bottom: 1px solid rgba($gray, 1);
+        }
+        &::placeholder {
+          color: $white;
+          opacity: 0.5;
+        }
+        &:-ms-input-placeholder {
+          color: $white;
+        }
 
-				&::-ms-input-placeholder {
-				 	color: $white;
-				}
-			}
-		}
-		.highlight-link-composer-actionbar {
-			display: flex;
-	    	flex-direction: row;
-	    	justify-content: flex-end;
-	    	margin-top: 25px;
-	    	button {
-	    		width: auto;
-	    		padding: 0;
-	    		margin-right: 30px;
-	    		&.close-button {
-	    			span {
-	    				color: $white;
-	    			}
-	    		}
-	    		&.link-button {
-	    			span {
-	    				color: $yellow;
-	    			}
-	    		}
-	    		&:last-of-type {
-	    			margin-right: 0;
-	    		}
-	    		span {
-	    			@include Sans();
-	    			line-height: 18px;
-	    			text-transform: uppercase;
-	    			margin: 0;
-	    		}
-	    	}
-		}
-	}
-	.icon {
-		display: inline-block;
-	    position: relative;
-	    vertical-align: middle;
-	    background-image: url($stack-sprite);
-	    width: 17px;
-	    height: 17px;
-	    position: absolute;
-	    &.close-link-composer-icon {
-	    	background-position: -45px -645px;
-	    	width: 14px;
-		    height: 14px;
-		    margin-left: auto;
-		    right: 0;
-		    top: 15px;
-	    }
-	}
+        &::-ms-input-placeholder {
+          color: $white;
+        }
+      }
+    }
+    .highlight-link-composer-actionbar {
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-end;
+      margin-top: 25px;
+      button {
+        width: auto;
+        padding: 0;
+        margin-right: 30px;
+        &.close-button {
+          span {
+            color: $white;
+          }
+        }
+        &.link-button {
+          span {
+            color: $yellow;
+          }
+        }
+        &:last-of-type {
+          margin-right: 0;
+        }
+        span {
+          @include Sans();
+          line-height: 18px;
+          text-transform: uppercase;
+          margin: 0;
+        }
+      }
+    }
+  }
+  .icon {
+    display: inline-block;
+    position: relative;
+    vertical-align: middle;
+    background-image: url($stack-sprite);
+    width: 17px;
+    height: 17px;
+    position: absolute;
+    &.close-link-composer-icon {
+      background-position: -45px -645px;
+      width: 14px;
+      height: 14px;
+      margin-left: auto;
+      right: 0;
+      top: 15px;
+    }
+  }
 }
 
 @media only screen and (max-width: 767px) {
-	.editor {
-		.highlight-link-composer {
-			top: 0;
-		    width: 100%;
-			padding: 30px;
-			margin: 0;
-			border-radius: 0;
-			z-index: 9999;
-		}
-	}
+  .editor {
+    .highlight-link-composer {
+      top: 0;
+      width: 100%;
+      padding: 30px;
+      margin: 0;
+      border-radius: 0;
+      z-index: 9999;
+    }
+  }
 }
 
 // Retina (2x)
 
-@media
-only screen and (-webkit-min-device-pixel-ratio: 2),
-only screen and (   min--moz-device-pixel-ratio: 2),
-only screen and (min-device-pixel-ratio: 2) {
-	.editor .icon {
-		background-image: url($stack-sprite-2x);
-		background-size: 900px 900px;
-		-webkit-background-size: 900px 900px;
-		-moz-background-size: 900px 900px;
-	}
+@media only screen and (-webkit-min-device-pixel-ratio: 2),
+  only screen and (min--moz-device-pixel-ratio: 2),
+  only screen and (min-device-pixel-ratio: 2) {
+  .editor .icon {
+    background-image: url($stack-sprite-2x);
+    background-size: 900px 900px;
+    -webkit-background-size: 900px 900px;
+    -moz-background-size: 900px 900px;
+  }
 }
 
 // Retina (3x)
 
-@media
-only screen and (-webkit-min-device-pixel-ratio: 3),
-only screen and (   min--moz-device-pixel-ratio: 3),
-only screen and (min-device-pixel-ratio: 3) {
-	.editor .icon {
-		background-image: url($stack-sprite-3x);
-		background-size: 900px 900px;
-		-webkit-background-size: 900px 900px;
-		-moz-background-size: 900px 900px;
-	}
+@media only screen and (-webkit-min-device-pixel-ratio: 3),
+  only screen and (min--moz-device-pixel-ratio: 3),
+  only screen and (min-device-pixel-ratio: 3) {
+  .editor .icon {
+    background-image: url($stack-sprite-3x);
+    background-size: 900px 900px;
+    -webkit-background-size: 900px 900px;
+    -moz-background-size: 900px 900px;
+  }
 }

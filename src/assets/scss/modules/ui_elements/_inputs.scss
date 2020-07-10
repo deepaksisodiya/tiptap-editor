@@ -61,11 +61,16 @@ textarea {
 	&.otp-number-input {
 		font-weight: 500;
 	}
+	&:-webkit-autofill,
+	&:-webkit-autofill:hover,
+	&:-webkit-autofill:focus,
+	:-webkit-autofill:active {
+		-webkit-box-shadow: 0 0 0 30px white inset;
+	}
 }
 textarea {
 	width: 100%;
 	resize: none;
-	max-height: 65px;
 }
 em {
 	@include Sans();
@@ -74,6 +79,15 @@ em {
 	line-height: 25px;
 	opacity: 0.3;
 	display: inline-block;
+}
+
+input[type="number"] {
+	-moz-appearance: textfield;
+}
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+	-webkit-appearance: none;
+	margin: 0;
 }
 
 .input-container {
@@ -90,6 +104,8 @@ em {
 		position: absolute;
 		left: 1px;
 		top: 23px;
+		height: 21px;
+		width: 21px;
 	}
 	.input-close-icon {
 		background-position: -635px -777px;
@@ -99,10 +115,22 @@ em {
 		right: 0;
 		top: 23px;
 	}
+	.facebook-icon {
+		background-position: 4px -220px;
+	}
 	.twitter-icon {
-		background-position: -882px -636px;
-		height: 14px;
-		width: 18px;
+		background-position: -57px -221px;
+	}
+	.linkedin-icon {
+		background-position: -126px -219px;
+		margin-top: -5px;
+	}
+	.instagram-icon {
+		background-position: -196px -219px;
+		margin-top: -3px;
+	}
+	.link-icon {
+		background-position: -255px -219px;
 	}
 	input {
 		width: 100%;
@@ -188,33 +216,6 @@ input[type="radio"] {
 	}
 }
 
-.radio-button-list-item {
-	label {
-		display: flex;
-		cursor: pointer;
-		margin-bottom: 0;
-	}
-	.icon-radio-default {
-		display: inline-block;
-		vertical-align: middle;
-		background-image: url($stack-sprite);
-		margin: 0;
-		background-position: -608px -867px;
-		height: 33px;
-		width: 33px;
-		min-width: 33px;
-	}
-	input[type="radio"] {
-		&:checked {
-			+ .icon-radio-default {
-				background-position: -551px -867px;
-			}
-		}
-	}
-}
-
-// End of checkbox
-
 @media (max-width: 767px) {
 	label,
 	input,
@@ -234,7 +235,6 @@ input[type="radio"] {
 	only screen and (min--moz-device-pixel-ratio: 2),
 	only screen and (min-device-pixel-ratio: 2) {
 	.input-container i,
-	.radio-button-list-item .icon-radio-default,
 	input[type="checkbox"] + label,
 	input[type="radio"] + label {
 		background-image: url($stack-sprite-2x);
@@ -250,7 +250,6 @@ input[type="radio"] {
 	only screen and (min--moz-device-pixel-ratio: 3),
 	only screen and (min-device-pixel-ratio: 3) {
 	.input-container i,
-	.radio-button-list-item .icon-radio-default,
 	input[type="checkbox"] + label,
 	input[type="radio"] + label {
 		background-image: url($stack-sprite-3x);
