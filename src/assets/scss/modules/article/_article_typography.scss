@@ -1,0 +1,118 @@
+article {
+    p, h3 {
+		opacity: .9;
+	}
+
+	p, p em {
+		@include Serif();
+		font-size: 20px;
+		line-height: 33px;
+		margin-bottom: 42px;
+	}
+
+	p em {
+		display: inline;
+		font-style: italic;
+		margin: 0;
+		opacity: 1;
+	}
+
+	h3 {
+		@include Serif();
+		font-size: 22px;
+		line-height: 32px;
+		margin-top: 42px;
+		margin-bottom: 15px;
+		font-weight: 500;
+	}
+
+	h5 {
+		@include Sans();
+		font-size: 16px;
+		line-height: 32px;
+		margin-top: 6px;
+		margin-bottom: 15px;
+		font-weight: 500;
+		letter-spacing: 1.35px;
+	}
+
+	h3+p,
+	h5+p {
+		margin-top: 6px;
+	}
+
+	ul,
+	ol {
+		margin: 0;
+		padding-left: 23px;
+		margin-bottom: 42px;
+		li, li>p {
+			@include Serif();
+			font-size: 21px;
+			line-height: 32px;
+			margin-bottom: 15px;
+		}
+	}
+
+	figcaption {
+		@include Sans();
+		font-size: 14px;
+		line-height: 19px;
+		text-align: center;
+		opacity: 0.7;
+		margin-top: 15px;
+		border: none;
+	}
+
+	blockquote {
+		border-left: 3px solid $black;
+    	padding-left: 25px;
+		*:not(a) {
+			@include Serif();
+			font-size: 20px;
+			line-height: 33px;
+			font-style: italic;
+			margin-bottom: 42px;
+		}
+	}
+}
+
+@media (max-width: 767px) {
+	article {
+        p, p em {
+			font-size: 18px;
+			line-height: 28px;
+			margin-bottom: 25px;
+		}
+
+		p em {
+			@include Serif();
+			font-style: italic;
+			opacity: 1;
+			margin: 0;
+		}
+		
+		h3 {
+			line-height: 34px;
+			margin-top: 25px;
+		}
+		h5 {
+			margin: 15px 0 13px;
+		}
+		ul,
+		ol {
+			margin-bottom: 25px;
+			li, li>p {
+				font-size: 18px;
+				line-height: 28px;
+			}
+		}
+		blockquote {
+			*:not(a) {
+				font-size: 18px;
+				line-height: 28px;
+				margin-bottom: 25px;
+			}
+		}
+    }
+}

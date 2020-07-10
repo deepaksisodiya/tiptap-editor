@@ -1,0 +1,56 @@
+article {
+    figure {
+		max-width: 680px;
+		margin: 42px auto;
+		line-height: 0;
+		picture {
+			position: relative;
+			img {
+				border-radius: 0;
+			}
+		}
+
+		&.featured-image {
+			position: relative;
+			width: 100%;
+			margin: 55px auto;
+			left: calc(-50vw + 50%);
+			img {
+				width: 100vw;
+			}
+			figcaption {
+				position: relative;
+				max-width: 680px;
+				margin: 15px auto;
+				left: calc(50vw - 50%);
+			}
+		}
+		&.video-embed {
+			position: relative;
+			.video-play-button {
+				display: inline-block;
+                position: absolute;
+                background-image: url($stack-sprite);
+				background-position: -665px 0px;
+                width: 55px;
+				height: 55px;
+				top: 45%;
+				left: 50%;
+				box-shadow: 5px 0px 10px rgba(155,155,155,.1), 0px 5px 10px rgba(155,155,155,.1),;
+                vertical-align: middle;
+                transform: translate(-50%,-50%);
+			}
+		}
+	}
+}
+
+@media (max-width: 767px) {
+	article {
+        figure {
+			margin: 35px auto;
+			&.featured-image {
+				margin: 35px auto;
+			}
+		}
+    }
+}

@@ -1,0 +1,300 @@
+// Button with icons
+
+button {
+	background-color: $white;
+	border: none;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	cursor: pointer;
+	box-shadow: 5px 0px 10px 2px rgba(155, 155, 155, 0.1),
+		0px 5px 10px 2px rgba(155, 155, 155, 0.1);
+	padding: 19px 24px;
+	border-radius: 99px;
+	&.fixed-button {
+		position: fixed;
+		background-color: $black;
+		left: 50%;
+		bottom: 45px;
+		width: max-content;
+		color: $white;
+		transform: translateX(-50%);
+		padding: 16px 20px;
+		border-radius: 999px;
+	}
+	&.danger-button {
+		span {
+			color: $error-red;
+		}
+	}
+	&.dark-button {
+		background-color: $black;
+		color: $white;
+	}
+	&.light-button {
+		background-color: $white;
+		color: $black;
+	}
+	&.disabled-button {
+		background-color: $white;
+		span {
+			color: rgba($black, 0.2);
+		}
+	}
+	&.transparent-button {
+		background-color: transparent;
+		color: $white;
+		box-shadow: none;
+	}
+	&.button-loading {
+		@include zebraStripeAnimation();
+		cursor: default;
+		&:hover {
+			@include zebraStripeAnimation();
+		}
+	}
+	&.info-button {
+		display: flex;
+		flex-direction: row;
+		background-color: $black;
+		border-radius: 8px;
+		margin: 30px 0 0;
+		padding: 13px 30px;
+		min-height: 58px;
+
+		.info {
+			span {
+				@include Sans();
+				font-size: 13px;
+				line-height: 11px;
+				font-weight: 500;
+				letter-spacing: 0.11px;
+				margin: 0;
+				color: rgba($white, 0.5);
+			}
+			&.amount {
+				@include Sans();
+				display: flex;
+				flex-direction: column;
+				text-align: left;
+				h3,
+				small {
+					color: $white;
+				}
+				h3 {
+					font-size: 13px;
+					line-height: 18px;
+					font-weight: 500;
+					margin: 0;
+					letter-spacing: 0.11px;
+				}
+				small {
+					color: #9b9b9b;
+					font-size: 10px;
+					line-height: 13px;
+					letter-spacing: 0.08px;
+				}
+			}
+			span {
+				opacity: 1;
+			}
+		}
+		h4 {
+			@include Sans();
+			font-size: 15px;
+			line-height: 18px;
+			font-weight: 700;
+			letter-spacing: 0.13px;
+			margin: 0;
+			margin-left: auto;
+			color: rgba($white, 1);
+		}
+		&.disabled {
+			background-color: $white;
+			* {
+				color: rgba($black, 0.2);
+			}
+			.info {
+				span {
+					color: rgba($black, 0.2);
+				}
+			}
+			.info.amount {
+				h3,
+				small {
+					color: rgba($black, 0.2);
+				}
+			}
+		}
+	}
+	&.button-saved-card {
+		background: rgba(51, 102, 204, 0.1);
+		box-shadow: none;
+		min-height: 58px;
+		span {
+			font-weight: 500;
+		}
+	}
+	&.button-edge-to-edge {
+		width: 100%;
+	}
+	&.share-button {
+		span {
+			vertical-align: middle;
+			margin: 0;
+		}
+	}
+	&.button-with-icon-only {
+		box-shadow: none;
+		background-color: transparent;
+		padding: 0;
+	}
+	&.tiny-button {
+		width: max-content;
+		padding: 8px 3px;
+		border-radius: 8px;
+		span {
+			@include Sans();
+			font-size: 13px;
+			line-height: 18px;
+			color: rgba($black, 0.5);
+		}
+	}
+	span {
+		font-family: "IBM Plex Serif", serif;
+		font-size: 15px;
+		line-height: 15px;
+		font-weight: 600;
+		margin-left: 12px;
+		margin-right: 15px;
+	}
+	i {
+		display: inline-block;
+		position: relative;
+		vertical-align: middle;
+		background-image: url($stack-sprite);
+	}
+	.feather-icon {
+		background-position: -736px -766px;
+		width: 21px;
+		height: 26px;
+	}
+	.linkedin-icon {
+		background-position: -832px -693px;
+		width: 22px;
+		height: 22px;
+	}
+	.twitter-icon {
+		background-position: -878px -693px;
+		width: 22px;
+		height: 22px;
+		margin-right: 9px;
+	}
+	.arrow-icon {
+		background-position: -892px -775px;
+		width: 8px;
+		height: 13px;
+		margin-left: auto;
+	}
+	.arrow-icon-white {
+		background-position: -863px -735px;
+		width: 8px;
+		height: 13px;
+		margin-left: auto;
+	}
+	.right-icon {
+		background-position: -892px -736px;
+		width: 8px;
+		height: 13px;
+		margin-left: auto;
+	}
+	.edit-icon {
+		background-position: -855px -776px;
+		width: 13px;
+		height: 12px;
+	}
+	.facebook-icon {
+		background-position: -881px -585px;
+		width: 19px;
+		height: 19px;
+		margin-right: 9px;
+	}
+	.google-icon {
+		background-position: -835px -585px;
+		width: 19px;
+		height: 19px;
+		margin-right: 9px;
+	}
+	.danger-arrow-icon {
+		background-position: -831px -737px;
+		width: 8px;
+		height: 12px;
+		margin-left: auto;
+	}
+	.white-feather-icon {
+		background-position: -589px -771px;
+		width: 16px;
+		height: 19px;
+	}
+	.article-share-icon {
+		background-position: -751px -487px;
+		width: 16px;
+		height: 22px;
+		margin-right: 6px;
+	}
+	.add-new-post-icon {
+		background-position: -182px -567px;
+		width: 23px;
+		height: 23px;
+		margin-right: 8px;
+		box-shadow: 5px 0px 10px 2px rgba(155, 155, 155, 0.1),
+			0px 5px 10px 2px rgba(155, 155, 155, 0.1);
+		border-radius: 999px;
+	}
+	.edit-pen-icon {
+		background-position: -750px -33px;
+		width: 15px;
+		height: 14px;
+		margin-right: 7px;
+	}
+	.dot-menu-icon {
+		background-position: -1px -304px;
+		width: 18px;
+		height: 4px;
+	}
+}
+
+@media (max-width: 767px) {
+	button {
+		width: 100%;
+		&.fixed-button {
+			padding: 18px 20px;
+		}
+	}
+}
+
+// Retina (2x)
+
+@media only screen and (-webkit-min-device-pixel-ratio: 2),
+	only screen and (min--moz-device-pixel-ratio: 2),
+	only screen and (min-device-pixel-ratio: 2) {
+	button i {
+		background-image: url($stack-sprite-2x);
+		background-size: 900px 900px;
+		-webkit-background-size: 900px 900px;
+		-moz-background-size: 900px 900px;
+	}
+}
+
+// Retina (3x)
+
+@media only screen and (-webkit-min-device-pixel-ratio: 3),
+	only screen and (min--moz-device-pixel-ratio: 3),
+	only screen and (min-device-pixel-ratio: 3) {
+	button i {
+		background-image: url($stack-sprite-3x);
+		background-size: 900px 900px;
+		-webkit-background-size: 900px 900px;
+		-moz-background-size: 900px 900px;
+	}
+}
