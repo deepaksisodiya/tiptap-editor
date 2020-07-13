@@ -41,8 +41,3 @@ if you have tiptap-editor and web in same directory, then
 cd web
 yarn add file:./../tiptap-editor/
 ```
-
-## Update submodule
-```
-git submodule update --remote
-```
