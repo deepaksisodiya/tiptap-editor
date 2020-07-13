@@ -92,7 +92,7 @@ export default {
     },
     async loaded() {
       this.caption = "";
-      const fileInputEl = document.getElementById("imageInput");
+      const fileInputEl = document.getElementById("image-input");
       if (this.dataUrl.includes("data:") && fileInputEl.files.length != 0) {
         const file = fileInputEl.files[0];
         const formData = new FormData();
