@@ -143,7 +143,7 @@
         >
           <input
             type="file"
-            id="fileInput"
+            id="imageInput"
             ref="fileInput"
             style="display:none"
             @change="previewFiles(commands.image)"
