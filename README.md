@@ -26,7 +26,7 @@ import "./node_modules/tiptap-editor/src/assets/scss/article.scss";
 | Props                   | Type     | Details                                                                      |
 |-------------------------|----------|------------------------------------------------------------------------------|
 | onUpdatePost            | function | Method call when there is some changes in editor, default debounce is 300 ms |
-| blocks                  | JSON     | content json                                                                  |
+| content                  | JSON     | content json                                                                  |
 | title                   | String   | title of the post                                                            |
 | should-show-title-error | Boolean  | should show title error                                                      |
 | hide-title-error        | function | to hide title error message                                                  |
