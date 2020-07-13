@@ -79,13 +79,13 @@ export default {
     },
     deleteNode() {
       let {
-        state: { tr, schema }
+        state: { tr }
       } = this.view;
       const pos = this.getPos();
-      tr = tr.insert(pos + 1, schema.node("paragraph"));
       let textSelection = TextSelection.create(tr.doc, pos, pos + 1);
-      tr = tr.setSelection(textSelection).deleteSelection();
-      this.view.dispatch(tr);
+      this.view.dispatch(
+        tr.setSelection(textSelection).deleteSelection(this.src)
+      );
       this.view.focus();
     },
     onImageClick() {
