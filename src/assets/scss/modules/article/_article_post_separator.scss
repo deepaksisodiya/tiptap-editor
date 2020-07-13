@@ -1,0 +1,17 @@
+hr {
+  &.post-separator {
+    &:before {
+      content: none;
+    }
+    border-bottom: 1px solid $gray;
+    margin: 75px 0;
+  }
+}
+
+@media (max-width: 767px) {
+  hr {
+    &.post-separator {
+      margin: 55px 0;
+    }
+  }
+}

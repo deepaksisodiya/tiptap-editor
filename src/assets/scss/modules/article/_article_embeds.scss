@@ -1,0 +1,473 @@
+.embed-link-block-container {
+	display: block;
+	text-decoration: none;
+	color: $black;
+}
+
+.embed-input {
+	display: block;
+	position: relative;
+	border: none;
+	max-width: initial;
+	width: 100%;
+	margin-bottom: 42px;
+	input {
+		border-bottom: 1px solid $gray;
+		padding: 0 70px 14px 10px;
+		max-width: initial;
+		box-sizing: border-box;
+		margin: 0;
+		width: 100%;
+		&:focus {
+			border-color: $blue;
+		}
+	}
+	span {
+		@include Sans();
+		font-size: 16px;
+		line-height: 18px;
+		color: $black;
+		opacity: 0.4;
+	}
+	button {
+		position: absolute;
+		top: 0;
+		right: 0;
+		color: $blue;
+		font-size: 16px;
+		line-height: 19px;
+		font-weight: 500;
+		background-color: $white;
+		box-shadow: none;
+		margin-left: auto;
+		padding: 4px 20px;
+		border: none;
+		text-transform: uppercase;
+	}
+	&.embedding {
+		border-bottom: 1px solid $gray;
+		padding-bottom: 14px;
+	}
+}
+
+.embed-link-block {
+	display: flex;
+	flex-direction: row;
+	padding: 29px 40px 40px;
+	width: 100%;
+	max-width: 500px;
+	background-color: #ffffff;
+	box-shadow: 5px 0px 10px 2px rgba(155, 155, 155, 0.1),
+		0px 5px 10px 2px rgba(155, 155, 155, 0.1);
+	border-radius: 12px;
+	box-sizing: border-box;
+	margin: 42px auto;
+	figure {
+		margin: 0;
+		margin-left: auto;
+		img {
+			height: 90px;
+			width: 90px;
+			border-radius: 6px;
+		}
+	}
+
+	.link-embed {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		cursor: pointer;
+		height: 25px;
+		width: 25px;
+		background: $light-gray;
+		border-radius: 3px;
+		margin-right: 10px;
+		.embed-link-icon {
+			display: inline-block;
+			position: relative;
+			vertical-align: middle;
+			background-image: url($stack-sprite);
+			background-position: -110px -576px;
+			width: 14px;
+			height: 14px;
+			margin: 0;
+		}
+	}
+	&.link-only {
+		padding: 17px 20px;
+		.content {
+			display: flex;
+			flex-direction: row;
+			align-items: center;
+			padding: 0;
+			.link-embed {
+				min-width: 25px;
+				min-height: 25px;
+			}
+			span {
+				margin: 0;
+			}
+			figure {
+				img {
+					border-radius: 3px;
+				}
+			}
+			.right-arrow {
+				margin-left: auto;
+			}
+		}
+	}
+	.content {
+		width: 60%;
+		h1,
+		p,
+		span {
+			display: -webkit-box;
+			-webkit-box-orient: vertical;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			padding-right: 30px;
+		}
+		h1 {
+			@include Serif();
+			font-size: 21px;
+			line-height: 28px;
+			font-weight: 500;
+			margin: 0;
+			margin-bottom: 11px;
+			-webkit-line-clamp: 3;
+		}
+		p {
+			@include Sans();
+			font-size: 16px;
+			line-height: 23px;
+			opacity: 0.5;
+			margin: 0;
+			margin-bottom: 30px;
+			-webkit-line-clamp: 3;
+		}
+		span {
+			@include Sans();
+			font-size: 16px;
+			line-height: 20px;
+			color: #36c;
+			margin-top: 30px;
+			-webkit-line-clamp: 1;
+		}
+		.right-arrow {
+			display: inline-block;
+			position: relative;
+			vertical-align: middle;
+			background-image: url($stack-sprite);
+			background-position: -768px -736px;
+			width: 7px;
+			height: 13px;
+		}
+		.embed-source {
+			display: flex;
+			flex-direction: row;
+			align-items: center;
+			figure {
+				margin: 0;
+				margin-right: 10px;
+				img {
+					height: 25px;
+					width: auto;
+				}
+			}
+			span {
+				font-size: 16px;
+				line-height: 20px;
+				color: #36c;
+			}
+		}
+	}
+	&.no-image {
+		.content {
+			width: 100%;
+			.embed-source span {
+				margin-top: 0;
+			}
+		}
+	}
+	&.full-width-image {
+		padding: 0;
+		flex-direction: column-reverse;
+		.content {
+			box-sizing: border-box;
+			width: 100%;
+			padding: 25px;
+			h1 {
+				-webkit-line-clamp: unset;
+				padding-right: 0;
+			}
+			p {
+				padding-right: 0;
+			}
+		}
+		figure {
+			margin-right: auto;
+			border-radius: 6px 6px 0 0;
+			overflow: hidden;
+			width: 100%;
+			img {
+				width: 100%;
+				height: 100%;
+				max-height: 235px;
+				object-fit: cover;
+				border-radius: 0;
+			}
+		}
+	}
+}
+
+.youtube-wrapper,
+.vimeo-wrapper {
+	position: relative;
+	padding-top: 56.25%;
+	margin: 45px auto 70px;
+	iframe {
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		width: 100%;
+		height: 100%;
+	}
+	figure {
+		margin: 0 auto;
+	}
+	figcaption {
+		position: absolute;
+		width: 100%;
+	}
+}
+
+.gist-embed-wrapper {
+	margin: 35px auto;
+}
+
+.instagram-wrapper {
+	margin: 35px auto;
+	iframe {
+		min-width: initial !important;
+		max-width: 100% !important;
+		margin: 0 !important;
+	}
+}
+
+twitter-widget {
+	margin: 35px auto !important;
+}
+
+blockquote {
+	&.twitter-tweet {
+		background: lighten(#e1e8ed, 8%);
+		font-size: 0;
+		border: 0;
+		border: 1px solid #e1e8ed;
+		border-radius: 12px;
+		max-width: 550px;
+		margin: 35px auto;
+		padding: 30px;
+		box-sizing: border-box;
+		p {
+			@include Sans();
+			color: #657786;
+			font-size: 16px;
+			line-height: 25px;
+			font-style: normal;
+			margin: 0;
+		}
+	}
+	&.instagram-media {
+		min-width: 100% !important;
+	}
+}
+
+// Embeds with Selected state (Images, Videos, Links, and more)
+
+figure,
+div {
+	.close-button {
+		display: none;
+		align-items: center;
+		justify-content: center;
+		cursor: pointer;
+		margin-left: auto;
+		position: absolute;
+		right: -14px;
+		top: -13px;
+		height: 25px;
+		width: 25px;
+		background: #ffa20d;
+		border-radius: 999px;
+		z-index: 1;
+		.close-icon {
+			display: inline-block;
+			position: relative;
+			vertical-align: middle;
+			background-image: url($stack-sprite);
+			background-position: -514px -776px;
+			width: 11px;
+			height: 11px;
+		}
+	}
+	&.selected {
+		.close-button {
+			display: flex;
+		}
+	}
+}
+
+figure {
+	&.selected {
+		position: relative;
+		img {
+			box-shadow: 0 0 0px 3px $yellow;
+			position: relative;
+		}
+	}
+	&.featured-image.selected {
+		.close-button {
+			right: initial;
+			left: 90vw;
+		}
+	}
+}
+
+div {
+	&.selected {
+		position: relative;
+		.embed-link-block {
+			box-shadow: 0 0 0px 3px $yellow;
+			position: relative;
+			figure img {
+				border-radius: 12px 12px 0 0;
+			}
+		}
+	}
+}
+
+.embed-wrapper {
+	&.twitter-wrapper {
+		max-width: 550px;
+		margin: 35px auto;
+		&.selected {
+			max-width: 550px;
+			margin: 35px auto;
+			iframe {
+				box-shadow: 0 0 0px 3px $yellow;
+				border-radius: 12px;
+			}
+		}
+	}
+	&.instagram-wrapper {
+		&.selected {
+			max-width: 100%;
+			margin: 35px auto;
+			box-shadow: 0 0 0px 3px $yellow;
+			border-radius: 4px;
+		}
+	}
+	.embed-content {
+		position: relative;
+		&::before {
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			z-index: 400;
+			content: "";
+		}
+	}
+}
+
+// End of Embeds with Selected state (Images, Videos, Links, and more)
+
+@media (max-width: 767px) {
+	.embed-input {
+		margin-bottom: 25px;
+		button {
+			width: auto;
+			padding: 0 10px;
+		}
+	}
+	.embed-link-block {
+		padding: 20px 20px;
+		.content {
+			padding-right: 0;
+			h1 {
+				font-size: 17px;
+				line-height: 25px;
+				font-weight: 500;
+				margin-bottom: 8px;
+				opacity: 0.7;
+			}
+			p {
+				font-size: 15px;
+				font-weight: 400;
+				margin-bottom: 15px;
+			}
+			span {
+				font-size: 13px;
+				line-height: 20px;
+			}
+			.embed-source {
+				figure {
+					img {
+						height: 20px;
+					}
+				}
+				span {
+					font-size: 13px;
+					color: #36c;
+				}
+			}
+		}
+	}
+}
+
+// Crappy code to support delete button on non-mobile devices
+
+@media (min-width: 501px) {
+	div {
+		&.selected {
+			max-width: 500px;
+			margin: 0 auto;
+		}
+	}
+}
+
+// Retina (2x)
+
+@media only screen and (-webkit-min-device-pixel-ratio: 2),
+	only screen and (min--moz-device-pixel-ratio: 2),
+	only screen and (min-device-pixel-ratio: 2) {
+	figure .close-button .close-icon,
+	div .close-button .close-icon,
+	.embed-link-block .content .right-arrow,
+	.embed-link-block .link-embed .embed-link-icon {
+		background-image: url($stack-sprite-2x);
+		background-size: 900px 900px;
+		-webkit-background-size: 900px 900px;
+		-moz-background-size: 900px 900px;
+	}
+}
+
+// Retina (3x)
+
+@media only screen and (-webkit-min-device-pixel-ratio: 3),
+	only screen and (min--moz-device-pixel-ratio: 3),
+	only screen and (min-device-pixel-ratio: 3) {
+	figure .close-button .close-icon,
+	div .close-button .close-icon,
+	.embed-link-block .content .right-arrow,
+	.embed-link-block .link-embed .embed-link-icon {
+		background-image: url($stack-sprite-3x);
+		background-size: 900px 900px;
+		-webkit-background-size: 900px 900px;
+		-moz-background-size: 900px 900px;
+	}
+}

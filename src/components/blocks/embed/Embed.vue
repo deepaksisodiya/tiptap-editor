@@ -213,7 +213,6 @@ export default {
         if (window.twttr) window.twttr.widgets.load();
         else {
           this.loadScript("https://platform.twitter.com/widgets.js", () => {
-            console.log("twitter script loaded!");
             window.twttr.widgets.load();
           });
         }
@@ -223,7 +222,6 @@ export default {
         if (window.instgrm) window.instgrm.Embeds.process();
         else {
           this.loadScript("https://www.instagram.com/embed.js", () => {
-            console.log("instagram script loaded!");
             window.instgrm.Embeds.process();
           });
         }

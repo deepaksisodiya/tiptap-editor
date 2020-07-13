@@ -1,0 +1,55 @@
+$assets-base: ".." !default;
+
+$stack-sprite: $assets-base + "/img/stackSprite.png";
+$stack-sprite-2x: $assets-base + "/img/stackSprite_2x.png";
+$stack-sprite-3x: $assets-base + "/img/stackSprite_3x.png";
+
+$stack-header-banner: $assets-base + "/img/onboarding/header-banner.png";
+$stack-header-banner-mobile: $assets-base +
+	"/img/onboarding/header-banner-mobile.png";
+$stack-message-illustration: $assets-base +
+	"/img/article/message-illustration.png";
+
+$stack-terms-illustration: $assets-base +
+	"/img/terms/terms-header-background.png";
+
+$stack-privacy-illustration: $assets-base +
+	"/img/terms/privacy-header-background.png";
+
+$stack-terms-illustration-mobile: $assets-base +
+	"/img/terms/terms-header-illustration-mobile.png";
+
+$stack-privacy-illustration-mobile: $assets-base +
+	"/img/terms/privacy-header-illustration-mobile.png";
+.icon {
+	display: inline-block;
+	position: relative;
+	vertical-align: middle;
+	background-image: url($stack-sprite);
+}
+
+// Retina (2x)
+
+@media only screen and (-webkit-min-device-pixel-ratio: 2),
+	only screen and (min--moz-device-pixel-ratio: 2),
+	only screen and (min-device-pixel-ratio: 2) {
+	.icon {
+		background-image: url($stack-sprite-2x);
+		background-size: 900px 900px;
+		-webkit-background-size: 900px 900px;
+		-moz-background-size: 900px 900px;
+	}
+}
+
+// Retina (3x)
+
+@media only screen and (-webkit-min-device-pixel-ratio: 3),
+	only screen and (min--moz-device-pixel-ratio: 3),
+	only screen and (min-device-pixel-ratio: 3) {
+	.icon {
+		background-image: url($stack-sprite-3x);
+		background-size: 900px 900px;
+		-webkit-background-size: 900px 900px;
+		-moz-background-size: 900px 900px;
+	}
+}

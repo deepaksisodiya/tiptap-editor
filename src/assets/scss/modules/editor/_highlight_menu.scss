@@ -1,0 +1,236 @@
+.highlight-menu {
+  position: sticky;
+  display: block;
+  background: #0f1f3d;
+  top: 0;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  width: max-content;
+  height: 0;
+  border-radius: 8px;
+  padding: 0;
+  transition: all 0.2s ease-in-out;
+  opacity: 0;
+  visibility: hidden;
+  z-index: 1001;
+  &.is-active {
+    padding: 8px 18px;
+    height: initial;
+    visibility: visible;
+    opacity: 1;
+  }
+  &.ios {
+    position: absolute;
+  }
+  li {
+    display: inline-flex;
+    background: transparent;
+    vertical-align: middle;
+    border: 0;
+    color: #fff;
+    padding: 6px;
+    margin-right: 12px;
+    margin-bottom: 0;
+    border-radius: 3px;
+    &:last-child {
+      margin-right: 0;
+    }
+    &.is-active {
+      background-color: rgba(255, 255, 255, 0.2);
+    }
+    button {
+      background: transparent;
+      box-shadow: none;
+      border: none;
+      line-height: 18px;
+      cursor: pointer;
+      padding: 0;
+      margin: 0;
+      i {
+        display: inline-block;
+        position: relative;
+        vertical-align: middle;
+        background-image: url($stack-sprite);
+        width: 17px;
+        height: 17px;
+      }
+      .bold-icon {
+        background-position: 0px -878px;
+        &.is-active {
+          background-position: 0px -799px;
+        }
+      }
+      .italic-icon {
+        background-position: -49px -878px;
+        &.is-active {
+          background-position: -49px -799px;
+        }
+      }
+      .link-icon {
+        background-position: -102px -878px;
+        &.is-active {
+          background-position: -102px -799px;
+        }
+      }
+      .separator-icon {
+        background-position: -161px -797px;
+        height: 24px;
+        width: 2px;
+        &.is-active {
+          background-position: -159px -795px;
+        }
+      }
+      .large-heading-icon {
+        background-position: -202px -878px;
+        &.is-active {
+          background-position: -202px -799px;
+        }
+      }
+      .small-heading-icon {
+        background-position: -254px -878px;
+        &.is-active {
+          background-position: -254px -799px;
+        }
+      }
+      .quote-icon {
+        background-position: -310px -878px;
+        &.is-active {
+          background-position: -310px -799px;
+        }
+      }
+    }
+  }
+}
+.highlight-menu-input {
+  display: flex;
+  flex-direction: row;
+  box-sizing: border-box;
+  background-color: #0f1f3d;
+  align-items: center;
+  width: max-content;
+  padding: 3px 24px 4px;
+  margin: 0 auto;
+  border-radius: 12px;
+  i {
+    display: inline-block;
+    position: relative;
+    vertical-align: middle;
+    background-image: url($stack-sprite);
+    width: 17px;
+    height: 17px;
+  }
+  .toolbar-link-icon {
+    background-position: 0px -645px;
+    width: 16px;
+    height: 16px;
+    padding-right: 15px;
+  }
+  .toolbar-close-icon {
+    background-position: -45px -645px;
+    width: 14px;
+    height: 14px;
+    margin-left: auto;
+  }
+  input {
+    background-color: transparent;
+    width: 100%;
+    min-width: 252px;
+    color: #ffffff;
+    font-size: 16px;
+    line-height: 19px;
+    border: none;
+    padding-right: 15px;
+    &::placeholder {
+      color: $white;
+      opacity: 0.5;
+    }
+    &:-ms-input-placeholder {
+      color: $white;
+    }
+    &::-ms-input-placeholder {
+      color: $white;
+    }
+  }
+  &.ios {
+    position: absolute;
+  }
+}
+@media only screen and (max-width: 767px) {
+  .highlight-menu {
+    position: fixed;
+    display: flex;
+    width: auto;
+    justify-content: space-between;
+    border-radius: 0;
+    &.is-active {
+      padding: 14px 18px 15px;
+    }
+  }
+  .highlight-menu-input {
+    padding: 18px 25px 18px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1001;
+    border-radius: 0;
+    input {
+      border-bottom: 1px solid rgba($gray, 0.5);
+      padding-right: 25px;
+      padding-bottom: 10px;
+      margin: 0;
+    }
+    .toolbar-close-icon {
+      position: absolute;
+      right: 25px;
+      top: 50%;
+      margin-top: -5px;
+      transform: translateY(-50%);
+    }
+  }
+}
+@media only screen and (min-width: 768px) {
+  .highlight-menu {
+    position: absolute;
+    top: unset;
+    height: auto;
+    padding: 8px 18px;
+    margin: 0px 0px 12px 0px;
+  }
+
+  .highlight-menu-input {
+    position: absolute;
+    padding: 17px 15px 16px;
+    margin: 0 0 12px 0;
+    border-radius: 8px;
+    input {
+      margin: 0;
+      padding: 0;
+    }
+  }
+}
+// Retina (2x)
+@media only screen and (-webkit-min-device-pixel-ratio: 2),
+  only screen and (min--moz-device-pixel-ratio: 2),
+  only screen and (min-device-pixel-ratio: 2) {
+  .highlight-menu li button i,
+  .highlight-menu-input i {
+    background-image: url($stack-sprite-2x);
+    background-size: 900px 900px;
+    -webkit-background-size: 900px 900px;
+    -moz-background-size: 900px 900px;
+  }
+}
+// Retina (3x)
+@media only screen and (-webkit-min-device-pixel-ratio: 3),
+  only screen and (min--moz-device-pixel-ratio: 3),
+  only screen and (min-device-pixel-ratio: 3) {
+  .highlight-menu li button i,
+  .highlight-menu-input i {
+    background-image: url($stack-sprite-3x);
+    background-size: 900px 900px;
+    -webkit-background-size: 900px 900px;
+    -moz-background-size: 900px 900px;
+  }
+}

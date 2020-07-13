@@ -1,0 +1,260 @@
+// INPUTS
+
+::placeholder {
+	color: $black;
+	opacity: 0.3;
+}
+
+:-ms-input-placeholder {
+	color: $black;
+	opacity: 0.3;
+}
+
+::-ms-input-placeholder {
+	color: $black;
+	opacity: 0.3;
+}
+
+.password-input::placeholder {
+	letter-spacing: 0;
+}
+
+.password-input:-ms-input-placeholder {
+	letter-spacing: 0;
+}
+
+.password-input::-ms-input-placeholder {
+	letter-spacing: 0;
+}
+.password-input {
+	letter-spacing: 7px;
+}
+
+label {
+	display: block;
+	@include Sans();
+	font-size: 18px;
+	line-height: 25px;
+	font-weight: 700;
+	margin-bottom: 10px;
+}
+
+input,
+textarea {
+	@include Sans();
+	font-size: 18px;
+	line-height: 25px;
+	padding: 0;
+	margin: 0;
+	margin-top: 12px;
+	padding-bottom: 14px;
+	border: none;
+	border-radius: 0;
+	border-bottom: 1px solid $gray;
+	-webkit-tap-highlight-color: transparent;
+	transition: border 0.5s ease-in-out;
+	&:focus {
+		border-color: $blue;
+		outline: none;
+		border-radius: none;
+	}
+	&.otp-number-input {
+		font-weight: 500;
+	}
+	&:-webkit-autofill,
+	&:-webkit-autofill:hover,
+	&:-webkit-autofill:focus,
+	:-webkit-autofill:active {
+		-webkit-box-shadow: 0 0 0 30px white inset;
+	}
+}
+textarea {
+	width: 100%;
+	resize: none;
+}
+em {
+	@include Sans();
+	font-size: 18px;
+	font-style: normal;
+	line-height: 25px;
+	opacity: 0.3;
+	display: inline-block;
+}
+
+input[type="number"] {
+	-moz-appearance: textfield;
+}
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+	-webkit-appearance: none;
+	margin: 0;
+}
+
+.input-container {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	position: relative;
+	i {
+		display: block;
+		vertical-align: middle;
+		background-image: url($stack-sprite);
+	}
+	.social-icons {
+		position: absolute;
+		left: 1px;
+		top: 23px;
+		height: 21px;
+		width: 21px;
+	}
+	.input-close-icon {
+		background-position: -635px -777px;
+		height: 11px;
+		width: 11px;
+		position: absolute;
+		right: 0;
+		top: 23px;
+	}
+	.facebook-icon {
+		background-position: 4px -220px;
+	}
+	.twitter-icon {
+		background-position: -57px -221px;
+	}
+	.linkedin-icon {
+		background-position: -126px -219px;
+		margin-top: -5px;
+	}
+	.instagram-icon {
+		background-position: -196px -219px;
+		margin-top: -3px;
+	}
+	.link-icon {
+		background-position: -255px -219px;
+	}
+	input {
+		width: 100%;
+		padding: 0 27px 14px;
+		margin: 17px 0;
+		&.otp-number-input {
+			padding-left: 0;
+			margin: 0;
+		}
+	}
+	button {
+		@include Sans() font-size: 14px;
+		line-height: 18px;
+		font-weight: 500;
+		text-transform: uppercase;
+		color: $blue;
+		width: auto;
+		background-color: transparent;
+		box-shadow: none;
+		padding: 0 0 16px 0;
+		position: absolute;
+		top: 0;
+		right: 0;
+	}
+}
+
+.input-with-icons {
+	position: relative;
+	margin-bottom: 16px;
+	input {
+		padding-right: 25px;
+		box-sizing: border-box;
+		width: 100%;
+	}
+	.input-close-icon {
+		background-position: -635px -777px;
+		height: 11px;
+		width: 11px;
+		position: absolute;
+		right: 0;
+		top: 8px;
+	}
+	&:last-of-type {
+		margin: 0;
+	}
+}
+
+// Checkbox
+
+input[type="checkbox"],
+input[type="radio"] {
+	display: none;
+}
+
+input[type="checkbox"] + label {
+	display: inline-block;
+	vertical-align: middle;
+	background-image: url($stack-sprite);
+	margin: 0;
+}
+input[type="checkbox"] + label {
+	background-position: -552px 1px;
+	height: 24px;
+	width: 24px;
+}
+input[type="checkbox"]:checked + label {
+	background-position: -502px 1px;
+}
+input[type="radio"] {
+	+ label {
+		display: inline-block;
+		vertical-align: middle;
+		background-image: url($stack-sprite);
+		margin: 0;
+		background-position: -608px -867px;
+		height: 33px;
+		width: 33px;
+	}
+	&:checked {
+		+ label {
+			background-position: -551px -867px;
+		}
+	}
+}
+
+@media (max-width: 767px) {
+	label,
+	input,
+	textarea,
+	em {
+		font-size: 15px;
+		line-height: 20px;
+	}
+	label {
+		margin-bottom: 3px;
+	}
+}
+
+// Retina (2x)
+
+@media only screen and (-webkit-min-device-pixel-ratio: 2),
+	only screen and (min--moz-device-pixel-ratio: 2),
+	only screen and (min-device-pixel-ratio: 2) {
+	.input-container i,
+	input[type="checkbox"] + label,
+	input[type="radio"] + label {
+		background-image: url($stack-sprite-2x);
+		background-size: 900px 900px;
+		-webkit-background-size: 900px 900px;
+		-moz-background-size: 900px 900px;
+	}
+}
+
+// Retina (3x)
+
+@media only screen and (-webkit-min-device-pixel-ratio: 3),
+	only screen and (min--moz-device-pixel-ratio: 3),
+	only screen and (min-device-pixel-ratio: 3) {
+	.input-container i,
+	input[type="checkbox"] + label,
+	input[type="radio"] + label {
+		background-image: url($stack-sprite-3x);
+		background-size: 900px 900px;
+		-webkit-background-size: 900px 900px;
+		-moz-background-size: 900px 900px;
+	}
+}

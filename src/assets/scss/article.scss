@@ -1,0 +1,40 @@
+@import "./modules/common/mixin";
+@import "./modules/article/_article_typography";
+@import "./modules/article/_article_media";
+@import "./modules/article/_article_embeds";
+
+article {
+  width: 100%;
+  max-width: 680px;
+  padding: 0;
+  margin: 0 auto;
+
+  header {
+    margin: 55px auto 13px;
+    h1 {
+      @include Serif();
+      font-size: 40px;
+      line-height: 50px;
+      font-weight: 400;
+      margin: 0;
+      letter-spacing: -0.35px;
+    }
+  }
+}
+
+@media (max-width: 767px) {
+  article {
+    padding: 0 30px;
+    box-sizing: border-box;
+
+    header {
+      margin: 45px auto 35px;
+      h1 {
+        font-size: 24px;
+        line-height: 32px;
+        font-weight: 500;
+        letter-spacing: 0;
+      }
+    }
+  }
+}
