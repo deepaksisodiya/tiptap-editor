@@ -1,12 +1,13 @@
 <template>
-  <div>
-    <Article
-      :onUpdatePost="onUpdatePost"
-      :uploadImage="uploadImage"
-      :getEmbeds="getEmbeds"
-    />
-    <div>Title is {{ title }}</div>
-    <vue-json-pretty :path="'res'" :data="blocks"> </vue-json-pretty>
+  <div class="demo">
+    <div class="article-container">
+      <Article
+        :onUpdatePost="onUpdatePost"
+        :uploadImage="uploadImage"
+        :getEmbeds="getEmbeds"
+      />
+    </div>
+    <vue-json-pretty :path="'res'" :data="blocks"></vue-json-pretty>
   </div>
 </template>
 
@@ -46,3 +47,29 @@ export default {
   }
 };
 </script>
+<style>
+@media only screen and (min-width: 768px) {
+  .demo {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 20px;
+  }
+  .article-container {
+    width: 50%;
+    padding: 0 50px;
+    box-sizing: border-box;
+    margin: unset;
+    height: 600px;
+    overflow-y: scroll;
+  }
+  .vjs-tree.is-root {
+    position: relative;
+    width: 50%;
+    padding: 10px;
+    box-sizing: border-box;
+    height: 600px;
+    overflow-y: scroll;
+  }
+}
+</style>
