@@ -92,8 +92,9 @@ export default {
     },
     async loaded() {
       this.caption = "";
-      if (this.dataUrl.includes("data:")) {
-        const file = document.getElementById("fileInput").files[0];
+      const fileInputEl = document.getElementById("fileInput");
+      if (this.dataUrl.includes("data:") && fileInputEl.files.length != 0) {
+        const file = fileInputEl.files[0];
         const formData = new FormData();
         formData.append("image", file);
 
@@ -105,7 +106,7 @@ export default {
           this.options.handleError(error);
           this.deleteNode();
         } finally {
-          document.getElementById("fileInput").value = "";
+          fileInputEl.value = "";
         }
       }
     }
