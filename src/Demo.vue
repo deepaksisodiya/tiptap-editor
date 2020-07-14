@@ -1,11 +1,12 @@
 <template>
   <div class="demo">
-    <Article
-      class="article-container"
-      :onUpdatePost="onUpdatePost"
-      :uploadImage="uploadImage"
-      :getEmbeds="getEmbeds"
-    />
+    <div class="article-container">
+      <Article
+        :onUpdatePost="onUpdatePost"
+        :uploadImage="uploadImage"
+        :getEmbeds="getEmbeds"
+      />
+    </div>
     <vue-json-pretty :path="'res'" :data="blocks"></vue-json-pretty>
   </div>
 </template>
