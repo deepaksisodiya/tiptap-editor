@@ -4,13 +4,16 @@
       <i class="close-icon"></i>
     </div>
     <img
+      v-if="!isMultiSrc"
       @click="onImageClick"
-      ref="img"
       :src="dataUrl"
-      :height="height"
-      :width="width"
       @load="loaded"
     />
+    <picture @click="onImageClick" v-else>
+      <source :srcset="dataUrl.image" type="image/webp" />
+      <source :srcset="dataUrl.fallback" type="image" />
+      <img :src="dataUrl.fallback" @load="loaded" />
+    </picture>
     <figcaption>
       <input
         v-model="caption"
@@ -56,6 +59,9 @@ export default {
           caption
         });
       }
+    },
+    isMultiSrc() {
+      return this.dataUrl && typeof this.dataUrl === "object";
     }
   },
   mounted() {
@@ -94,15 +100,19 @@ export default {
     async loaded() {
       this.caption = "";
       const fileInputEl = document.getElementById("image-input");
-      if (this.dataUrl.includes("data:") && fileInputEl.files.length != 0) {
+
+      if (
+        !this.isMultiSrc &&
+        this.dataUrl.includes("data:") &&
+        fileInputEl.files.length != 0
+      ) {
         const file = fileInputEl.files[0];
         const formData = new FormData();
         formData.append("image", file);
 
         try {
           const response = await this.options.uploadImage(formData);
-          if (response && response.status === 200)
-            this.src = response.data.image;
+          if (response && response.status === 200) this.src = response.data;
         } catch (error) {
           this.options.handleError(error);
           this.deleteNode();

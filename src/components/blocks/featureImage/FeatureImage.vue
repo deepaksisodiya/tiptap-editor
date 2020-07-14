@@ -22,7 +22,17 @@
         <div class="close-button" @click="removeImage">
           <i class="close-icon"></i>
         </div>
-        <img @click="onImageClick" :src="dataUrl" @load="onImageLoad" />
+        <img
+          v-if="!isMultiSrc"
+          @click="onImageClick"
+          :src="dataUrl"
+          @load="onImageLoad"
+        />
+        <picture v-else @click="onImageClick">
+          <source :srcset="dataUrl.image" type="image/webp" />
+          <source :srcset="dataUrl.fallback" type="image" />
+          <img :src="dataUrl.fallback" @load="loaded" />
+        </picture>
         <figcaption>
           <input
             v-model="caption"
@@ -73,6 +83,9 @@ export default {
           caption
         });
       }
+    },
+    isMultiSrc() {
+      return this.dataUrl && typeof this.dataUrl === "object";
     }
   },
   mounted() {
@@ -110,7 +123,7 @@ export default {
           // TODO handle image loading here later
           try {
             const response = await this.options.uploadImage(formData);
-            if (response) this.src = response.data.image;
+            if (response) this.src = response.data;
           } catch (error) {
             this.options.handleError(error);
             this.src = "";
