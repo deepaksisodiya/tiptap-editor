@@ -1,5 +1,5 @@
 <template>
-  <figure :class="{ selected: shouldShowClose }">
+  <figure v-if="data.fallback" :class="{ selected: shouldShowClose }">
     <div class="close-button" @click="deleteNode">
       <i class="close-icon"></i>
     </div>
@@ -92,7 +92,7 @@ export default {
       return !!data.match(regex);
     },
     onImageClick() {
-      if (this.isDataURL(this.data.fallback) === false)
+      if (this.isDataURL(this.data && this.data.fallback) === false)
         this.shouldShowClose = !this.shouldShowClose;
     },
     async loaded() {
