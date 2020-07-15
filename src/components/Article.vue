@@ -396,7 +396,11 @@ export default {
             newData.content.shift();
           }
           newData.content.forEach(block => {
-            if (block.type === "image" && block.attrs.src.includes("data:")) {
+            if (
+              block.type === "image" &&
+              block.attrs.src &&
+              block.attrs.src.fallback.includes("data:")
+            ) {
               block.attrs.src = "";
             }
           });
@@ -644,7 +648,7 @@ export default {
           img.src = reader.result;
           this.imageSrc = img.src;
           command({
-            src: this.imageSrc,
+            src: { fallback: this.imageSrc },
             addImageAt: this.addImageAt
           });
         };

@@ -3,14 +3,11 @@
     <div class="close-button" @click="deleteNode">
       <i class="close-icon"></i>
     </div>
-    <img
-      @click="onImageClick"
-      ref="img"
-      :src="dataUrl"
-      :height="height"
-      :width="width"
-      @load="loaded"
-    />
+    <picture @click="onImageClick">
+      <source v-if="data.image" :srcset="data.image" type="image" />
+      <source :srcset="data.fallback" type="image" />
+      <img :src="data.fallback" @load="loaded" />
+    </picture>
     <figcaption>
       <input
         v-model="caption"
@@ -32,7 +29,7 @@ export default {
     return {
       height: "",
       width: "",
-      dataUrl: this.node.attrs.src,
+      data: this.node.attrs.src,
       shouldShowClose: false
     };
   },
@@ -93,21 +90,24 @@ export default {
     },
     async loaded() {
       this.caption = "";
-      const fileInputEl = document.getElementById("image-input");
-      if (this.dataUrl.includes("data:") && fileInputEl.files.length != 0) {
-        const file = fileInputEl.files[0];
+      const imageInputEl = document.getElementById("image-input");
+
+      if (
+        this.data.fallback.includes("data:") &&
+        imageInputEl.files.length != 0
+      ) {
+        const file = imageInputEl.files[0];
         const formData = new FormData();
         formData.append("image", file);
 
         try {
           const response = await this.options.uploadImage(formData);
-          if (response && response.status === 200)
-            this.src = response.data.image;
+          if (response && response.status === 200) this.src = response.data;
         } catch (error) {
           this.options.handleError(error);
           this.deleteNode();
         } finally {
-          fileInputEl.value = "";
+          imageInputEl.value = "";
         }
       }
     }

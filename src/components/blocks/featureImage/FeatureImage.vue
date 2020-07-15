@@ -1,10 +1,10 @@
 <template>
   <div>
     <div
-      :class="{ 'upload-picture-block': !dataUrl }"
+      :class="{ 'upload-picture-block': !data.fallback }"
       style="position: relative;"
     >
-      <template v-if="!dataUrl">
+      <template v-if="!data.fallback">
         <i class="upload-icon"></i>
         <span>Upload feature image (optional)</span>
         <input
@@ -15,14 +15,18 @@
         />
       </template>
       <figure
-        v-if="dataUrl"
+        v-if="data.fallback"
         class="featured-image"
         :class="{ selected: shouldShowClose }"
       >
         <div class="close-button" @click="removeImage">
           <i class="close-icon"></i>
         </div>
-        <img @click="onImageClick" :src="dataUrl" @load="onImageLoad" />
+        <picture @click="onImageClick">
+          <source v-if="data.image" :srcset="data.image" type="image" />
+          <source :srcset="data.fallback" type="image" />
+          <img :src="data.fallback" @load="loaded" />
+        </picture>
         <figcaption>
           <input
             v-model="caption"
@@ -44,13 +48,13 @@ export default {
   props: ["node", "updateAttrs", "view", "getPos", "options"],
   data() {
     return {
-      dataUrl: this.node.attrs.src,
+      data: this.node.attrs.src,
       shouldShowClose: false
     };
   },
   watch: {
     "node.attrs.src"(newValue) {
-      if (!this.dataUrl) this.dataUrl = newValue;
+      if (!this.data.fallback) this.data = newValue;
     }
   },
   computed: {
@@ -103,18 +107,18 @@ export default {
         reader.onload = async () => {
           const img = new Image();
           img.src = reader.result;
-          this.dataUrl = img.src;
+          this.data = { fallback: img.src };
 
           const formData = new FormData();
           formData.append("image", file);
           // TODO handle image loading here later
           try {
             const response = await this.options.uploadImage(formData);
-            if (response) this.src = response.data.image;
+            if (response) this.src = response.data;
           } catch (error) {
             this.options.handleError(error);
             this.src = "";
-            this.dataUrl = "";
+            this.data = "";
           }
         };
         reader.readAsDataURL(file);
@@ -129,7 +133,7 @@ export default {
     },
     removeImage() {
       this.src = "";
-      this.dataUrl = "";
+      this.data = "";
     },
     onImageClick() {
       this.shouldShowClose = !this.shouldShowClose;
