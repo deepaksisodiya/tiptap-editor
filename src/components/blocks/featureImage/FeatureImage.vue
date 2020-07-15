@@ -114,7 +114,10 @@ export default {
           // TODO handle image loading here later
           try {
             const response = await this.options.uploadImage(formData);
-            if (response) this.src = response.data;
+            if (response && response.status === 200) {
+              this.src = response.data;
+              this.data = response.data;
+            }
           } catch (error) {
             this.options.handleError(error);
             this.src = "";
@@ -142,7 +145,7 @@ export default {
       return !!data.match(regex);
     },
     onImageClick() {
-      if (this.isDataURL(this.src) === false)
+      if (this.isDataURL(this.data.fallback) === false)
         this.shouldShowClose = !this.shouldShowClose;
     }
   }
