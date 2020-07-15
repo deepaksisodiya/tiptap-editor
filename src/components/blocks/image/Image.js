@@ -36,10 +36,7 @@ export default class ImageNode extends TiptapImage {
           "img",
           {
             ...node.attrs,
-            src:
-              typeof node.attrs.src === "string"
-                ? node.attrs.src
-                : node.attrs.src.fallback,
+            src: node.attrs.src && node.attrs.src.fallback,
             "data-src": JSON.stringify(node.attrs.src),
             "data-featured-image": false
           }
