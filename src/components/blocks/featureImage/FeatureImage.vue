@@ -145,7 +145,7 @@ export default {
       return !!data.match(regex);
     },
     onImageClick() {
-      if (this.isDataURL(this.data.fallback) === false)
+      if (this.isDataURL(this.data && this.data.fallback) === false)
         this.shouldShowClose = !this.shouldShowClose;
     }
   }
