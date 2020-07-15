@@ -127,7 +127,7 @@ export default {
         reader.readAsDataURL(file);
       }
     },
-    onImageLoad() {
+    loaded() {
       if (this.caption) return;
       this.caption = " ";
       this.$nextTick(() => {
