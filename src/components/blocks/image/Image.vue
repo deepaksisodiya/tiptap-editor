@@ -29,7 +29,7 @@ export default {
     return {
       height: "",
       width: "",
-      dataUrl: this.node.attrs.src || {},
+      dataUrl: this.node.attrs.src,
       shouldShowClose: false
     };
   },

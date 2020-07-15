@@ -1,10 +1,10 @@
 <template>
   <div>
     <div
-      :class="{ 'upload-picture-block': !dataUrl }"
+      :class="{ 'upload-picture-block': !dataUrl.fallback }"
       style="position: relative;"
     >
-      <template v-if="!dataUrl">
+      <template v-if="!dataUrl.fallback">
         <i class="upload-icon"></i>
         <span>Upload feature image (optional)</span>
         <input
@@ -15,7 +15,7 @@
         />
       </template>
       <figure
-        v-if="dataUrl"
+        v-if="dataUrl.fallback"
         class="featured-image"
         :class="{ selected: shouldShowClose }"
       >
@@ -58,7 +58,7 @@ export default {
   },
   watch: {
     "node.attrs.src"(newValue) {
-      if (!this.dataUrl) this.dataUrl = newValue;
+      if (!this.dataUrl.fallback) this.dataUrl = newValue;
     }
   },
   computed: {
