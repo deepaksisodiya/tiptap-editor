@@ -131,8 +131,15 @@ export default {
       this.src = "";
       this.dataUrl = "";
     },
+    isDataURL(data) {
+      const regex = new RegExp(
+        /^\s*data:([a-z]+\/[a-z]+(;[a-z\-]+\=[a-z\-]+)?)?(;base64)?,[a-z0-9\!\$\&\'\,\(\)\*\+\,\;\=\-\.\_\~\:\@\/\?\%\s]*\s*$/i
+      );
+      return !!data.match(regex);
+    },
     onImageClick() {
-      this.shouldShowClose = !this.shouldShowClose;
+      if (this.isDataURL(this.src) === false)
+        this.shouldShowClose = !this.shouldShowClose;
     }
   }
 };
