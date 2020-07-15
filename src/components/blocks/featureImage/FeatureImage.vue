@@ -1,10 +1,10 @@
 <template>
   <div>
     <div
-      :class="{ 'upload-picture-block': !dataUrl.fallback }"
+      :class="{ 'upload-picture-block': !data.fallback }"
       style="position: relative;"
     >
-      <template v-if="!dataUrl.fallback">
+      <template v-if="!data.fallback">
         <i class="upload-icon"></i>
         <span>Upload feature image (optional)</span>
         <input
@@ -15,7 +15,7 @@
         />
       </template>
       <figure
-        v-if="dataUrl.fallback"
+        v-if="data.fallback"
         class="featured-image"
         :class="{ selected: shouldShowClose }"
       >
@@ -23,13 +23,9 @@
           <i class="close-icon"></i>
         </div>
         <picture @click="onImageClick">
-          <source
-            v-if="dataUrl.image"
-            :srcset="dataUrl.image"
-            type="image/webp"
-          />
-          <source :srcset="dataUrl.fallback" type="image" />
-          <img :src="dataUrl.fallback" @load="loaded" />
+          <source v-if="data.image" :srcset="data.image" type="image/webp" />
+          <source :srcset="data.fallback" type="image" />
+          <img :src="data.fallback" @load="loaded" />
         </picture>
         <figcaption>
           <input
@@ -52,13 +48,13 @@ export default {
   props: ["node", "updateAttrs", "view", "getPos", "options"],
   data() {
     return {
-      dataUrl: this.node.attrs.src || {},
+      data: this.node.attrs.src,
       shouldShowClose: false
     };
   },
   watch: {
     "node.attrs.src"(newValue) {
-      if (!this.dataUrl.fallback) this.dataUrl = newValue;
+      if (!this.data.fallback) this.data = newValue;
     }
   },
   computed: {
@@ -111,7 +107,7 @@ export default {
         reader.onload = async () => {
           const img = new Image();
           img.src = reader.result;
-          this.dataUrl = { fallback: img.src };
+          this.data = { fallback: img.src };
 
           const formData = new FormData();
           formData.append("image", file);
@@ -122,7 +118,7 @@ export default {
           } catch (error) {
             this.options.handleError(error);
             this.src = "";
-            this.dataUrl = "";
+            this.data = "";
           }
         };
         reader.readAsDataURL(file);
@@ -137,7 +133,7 @@ export default {
     },
     removeImage() {
       this.src = "";
-      this.dataUrl = "";
+      this.data = "";
     },
     onImageClick() {
       this.shouldShowClose = !this.shouldShowClose;

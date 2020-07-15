@@ -4,9 +4,9 @@
       <i class="close-icon"></i>
     </div>
     <picture @click="onImageClick">
-      <source v-if="dataUrl.image" :srcset="dataUrl.image" type="image/webp" />
-      <source :srcset="dataUrl.fallback" type="image" />
-      <img :src="dataUrl.fallback" @load="loaded" />
+      <source v-if="data.image" :srcset="data.image" type="image/webp" />
+      <source :srcset="data.fallback" type="image" />
+      <img :src="data.fallback" @load="loaded" />
     </picture>
     <figcaption>
       <input
@@ -29,7 +29,7 @@ export default {
     return {
       height: "",
       width: "",
-      dataUrl: this.node.attrs.src,
+      data: this.node.attrs.src,
       shouldShowClose: false
     };
   },
@@ -90,13 +90,13 @@ export default {
     },
     async loaded() {
       this.caption = "";
-      const fileInputEl = document.getElementById("image-input");
+      const imageInputEl = document.getElementById("image-input");
 
       if (
-        this.dataUrl.fallback.includes("data:") &&
-        fileInputEl.files.length != 0
+        this.data.fallback.includes("data:") &&
+        imageInputEl.files.length != 0
       ) {
-        const file = fileInputEl.files[0];
+        const file = imageInputEl.files[0];
         const formData = new FormData();
         formData.append("image", file);
 
@@ -107,7 +107,7 @@ export default {
           this.options.handleError(error);
           this.deleteNode();
         } finally {
-          fileInputEl.value = "";
+          imageInputEl.value = "";
         }
       }
     }
