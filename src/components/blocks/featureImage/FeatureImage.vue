@@ -23,7 +23,7 @@
           <i class="close-icon"></i>
         </div>
         <picture @click="onImageClick">
-          <source v-if="data.image" :srcset="data.image" type="image/webp" />
+          <source v-if="data.image" :srcset="data.image" type="image" />
           <source :srcset="data.fallback" type="image" />
           <img :src="data.fallback" @load="loaded" />
         </picture>
