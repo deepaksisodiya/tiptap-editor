@@ -3,14 +3,8 @@
     <div class="close-button" @click="deleteNode">
       <i class="close-icon"></i>
     </div>
-    <img
-      v-if="!isMultiSrc"
-      @click="onImageClick"
-      :src="dataUrl"
-      @load="loaded"
-    />
-    <picture @click="onImageClick" v-else>
-      <source :srcset="dataUrl.image" type="image/webp" />
+    <picture @click="onImageClick">
+      <source v-if="dataUrl.image" :srcset="dataUrl.image" type="image/webp" />
       <source :srcset="dataUrl.fallback" type="image" />
       <img :src="dataUrl.fallback" @load="loaded" />
     </picture>
@@ -35,7 +29,7 @@ export default {
     return {
       height: "",
       width: "",
-      dataUrl: this.node.attrs.src,
+      dataUrl: this.node.attrs.src || {},
       shouldShowClose: false
     };
   },
@@ -59,9 +53,6 @@ export default {
           caption
         });
       }
-    },
-    isMultiSrc() {
-      return this.dataUrl && typeof this.dataUrl === "object";
     }
   },
   mounted() {
@@ -102,8 +93,7 @@ export default {
       const fileInputEl = document.getElementById("image-input");
 
       if (
-        !this.isMultiSrc &&
-        this.dataUrl.includes("data:") &&
+        this.dataUrl.fallback.includes("data:") &&
         fileInputEl.files.length != 0
       ) {
         const file = fileInputEl.files[0];

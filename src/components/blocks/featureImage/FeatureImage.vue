@@ -22,14 +22,12 @@
         <div class="close-button" @click="removeImage">
           <i class="close-icon"></i>
         </div>
-        <img
-          v-if="!isMultiSrc"
-          @click="onImageClick"
-          :src="dataUrl"
-          @load="onImageLoad"
-        />
-        <picture v-else @click="onImageClick">
-          <source :srcset="dataUrl.image" type="image/webp" />
+        <picture @click="onImageClick">
+          <source
+            v-if="dataUrl.image"
+            :srcset="dataUrl.image"
+            type="image/webp"
+          />
           <source :srcset="dataUrl.fallback" type="image" />
           <img :src="dataUrl.fallback" @load="loaded" />
         </picture>
@@ -54,7 +52,7 @@ export default {
   props: ["node", "updateAttrs", "view", "getPos", "options"],
   data() {
     return {
-      dataUrl: this.node.attrs.src,
+      dataUrl: this.node.attrs.src || {},
       shouldShowClose: false
     };
   },
@@ -83,9 +81,6 @@ export default {
           caption
         });
       }
-    },
-    isMultiSrc() {
-      return this.dataUrl && typeof this.dataUrl === "object";
     }
   },
   mounted() {
@@ -116,7 +111,7 @@ export default {
         reader.onload = async () => {
           const img = new Image();
           img.src = reader.result;
-          this.dataUrl = img.src;
+          this.dataUrl = { fallback: img.src };
 
           const formData = new FormData();
           formData.append("image", file);
