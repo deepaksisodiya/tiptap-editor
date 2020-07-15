@@ -49,26 +49,32 @@ export default {
 </script>
 <style>
 @media only screen and (min-width: 768px) {
+  .title {
+    text-align: center;
+  }
   .demo {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
     padding: 20px;
+    border: 2px solid black;
+    margin: 25px;
   }
   .article-container {
-    width: 50%;
+    width: 60%;
     padding: 0 50px;
     box-sizing: border-box;
     margin: unset;
-    height: 600px;
+    height: 730px;
     overflow-y: scroll;
+    border-right: 2px solid black;
   }
   .vjs-tree.is-root {
     position: relative;
-    width: 50%;
+    width: 40%;
     padding: 10px;
     box-sizing: border-box;
-    height: 600px;
+    height: 730px;
     overflow-y: scroll;
   }
 }
