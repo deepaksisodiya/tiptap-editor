@@ -21,7 +21,7 @@
 
 <script>
 import { TextSelection } from "tiptap";
-import { isDataURL } from "./../utils";
+import { isDataURL } from "./../../../utils";
 
 export default {
   name: "ImageBlock",
