@@ -32,6 +32,7 @@ export default class ImageNode extends TiptapImage {
         }
       ],
       toDOM: node => {
+        if (node.attrs.src === "") return ["paragraph"];
         return [
           "img",
           {
