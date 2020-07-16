@@ -21,6 +21,7 @@
 
 <script>
 import { TextSelection } from "tiptap";
+import { isDataURL } from "./../../../utils";
 
 export default {
   name: "ImageBlock",
@@ -85,14 +86,8 @@ export default {
       );
       this.view.focus();
     },
-    isDataURL(data) {
-      const regex = new RegExp(
-        /^\s*data:([a-z]+\/[a-z]+(;[a-z\-]+\=[a-z\-]+)?)?(;base64)?,[a-z0-9\!\$\&\'\,\(\)\*\+\,\;\=\-\.\_\~\:\@\/\?\%\s]*\s*$/i
-      );
-      return !!data.match(regex);
-    },
     onImageClick() {
-      if (this.isDataURL(this.data && this.data.fallback) === false)
+      if (isDataURL(this.data && this.data.fallback) === false)
         this.shouldShowClose = !this.shouldShowClose;
     },
     async loaded() {

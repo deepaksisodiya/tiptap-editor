@@ -23,7 +23,6 @@ export default {
   name: "Demo",
   data() {
     return {
-      title: "",
       blocks: {}
     };
   },
@@ -40,9 +39,8 @@ export default {
       // Should return promise with embed URL data
       console.log(url);
     },
-    onUpdatePost({ blocks, title }) {
-      this.blocks = blocks;
-      this.title = title;
+    onUpdatePost({ blocks, title = "" }) {
+      this.blocks = { title, ...blocks };
     }
   }
 };

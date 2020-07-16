@@ -42,6 +42,7 @@
 
 <script>
 import { TextSelection } from "tiptap";
+import { isDataURL } from "./../../../utils";
 
 export default {
   name: "FeatureImage",
@@ -111,7 +112,6 @@ export default {
 
           const formData = new FormData();
           formData.append("image", file);
-          // TODO handle image loading here later
           try {
             const response = await this.options.uploadImage(formData);
             if (response && response.status === 200) {
@@ -138,14 +138,8 @@ export default {
       this.src = "";
       this.data = "";
     },
-    isDataURL(data) {
-      const regex = new RegExp(
-        /^\s*data:([a-z]+\/[a-z]+(;[a-z\-]+\=[a-z\-]+)?)?(;base64)?,[a-z0-9\!\$\&\'\,\(\)\*\+\,\;\=\-\.\_\~\:\@\/\?\%\s]*\s*$/i
-      );
-      return !!data.match(regex);
-    },
     onImageClick() {
-      if (this.isDataURL(this.data && this.data.fallback) === false)
+      if (isDataURL(this.data && this.data.fallback) === false)
         this.shouldShowClose = !this.shouldShowClose;
     }
   }
