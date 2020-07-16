@@ -1,126 +1,7 @@
 <template>
   <div class="editor">
-    <!-- on hover it will show bold, italic and code -->
-    <!-- menububble start -->
-    <editor-menu-bubble
-      :editor="editor"
-      :keep-in-bounds="keepInBounds"
-      v-slot="{ commands, isActive, menu, getMarkAttrs }"
-      ref="menububble"
-    >
-      <div>
-        <ul
-          class="highlight-menu"
-          v-if="!linkMenuIsActive"
-          :class="{
-            'is-active': menu.isActive && !isTitleSelected(),
-            ios: isIOS,
-            'sticky-highlight-menu': !isIOS
-          }"
-          :style="getToolbarStyle(menu)"
-          ref="menuUl"
-        >
-          <li @click="commands.bold" v-if="!linkMenuIsActive">
-            <button>
-              <i
-                class="bold-icon"
-                :class="{ 'is-active': isActive.bold() }"
-              ></i>
-            </button>
-          </li>
-
-          <li @click="commands.italic" v-if="!linkMenuIsActive">
-            <button>
-              <i
-                class="italic-icon"
-                :class="{ 'is-active': isActive.italic() }"
-              ></i>
-            </button>
-          </li>
-          <li
-            v-if="!linkMenuIsActive"
-            @click="showLinkMenu(getMarkAttrs('link'))"
-          >
-            <button>
-              <i
-                class="link-icon"
-                :class="{ 'is-active': isActive.link() }"
-              ></i>
-              <!--
-          <span>{{ isActive.link() ? "Update Link" : "Add Link" }}</span>
-              -->
-            </button>
-          </li>
-
-          <li v-if="!linkMenuIsActive">
-            <button>
-              <i class="separator-icon"></i>
-            </button>
-          </li>
-
-          <li
-            class="menubar__button"
-            @click="commands.heading({ level: 3 })"
-            v-if="!linkMenuIsActive"
-          >
-            <button>
-              <i
-                class="large-heading-icon"
-                :class="{ 'is-active': isActive.heading({ level: 3 }) }"
-              ></i>
-            </button>
-          </li>
-
-          <li
-            class="menubar__button"
-            @click="commands.heading({ level: 5 })"
-            v-if="!linkMenuIsActive"
-          >
-            <button>
-              <i
-                class="small-heading-icon"
-                :class="{ 'is-active': isActive.heading({ level: 5 }) }"
-              ></i>
-            </button>
-          </li>
-
-          <li
-            class="menububble__button"
-            @click="commands.blockquote"
-            v-if="!linkMenuIsActive"
-          >
-            <button>
-              <i
-                class="quote-icon"
-                :class="{ 'is-active': isActive.blockquote() }"
-              ></i>
-            </button>
-          </li>
-        </ul>
-        <div
-          ref="linkDiv"
-          v-if="linkMenuIsActive"
-          :class="['highlight-menu-input', isIOS ? 'ios' : '']"
-          :style="getToolbarStyle(menu)"
-        >
-          <input
-            type="text"
-            v-model="linkUrl"
-            placeholder="Paste or type a link"
-            ref="linkInput"
-            @keydown.enter.prevent="setLinkUrl(editor.commands.link, linkUrl)"
-            @keydown.esc="hideLinkMenu"
-          />
-          <i
-            class="toolbar-close-icon"
-            @click="setLinkUrl(editor.commands.link, linkUrl)"
-          ></i>
-        </div>
-      </div>
-    </editor-menu-bubble>
-    <!-- menububble end -->
-
     <article>
+      <editor-menu-bubble :editor="editor" />
       <!-- Message-bar -->
       <error-message
         :onClickClose="onClickCloseError"
@@ -150,10 +31,7 @@
           />
           <ul class="kitchensink">
             <li @click="toggleFloatingMenu">
-              <i
-                class="add-icon"
-                :class="{ 'close-icon': shouldShowFloatingMenu }"
-              ></i>
+              <i class="add-icon" :class="{ 'close-icon': shouldShowFloatingMenu }"></i>
             </li>
             <li v-if="shouldShowTooltip" class="popover right-popover">
               <div class="popover-content">
@@ -167,11 +45,7 @@
                 </button>
               </div>
             </li>
-            <li
-              class="menubar__button"
-              @click="onClickImage()"
-              v-if="shouldShowFloatingMenu"
-            >
+            <li class="menubar__button" @click="onClickImage()" v-if="shouldShowFloatingMenu">
               <i class="image-icon"></i>
             </li>
 
@@ -254,7 +128,7 @@ import _debounce from "lodash.debounce";
 
 import ErrorMessage from "./ErrorMessage.vue";
 import EditorFloatingMenu from "./../EditorFloatingMenu";
-import EditorMenuBubble from "./../EditorMenuBubble";
+import EditorMenuBubble from "./EditorMenuBubble.vue";
 import {
   Embed,
   Image,
@@ -344,7 +218,6 @@ export default {
       editable: true,
       linkUrl: null,
       linkMenuIsActive: false,
-      isIOS: /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream,
       editor: new Editor({
         autoFocus: false,
         editable: true,
@@ -508,13 +381,6 @@ export default {
       this.error.name = "offline";
     }
 
-    this.$refs.menububble.$watch("menu.isActive", newValue => {
-      if (!newValue) this.linkMenuIsActive = false;
-    });
-
-    if (this.isIOS) {
-      this.menuBarTimer = setInterval(() => this.fixMenubarforIos(), 100);
-    }
     // init data
     const newContent = this.addTitle(
       this.content || defaultContent,
@@ -532,13 +398,6 @@ export default {
   methods: {
     updateOnlineStatus() {
       this.isOnline = navigator.onLine;
-    },
-    showLinkMenu(attrs) {
-      this.linkUrl = attrs.href;
-      this.linkMenuIsActive = true;
-      this.$nextTick(() => {
-        this.$refs.linkDiv.querySelector("input").focus();
-      });
     },
     addTitle(data, title) {
       if (data.content.length === 0) return;
@@ -577,15 +436,6 @@ export default {
           return "Start writing here";
       }
       return "";
-    },
-    hideLinkMenu() {
-      this.linkUrl = null;
-      this.linkMenuIsActive = false;
-    },
-    setLinkUrl(command, url) {
-      command({ href: url });
-      this.hideLinkMenu();
-      this.$refs.menububble.menu.isActive = true;
     },
     toggleFloatingMenu(e) {
       if (!this.shouldShowFloatingMenu) {
@@ -627,16 +477,6 @@ export default {
         this.error.name = "imageError";
       }
     },
-    isTitleSelected() {
-      const {
-        state: {
-          tr: { doc, selection }
-        }
-      } = this.editor.view;
-      const nodeAtStart = doc.resolve(selection.from).parent.type.name;
-      const nodeAtEnd = doc.resolve(selection.to).parent.type.name;
-      return nodeAtStart === "title" && nodeAtEnd === "title";
-    },
     hideFloatingMenu() {
       this.shouldShowFloatingMenu = false;
     },
@@ -658,15 +498,6 @@ export default {
         reader.readAsDataURL(file);
       }
     },
-    fixMenubarforIos() {
-      const menuUl = this.$refs.menuUl;
-      const linkDiv = this.$refs.linkDiv;
-      const pageTop = window.visualViewport.pageTop;
-      const article = document.getElementsByClassName("editor")[0];
-
-      if (linkDiv) linkDiv.style.top = `${pageTop - article.offsetTop}px`;
-      if (menuUl) menuUl.style.top = `${pageTop - article.offsetTop}px`;
-    },
     onClickOk() {
       if (!localStorage) return;
       localStorage.setItem("editorTour", true);
@@ -678,11 +509,6 @@ export default {
       if (this.error.name === "title") {
         this.hideTitleError();
       }
-    },
-    getToolbarStyle(menu) {
-      return window.screen.width >= 786
-        ? `left: ${menu.left}px; bottom: ${menu.bottom}px;`
-        : "";
     },
     handleAfterPaste({ state, dispatch }) {
       const { doc, schema, tr } = state;

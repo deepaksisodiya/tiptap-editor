@@ -81,9 +81,6 @@ export default {
     }
   },
   mounted() {
-    this.$nextTick(() => {
-      this.$el.scrollIntoView(true);
-    });
     this.view.featureImageInstance = this;
   },
   methods: {
