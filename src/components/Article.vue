@@ -536,6 +536,9 @@ export default {
     showLinkMenu(attrs) {
       this.linkUrl = attrs.href;
       this.linkMenuIsActive = true;
+      this.$nextTick(() => {
+        this.$refs.linkDiv.querySelector("input").focus();
+      });
     },
     addTitle(data, title) {
       if (data.content.length === 0) return;
