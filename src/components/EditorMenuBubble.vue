@@ -5,8 +5,7 @@
       class="highlight-menu"
       :class="{
         'is-active': menu.isActive && !isTitleSelected(),
-        ios,
-        'sticky-highlight-menu': !ios
+        ios
       }"
       :style="getStyle(menu)"
       ref="menuUl"
@@ -37,7 +36,7 @@
         </button>
       </li>
 
-      <li class="menubar__button" @click="commands.heading({ level: 3 })">
+      <li @click="commands.heading({ level: 3 })">
         <button>
           <i
             class="large-heading-icon"
@@ -46,7 +45,7 @@
         </button>
       </li>
 
-      <li class="menubar__button" @click="commands.heading({ level: 5 })">
+      <li @click="commands.heading({ level: 5 })">
         <button>
           <i
             class="small-heading-icon"
@@ -55,7 +54,7 @@
         </button>
       </li>
 
-      <li class="menububble__button" @click="commands.blockquote">
+      <li @click="commands.blockquote">
         <button>
           <i
             class="quote-icon"
@@ -191,16 +190,10 @@ export default {
       this.isInputActive = false;
     },
     isTitleSelected() {
-      const {
-        state: {
-          tr: {
-            selection: { $from, $to }
-          }
-        }
-      } = this.editor.view;
-      const nodeAtStart = $from.parent.type.name;
-      const nodeAtEnd = $to.parent.type.name;
-      return nodeAtStart === "title" && nodeAtEnd === "title";
+      const { $from, $to } = this.editor.view.state.tr.selection;
+      return (
+        $from.parent.type.name === "title" && $to.parent.type.name === "title"
+      );
     },
     fixMenubarforIos() {
       const menuUl = this.$refs.menuUl;

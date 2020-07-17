@@ -31,7 +31,10 @@
           />
           <ul class="kitchensink">
             <li @click="toggleFloatingMenu">
-              <i class="add-icon" :class="{ 'close-icon': shouldShowFloatingMenu }"></i>
+              <i
+                class="add-icon"
+                :class="{ 'close-icon': shouldShowFloatingMenu }"
+              ></i>
             </li>
             <li v-if="shouldShowTooltip" class="popover right-popover">
               <div class="popover-content">
@@ -45,7 +48,7 @@
                 </button>
               </div>
             </li>
-            <li class="menubar__button" @click="onClickImage()" v-if="shouldShowFloatingMenu">
+            <li @click="onClickImage()" v-if="shouldShowFloatingMenu">
               <i class="image-icon"></i>
             </li>
 
@@ -58,7 +61,6 @@
             </li>
 
             <li
-              class="menubar__button"
               v-if="shouldShowFloatingMenu"
               :class="{ 'is-active': isActive.ordered_list() }"
               @click="onClickMenuItem(commands.ordered_list)"
@@ -75,7 +77,6 @@
             </li>
 
             <li
-              class="menubar__button"
               :class="{ 'is-active': isActive.horizontal_rule() }"
               v-if="shouldShowFloatingMenu"
               @click="onClickMenuItem(commands.horizontal_rule)"
