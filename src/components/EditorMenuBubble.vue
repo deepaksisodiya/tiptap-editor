@@ -161,11 +161,11 @@ export default {
   },
   mounted() {
     if (this.ios) {
-      this.menuBarTimer = setInterval(() => this.fixMenubarforIos(), 100);
+      this.menuElTimer = setInterval(() => this.fixMenuEl(), 100);
     }
   },
   beforeDestroy() {
-    if (this.menuBarTimer) clearInterval(this.menuBarTimer);
+    if (this.menuElTimer) clearInterval(this.menuElTimer);
   },
   methods: {
     getStyle(menu) {
@@ -177,6 +177,7 @@ export default {
       this.href = attrs.href;
       this.isInputActive = true;
       this.$nextTick(() => {
+        if (this.ios) this.fixMenuEl();
         this.$refs.linkDiv.querySelector("input").focus();
       });
     },
@@ -195,7 +196,7 @@ export default {
         $from.parent.type.name === "title" && $to.parent.type.name === "title"
       );
     },
-    fixMenubarforIos() {
+    fixMenuEl() {
       const menuUl = this.$refs.menuUl;
       const linkDiv = this.$refs.linkDiv;
       const pageTop = window.visualViewport.pageTop;
