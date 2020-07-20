@@ -537,6 +537,7 @@ export default {
       this.linkUrl = attrs.href;
       this.linkMenuIsActive = true;
       this.$nextTick(() => {
+        if (this.isIOS) this.fixMenubarforIos();
         this.$refs.linkDiv.querySelector("input").focus();
       });
     },
