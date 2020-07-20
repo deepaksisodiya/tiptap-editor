@@ -91,7 +91,6 @@ export default {
         this.shouldShowClose = !this.shouldShowClose;
     },
     async loaded() {
-      this.caption = "";
       const imageInputEl = document.getElementById("image-input");
 
       if (
