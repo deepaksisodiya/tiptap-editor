@@ -87,7 +87,7 @@
 <script>
 import browser from "../utils/browser";
 import MenuBubble from "./../extensions/MenuBubble";
-import { getValidUrl } from "./../../../utils";
+import { getValidUrl } from "./../utils";
 
 export default {
   props: {
