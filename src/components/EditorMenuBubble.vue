@@ -87,6 +87,7 @@
 <script>
 import browser from "../utils/browser";
 import MenuBubble from "./../extensions/MenuBubble";
+import { getValidUrl } from "./../../../utils";
 
 export default {
   props: {
@@ -182,7 +183,8 @@ export default {
       });
     },
     addAnchor(command, url) {
-      command({ href: url });
+      const validUrl = getValidUrl(url);
+      command({ href: validUrl });
       this.hideInput();
       this.menu.isActive = true;
     },
