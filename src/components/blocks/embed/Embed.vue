@@ -70,6 +70,8 @@
 <script>
 import { TextSelection } from "tiptap";
 
+import { getValidUrl } from "./../../../utils";
+
 export default {
   name: "Embed",
   props: ["node", "updateAttrs", "view", "getPos", "options"],
@@ -195,19 +197,6 @@ export default {
       script.src = url;
       document.getElementsByTagName("head")[0].appendChild(script);
     },
-    // https://stackoverflow.com/questions/11300906/check-if-a-string-starts-with-http-using-javascript
-    getValidUrl(url = "") {
-      let newUrl = window.decodeURIComponent(url);
-      newUrl = newUrl.trim().replace(/\s/g, "");
-
-      if (/^(:\/\/)/.test(newUrl)) {
-        return `https${newUrl}`;
-      }
-      if (!/^(f|ht)tps?:\/\//i.test(newUrl)) {
-        return `https://${newUrl}`;
-      }
-      return newUrl;
-    },
     loadEmbeds() {
       if (this.embeds.data.provider === "Twitter") {
         if (window.twttr) window.twttr.widgets.load();
@@ -237,7 +226,7 @@ export default {
       tr = tr.setSelection(textSelection);
       this.view.dispatch(tr);
 
-      const validURL = this.getValidUrl(this.url);
+      const validURL = getValidUrl(this.url);
       this.updateAttrs({
         url: validURL
       });
@@ -330,7 +319,8 @@ export default {
     disableLink() {
       this.$el.querySelector("a").onclick = e => e.preventDefault();
     },
-    onClickEmbed() {
+    onClickEmbed(event) {
+      event.preventDefault();
       this.shouldShowClose = !this.shouldShowClose;
     },
     deleteNode() {
