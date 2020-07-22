@@ -75,7 +75,7 @@ export default class EmbedNode extends Node {
 
   get view() {
     return {
-      props: ["node", "updateAttrs", "view", "getPos", "options"],
+      props: ["node", "updateAttrs", "view", "getPos", "options", "editor"],
       components: {
         Embed
       },
@@ -86,6 +86,7 @@ export default class EmbedNode extends Node {
           :view='this.view'
           :getPos='this.getPos'
           :options='this.options'
+          :editor='this.editor'
         ></Embed>
       `
     };
