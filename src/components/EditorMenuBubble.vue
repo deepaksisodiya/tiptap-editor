@@ -183,7 +183,8 @@ export default {
       });
     },
     addAnchor(command, url) {
-      const validUrl = getValidUrl(url);
+      let validUrl;
+      if (url) validUrl = getValidUrl(url);
       command({ href: validUrl });
       this.hideInput();
       this.menu.isActive = true;
