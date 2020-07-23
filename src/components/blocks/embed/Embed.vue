@@ -39,7 +39,7 @@
           :disabled="!view.editable"
           @keydown="handleKeydown"
           @paste.stop
-          placeholder="write caption (optional)"
+          placeholder="Type caption for video (optional)"
         />
       </figcaption>
     </div>
