@@ -60,12 +60,26 @@
       <li v-if="shouldShowMenu" style="display:none">
         <i class="kitchensink-divider"></i>
       </li>
+      <!--
+              For now disable the lock icon from floating menu kitchsink for pre-alpha relese
+              later do like :style="`display: ${hasLock ? 'none' : 'inline'}`"
+              :style="`display: ${hasLock ? 'none' : 'none'}`"
+      -->
+      <!-- <li
+              v-if="shouldShowMenu"
+              :style="`display: ${hasLock ? 'none' : 'none'}`"
+              :class="{ 'is-active': isActive.lock() }"
+              @click="onClickMenuItem(commands.lock)"
+            >
+              <i class="lock-icon"></i>
+      </li>-->
     </ul>
   </div>
 </template>
 
 <script>
 import FloatingMenu from "./../extensions/FloatingMenu";
+import { contains } from "prosemirror-utils";
 
 export default {
   props: {
@@ -105,6 +119,12 @@ export default {
     getNodeAttrs() {
       return (
         this.editor.getNodeAttrs && this.editor.getNodeAttrs.bind(this.editor)
+      );
+    },
+    hasLock() {
+      return contains(
+        this.editor.view.state.doc,
+        this.editor.schema.nodes.lock
       );
     }
   },
