@@ -1,5 +1,6 @@
 <template>
   <div
+    class="editor__floating-menu"
     :class="{ 'is-plus-active': menu.isActive }"
     :style="`top: ${menu.top - 20}px`"
   >
