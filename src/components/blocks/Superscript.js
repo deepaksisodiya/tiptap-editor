@@ -1,7 +1,7 @@
 import { Mark } from "tiptap";
 import { toggleMark } from "tiptap-commands";
 
-export default class Title extends Mark {
+export default class Superscript extends Mark {
   get name() {
     return "sup";
   }
@@ -10,16 +10,16 @@ export default class Title extends Mark {
     return {
       parseDOM: [
         {
-          tag: "sup",
-        },
+          tag: "sup"
+        }
       ],
-      toDOM: () => ["sup", 0],
+      toDOM: () => ["sup", 0]
     };
   }
 
   keys({ type }) {
     return {
-      "Ctrl-6": toggleMark(type),
+      "Ctrl-6": toggleMark(type)
     };
   }
 }
