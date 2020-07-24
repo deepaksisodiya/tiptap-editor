@@ -43,7 +43,8 @@ import {
   Doc,
   Title,
   HorizontalRule,
-  Header
+  Header,
+  Superscript
 } from "./blocks";
 import Placeholder from "./../extensions/Placeholder";
 import browser from "../utils/browser";
@@ -154,7 +155,8 @@ export default {
           new Embed({
             getEmbeds: this.getEmbeds
           }),
-          new HorizontalRule()
+          new HorizontalRule(),
+          new Superscript()
           // new Lock()
         ],
         onUpdate: _debounce(({ getJSON }) => {
