@@ -160,7 +160,7 @@ export default {
           // new Lock()
         ],
         onUpdate: _debounce(({ getJSON }) => {
-          const data = { ...getJSON() };
+          const data = getJSON();
           const title = this.editor.state.doc.firstChild.textContent;
 
           data.content.shift();
