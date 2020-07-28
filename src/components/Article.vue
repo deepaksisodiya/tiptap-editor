@@ -160,18 +160,11 @@ export default {
           // new Lock()
         ],
         onUpdate: _debounce(({ getJSON }) => {
-          this.data = getJSON();
-          const newData = { ...this.data };
-          const headerContent = newData.content[0].content;
-          let title = "";
-          if (headerContent) {
-            title =
-              headerContent[0].content &&
-              headerContent[0].content[0] &&
-              headerContent[0].content[0].text;
-            newData.content.shift();
-          }
-          newData.content.forEach(block => {
+          const data = { ...getJSON() };
+          const title = this.editor.state.doc.firstChild.textContent;
+
+          data.content.shift();
+          data.content.forEach(block => {
             if (
               block.type === "image" &&
               block.attrs.src &&
@@ -180,8 +173,8 @@ export default {
               block.attrs.src = "";
             }
           });
-          const payload = { blocks: newData, title };
-          this.onUpdatePost(payload);
+
+          this.onUpdatePost({ blocks: data, title });
         }, 300),
         editorProps: {
           handlePaste: (view, event, slice) => {
@@ -292,8 +285,6 @@ export default {
     this.editor.setContent(newContent, false);
   },
   beforeDestroy() {
-    if (this.menuBarTimer) clearInterval(this.menuBarTimer);
-
     EVENTS.forEach(event =>
       window.removeEventListener(event, this.updateOnlineStatus)
     );
@@ -324,13 +315,7 @@ export default {
         return "Title";
       }
       if (this.editor) {
-        const {
-          state: {
-            doc: {
-              content: { content }
-            }
-          }
-        } = this.editor;
+        const { content } = this.editor.state.doc.content;
         if (
           content.length === 3 &&
           node.type.name === "paragraph" &&
@@ -361,28 +346,22 @@ export default {
       }
     },
     handleAfterPaste({ state, dispatch }) {
-      const { doc, schema, tr } = state;
-      const childAfterCursor = doc.childAfter(state.selection.anchor + 1);
+      const { doc, schema, tr, selection } = state;
+      const childAfterCursor = doc.childAfter(selection.anchor + 1);
       if (
         childAfterCursor.node &&
         childAfterCursor.node.type.name === "paragraph" &&
         childAfterCursor.node.nodeSize === 2
       ) {
-        this.editor.setSelection(
-          state.selection.anchor + 2,
-          state.selection.anchor + 2
-        );
+        this.editor.setSelection(selection.anchor + 2, selection.anchor + 2);
       } else if (
         !childAfterCursor.node &&
-        doc.content.size === state.selection.anchor + 1
+        doc.content.size === selection.anchor + 1
       ) {
         const type = schema.nodes["paragraph"];
         const transaction = tr.insert(doc.content.size, type.create());
         dispatch(transaction);
-        this.editor.setSelection(
-          state.selection.anchor + 2,
-          state.selection.anchor + 2
-        );
+        this.editor.setSelection(selection.anchor + 2, selection.anchor + 2);
       }
     }
   },
