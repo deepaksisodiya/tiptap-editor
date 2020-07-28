@@ -19,7 +19,7 @@ export default class Superscript extends Mark {
 
   keys({ type }) {
     return {
-      "Ctrl-6": toggleMark(type)
+      "Ctrl-Shift-6": toggleMark(type)
     };
   }
 }
