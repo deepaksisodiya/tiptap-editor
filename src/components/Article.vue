@@ -1,109 +1,14 @@
 <template>
   <div class="editor">
     <article>
-      <editor-menu-bubble :editor="editor" />
-      <!-- Message-bar -->
       <error-message
         :onClickClose="onClickCloseError"
         :hasError="error.occurred"
         :errorMessage="error.message"
         :error-name="error.name"
       />
-      <!-- End of message-bar -->
-
-      <editor-floating-menu
-        :editor="editor"
-        v-slot="{ commands, isActive, menu }"
-        ref="floatingMenu"
-      >
-        <div
-          class="editor__floating-menu"
-          :class="{ 'is-plus-active': menu.isActive }"
-          :style="`top: ${menu.top - 20}px`"
-          ref="floatingMenuElement"
-        >
-          <input
-            type="file"
-            id="image-input"
-            ref="fileInput"
-            style="display:none"
-            @change="previewFiles(commands.image)"
-          />
-          <ul class="kitchensink">
-            <li @click="toggleFloatingMenu">
-              <i
-                class="add-icon"
-                :class="{ 'close-icon': shouldShowFloatingMenu }"
-              ></i>
-            </li>
-            <li v-if="shouldShowTooltip" class="popover right-popover">
-              <div class="popover-content">
-                <h3>WELCOME TO SCROLLSTACK</h3>
-                <p>
-                  Tap the (+) button to add images, videos, embeds and more to
-                  your story.
-                </p>
-                <button @click="onClickOk" class="dark-button">
-                  <span>OK, Got it</span>
-                </button>
-              </div>
-            </li>
-            <li @click="onClickImage()" v-if="shouldShowFloatingMenu">
-              <i class="image-icon"></i>
-            </li>
-
-            <li
-              :class="{ 'is-active': isActive.embed() }"
-              v-if="shouldShowFloatingMenu"
-              @click="onClickEmbed(commands.embed, 'video')"
-            >
-              <i class="video-icon"></i>
-            </li>
-
-            <li
-              v-if="shouldShowFloatingMenu"
-              :class="{ 'is-active': isActive.ordered_list() }"
-              @click="onClickMenuItem(commands.ordered_list)"
-            >
-              <i class="list-icon"></i>
-            </li>
-
-            <li
-              :class="{ 'is-active': isActive.embed() }"
-              v-if="shouldShowFloatingMenu"
-              @click="onClickEmbed(commands.embed, 'link')"
-            >
-              <i class="link-icon"></i>
-            </li>
-
-            <li
-              :class="{ 'is-active': isActive.horizontal_rule() }"
-              v-if="shouldShowFloatingMenu"
-              @click="onClickMenuItem(commands.horizontal_rule)"
-            >
-              <i class="separator-icon"></i>
-            </li>
-
-            <li v-if="shouldShowFloatingMenu" style="display:none">
-              <i class="kitchensink-divider"></i>
-            </li>
-
-            <!--
-              For now disable the lock icon from floating menu kitchsink for pre-alpha relese
-              later do like :style="`display: ${hasLock ? 'none' : 'inline'}`"
-              :style="`display: ${hasLock ? 'none' : 'none'}`"
-            -->
-            <!-- <li
-              v-if="shouldShowFloatingMenu"
-              :style="`display: ${hasLock ? 'none' : 'none'}`"
-              :class="{ 'is-active': isActive.lock() }"
-              @click="onClickMenuItem(commands.lock)"
-            >
-              <i class="lock-icon"></i>
-            </li>-->
-          </ul>
-        </div>
-      </editor-floating-menu>
+      <editor-menu-bubble :editor="editor" />
+      <editor-floating-menu :editor="editor" />
       <editor-content id="editor" class="editor__content" :editor="editor" />
       <div class="ios-test-fix">empt</div>
     </article>
@@ -124,11 +29,11 @@ import {
   History,
   TrailingNode
 } from "tiptap-extensions";
-import { contains, findChildren } from "prosemirror-utils";
+import { findChildren } from "prosemirror-utils";
 import _debounce from "lodash.debounce";
 
 import ErrorMessage from "./ErrorMessage.vue";
-import EditorFloatingMenu from "./../EditorFloatingMenu";
+import EditorFloatingMenu from "./EditorFloatingMenu.vue";
 import EditorMenuBubble from "./EditorMenuBubble.vue";
 import {
   Embed,
@@ -213,13 +118,8 @@ export default {
         message: "",
         name: ""
       },
-      shouldShowTooltip: localStorage && !localStorage.getItem("editorTour"),
       data: this.content,
-      imageSrc: "",
-      shouldShowFloatingMenu: false,
       editable: true,
-      linkUrl: null,
-      linkMenuIsActive: false,
       editor: new Editor({
         autoFocus: false,
         editable: true,
@@ -440,33 +340,6 @@ export default {
       }
       return "";
     },
-    toggleFloatingMenu(e) {
-      if (!this.shouldShowFloatingMenu) {
-        const nodePos = this.editor.view.posAtCoords({
-          left: e.clientX + 100,
-          top: e.clientY
-        });
-        this.editor.setSelection(nodePos.pos, nodePos.pos);
-      }
-      if (localStorage && !localStorage.getItem("editorTour")) {
-        this.onClickOk();
-      }
-      this.shouldShowFloatingMenu = !this.shouldShowFloatingMenu;
-      this.editor.setOptions({});
-    },
-    onClickMenuItem(command) {
-      command();
-      this.hideFloatingMenu();
-    },
-    onClickEmbed(command, type) {
-      command({ type });
-      this.hideFloatingMenu();
-    },
-    onClickImage() {
-      this.addImageAt = this.editor.view.state.tr.selection.head;
-      this.$refs.fileInput.click();
-      this.hideFloatingMenu();
-    },
     handleError(apiError) {
       if (this.error.name === "title") this.hideTitleError();
       this.error.occurred = true;
@@ -479,32 +352,6 @@ export default {
           "Something went wrong while uploading the image. Please try again.";
         this.error.name = "imageError";
       }
-    },
-    hideFloatingMenu() {
-      this.shouldShowFloatingMenu = false;
-    },
-    previewFiles(command) {
-      const file = this.$refs.fileInput.files[0];
-
-      const imageType = /image.*/;
-      if (file.type.match(imageType)) {
-        const reader = new FileReader();
-        reader.onload = () => {
-          const img = new Image();
-          img.src = reader.result;
-          this.imageSrc = img.src;
-          command({
-            src: { fallback: this.imageSrc },
-            addImageAt: this.addImageAt
-          });
-        };
-        reader.readAsDataURL(file);
-      }
-    },
-    onClickOk() {
-      if (!localStorage) return;
-      localStorage.setItem("editorTour", true);
-      this.shouldShowTooltip = false;
     },
     onClickCloseError() {
       this.error.occurred = false;
@@ -545,18 +392,6 @@ export default {
         editable: this.editable
       });
     },
-    shouldShowFloatingMenu() {
-      const {
-        state: {
-          doc: {
-            content: { content }
-          }
-        }
-      } = this.editor;
-      if (content.length === 2) {
-        this.editor.setOptions({});
-      }
-    },
     shouldDisplayTitleError() {
       if (this.shouldShowTitleError) {
         this.error.occurred = true;
@@ -577,12 +412,6 @@ export default {
     }
   },
   computed: {
-    hasLock() {
-      return contains(
-        this.editor.view.state.doc,
-        this.editor.schema.nodes.lock
-      );
-    },
     shouldDisplayTitleError() {
       return this.shouldShowTitleError;
     }
