@@ -8,7 +8,7 @@
         :error-name="error.name"
       />
       <editor-menu-bubble :editor="editor" />
-      <editor-floating-menu :editor="editor" />
+      <editor-floating-menu :editor="editor" ref="floatingMenu" />
       <editor-content id="editor" class="editor__content" :editor="editor" />
       <div class="ios-test-fix">empt</div>
     </article>
@@ -319,7 +319,7 @@ export default {
         if (
           doc.childCount === 3 &&
           node.type.name === "paragraph" &&
-          !this.shouldShowFloatingMenu
+          !this.$refs.floatingMenu.shouldShowMenu
         )
           return "Start writing here";
       }
