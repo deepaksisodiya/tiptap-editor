@@ -315,9 +315,9 @@ export default {
         return "Title";
       }
       if (this.editor) {
-        const { content } = this.editor.state.doc.content;
+        const { doc } = this.editor.state;
         if (
-          content.length === 3 &&
+          doc.childCount === 3 &&
           node.type.name === "paragraph" &&
           !this.shouldShowFloatingMenu
         )
