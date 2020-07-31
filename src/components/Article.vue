@@ -258,6 +258,11 @@ export default {
                 }, 50);
               }
               return true;
+            },
+            keydown: (view, event) => {
+              if (browser.ios && event.keyCode === 13)
+                view.lastSelection = view.state.selection;
+              return false;
             }
           }
         }

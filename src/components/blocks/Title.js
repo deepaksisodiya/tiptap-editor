@@ -1,5 +1,6 @@
 import { Node } from "tiptap";
 import { TextSelection } from "tiptap";
+import browser from "../../utils/browser";
 
 export default class Title extends Node {
   get name() {
@@ -20,7 +21,7 @@ export default class Title extends Node {
   }
   keys() {
     return {
-      Enter: (state, dispatch) => {
+      Enter: (state, dispatch, view) => {
         let {
           tr,
           selection: { anchor },
@@ -28,6 +29,7 @@ export default class Title extends Node {
             nodes: { paragraph }
           }
         } = state;
+        if (browser.ios) anchor = view.lastSelection.anchor;
         if (tr.doc.resolve(anchor).parent.type.name !== "title") return false;
         if (tr.doc.nodeAt(anchor + 3).textContent)
           tr = tr.insert(anchor + 3, paragraph.create());
