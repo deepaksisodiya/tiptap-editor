@@ -102,6 +102,10 @@ export default {
     getEmbeds: {
       type: Function,
       required: true
+    },
+    debounceTime: {
+      type: Number,
+      required: true
     }
   },
   components: {
@@ -173,9 +177,8 @@ export default {
               block.attrs.src = "";
             }
           });
-
           this.onUpdatePost({ blocks: data, title });
-        }, 300),
+        }, this.debounceTime),
         editorProps: {
           handlePaste: (view, event, slice) => {
             const singleNode =
