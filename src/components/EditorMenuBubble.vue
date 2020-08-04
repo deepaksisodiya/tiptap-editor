@@ -167,6 +167,7 @@ export default {
   },
   beforeDestroy() {
     if (this.menuElTimer) clearInterval(this.menuElTimer);
+    this.editor.unregisterPlugin("menu_bubble");
   },
   methods: {
     getStyle(menu) {

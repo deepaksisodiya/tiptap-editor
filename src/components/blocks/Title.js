@@ -1,5 +1,6 @@
 import { Node } from "tiptap";
 import { TextSelection } from "tiptap";
+import browser from "../../utils/browser";
 
 export default class Title extends Node {
   get name() {
@@ -20,18 +21,26 @@ export default class Title extends Node {
   }
   keys() {
     return {
-      Enter: (state, dispatch) => {
+      Enter: (state, dispatch, view) => {
         let {
           tr,
-          selection: { anchor }
+          selection: { anchor },
+          schema: {
+            nodes: { paragraph }
+          }
         } = state;
+        if (browser.ios) anchor = view.lastSelection.anchor;
         if (tr.doc.resolve(anchor).parent.type.name !== "title") return false;
+        if (tr.doc.nodeAt(anchor + 3).textContent)
+          tr = tr.insert(anchor + 3, paragraph.create());
         let textSelection = TextSelection.create(
           tr.doc,
-          anchor + 3,
-          anchor + 3
+          anchor + 4,
+          anchor + 4
         );
-        return dispatch(tr.setSelection(textSelection));
+        tr = tr.setSelection(textSelection);
+        dispatch(tr);
+        return true;
       },
       Backspace: (state, dispatch, { featureImageInstance }) => {
         let {
@@ -62,7 +71,8 @@ export default class Title extends Node {
             anchor - 4,
             anchor - 4
           );
-          return dispatch(tr.setSelection(textSelection));
+          dispatch(tr.setSelection(textSelection));
+          return true;
         }
         return false;
       }

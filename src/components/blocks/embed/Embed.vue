@@ -39,7 +39,7 @@
           :disabled="!view.editable"
           @keydown="handleKeydown"
           @paste.stop
-          placeholder="write caption (optional)"
+          placeholder="Type caption for video (optional)"
         />
       </figcaption>
     </div>
@@ -74,7 +74,7 @@ import { getValidUrl } from "./../../../utils";
 
 export default {
   name: "Embed",
-  props: ["node", "updateAttrs", "view", "getPos", "options"],
+  props: ["node", "updateAttrs", "view", "getPos", "options", "editor"],
   data() {
     return {
       isButtonActive: false,
@@ -319,8 +319,8 @@ export default {
     disableLink() {
       this.$el.querySelector("a").onclick = e => e.preventDefault();
     },
-    onClickEmbed(event) {
-      event.preventDefault();
+    onClickEmbed() {
+      this.editor.blur();
       this.shouldShowClose = !this.shouldShowClose;
     },
     deleteNode() {
