@@ -196,6 +196,10 @@ export default {
     getEmbeds: {
       type: Function,
       required: true
+    },
+    debounceTime: {
+      type: Number,
+      required: true
     }
   },
   components: {
@@ -280,7 +284,7 @@ export default {
           });
           const payload = { blocks: newData, title };
           this.onUpdatePost(payload);
-        }, 300),
+        }, this.debounceTime),
         editorProps: {
           handlePaste: (view, event, slice) => {
             const singleNode =
