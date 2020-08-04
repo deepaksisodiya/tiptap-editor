@@ -5,7 +5,7 @@
         :onUpdatePost="onUpdatePost"
         :uploadImage="uploadImage"
         :getEmbeds="getEmbeds"
-        debounceTime="10000"
+        delayUpdateBy="10000"
       />
     </div>
     <vue-json-pretty :path="'res'" :data="blocks"></vue-json-pretty>
