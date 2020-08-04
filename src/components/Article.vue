@@ -103,9 +103,9 @@ export default {
       type: Function,
       required: true
     },
-    debounceTime: {
+    delayUpdateBy: {
       type: Number,
-      required: true
+      required: 1000
     }
   },
   components: {
@@ -178,7 +178,7 @@ export default {
             }
           });
           this.onUpdatePost({ blocks: data, title });
-        }, this.debounceTime),
+        }, this.delayUpdateBy),
         editorProps: {
           handlePaste: (view, event, slice) => {
             const singleNode =
