@@ -11,6 +11,13 @@
       v-show="false"
       @change="previewFiles(commands.image)"
     />
+    <input
+      type="file"
+      id="audio-input"
+      ref="audioInput"
+      v-show="false"
+      @change="previewAudio(commands.audio)"
+    />
     <ul class="kitchensink">
       <li @click="toggleMenu">
         <i class="add-icon" :class="{ 'close-icon': shouldShowMenu }"></i>
@@ -26,6 +33,9 @@
             <span>OK, Got it</span>
           </button>
         </div>
+      </li>
+      <li @click="onClickAudio()" v-if="shouldShowMenu">
+        <i class="image-icon"></i>
       </li>
       <li @click="onClickImage()" v-if="shouldShowMenu">
         <i class="image-icon"></i>
@@ -176,6 +186,11 @@ export default {
     onClickImage() {
       this.addImageAt = this.editor.view.state.tr.selection.head;
       this.$refs.imageInput.click();
+      this.hideFloatingMenu();
+    },
+    onClickAudio() {
+      // his.addImageAt = this.editor.view.state.tr.selection.head;
+      this.$refs.audioInput.click();
       this.hideFloatingMenu();
     },
     previewFiles(command) {
