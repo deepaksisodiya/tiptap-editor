@@ -44,7 +44,8 @@ import {
   Title,
   HorizontalRule,
   Header,
-  Superscript
+  Superscript,
+  Audio
 } from "./blocks";
 import Placeholder from "./../extensions/Placeholder";
 import browser from "../utils/browser";
@@ -99,6 +100,10 @@ export default {
       type: Function,
       required: true
     },
+    uploadAudio: {
+      type: Function,
+      required: true
+    },
     getEmbeds: {
       type: Function,
       required: true
@@ -150,6 +155,10 @@ export default {
           }),
           new Image({
             uploadImage: this.uploadImage,
+            handleError: this.handleError
+          }),
+          new Audio({
+            uploadAudio: this.uploadAudio,
             handleError: this.handleError
           }),
           new FeatureImage({

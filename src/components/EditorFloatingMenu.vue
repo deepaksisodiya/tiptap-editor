@@ -213,7 +213,23 @@ export default {
     },
     previewAudio(command) {
       console.log(command);
-      // see the previewFiles code
+      const audioFile = this.$refs.audioInput.files[0];
+      const audioType = /audio.*/;
+
+      if (audioFile.type.match(audioType)) {
+        const reader = new FileReader();
+        reader.onload = () => {
+          console.log(reader.result);
+          // const img = new Image();
+          // img.src = reader.result;
+          // this.imageSrc = img.src;
+          // command({
+          //   src: { fallback: this.imageSrc },
+          //   addImageAt: this.addImageAt
+          // });
+        };
+        reader.readAsDataURL(audioFile);
+      }
     },
     toggleMenu(e) {
       if (!this.shouldShowMenu) {
