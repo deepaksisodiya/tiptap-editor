@@ -211,6 +211,10 @@ export default {
         reader.readAsDataURL(file);
       }
     },
+    previewAudio(command) {
+      console.log(command);
+      // see the previewFiles code
+    },
     toggleMenu(e) {
       if (!this.shouldShowMenu) {
         const nodePos = this.editor.view.posAtCoords({
