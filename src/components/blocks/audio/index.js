@@ -14,9 +14,6 @@ export default class AudioNode extends Node {
         src: {
           default: ""
         },
-        alt: {
-          default: ""
-        },
         caption: {
           default: ""
         }

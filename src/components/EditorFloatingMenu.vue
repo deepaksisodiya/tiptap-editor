@@ -212,7 +212,6 @@ export default {
       }
     },
     previewAudio(command) {
-      console.log(command);
       const audioFile = this.$refs.audioInput.files[0];
       const audioType = /audio.*/;
 

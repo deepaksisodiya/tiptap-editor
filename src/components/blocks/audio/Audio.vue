@@ -1,10 +1,11 @@
 <template>
   <figure>
-    <audio controls="controls" :src="data" />
+    <audio controls="controls" :src="data" @loadedmetadata="onLoadedMetaData" />
     <figcaption>
       <input
         v-model="caption"
         placeholder="Type caption for Audio (optional)"
+        @keydown="handleKeydown"
         @paste.stop
       />
     </figcaption>
@@ -12,6 +13,8 @@
 </template>
 
 <script>
+import { TextSelection } from "tiptap";
+
 export default {
   name: "Audio",
   props: ["node", "updateAttrs", "view", "getPos", "options"],
@@ -47,6 +50,53 @@ export default {
       this.view.focus();
       this.$el.scrollIntoView(true);
     });
+  },
+  methods: {
+    handleKeydown(event) {
+      let {
+        state: { tr }
+      } = this.view;
+      const pos = this.getPos();
+      if (event.key === "Enter") {
+        let textSelection = TextSelection.create(tr.doc, pos + 2, pos + 2);
+        this.view.dispatch(tr.setSelection(textSelection));
+        this.view.focus();
+        event.preventDefault();
+      }
+    },
+    deleteNode() {
+      let {
+        state: { tr }
+      } = this.view;
+      const pos = this.getPos();
+      let textSelection = TextSelection.create(tr.doc, pos, pos + 1);
+      this.view.dispatch(
+        tr.setSelection(textSelection).deleteSelection(this.src)
+      );
+      this.view.focus();
+    },
+    async onLoadedMetaData() {
+      const audioInputEl = document.getElementById("audio-input");
+
+      if (this.data.includes("data:") && audioInputEl.files.length != 0) {
+        const file = audioInputEl.files[0];
+        const formData = new FormData();
+        formData.append("audio", file);
+
+        try {
+          const response = await this.options.uploadAudio(formData);
+          if (response && response.status === 200) {
+            this.src = response.data;
+            this.data = response.data;
+          }
+        } catch (error) {
+          this.options.handleError(error);
+          this.deleteNode();
+        } finally {
+          audioInputEl.value = "";
+        }
+      }
+    }
   }
 };
 </script>
