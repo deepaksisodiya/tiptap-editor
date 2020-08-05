@@ -107,6 +107,7 @@ export default {
         bottom: 0
       },
       addImageAt: null,
+      addAudioAt: null,
       shouldShowMenu: false,
       showTooltip: localStorage && !localStorage.getItem("editorTour")
     };
@@ -189,7 +190,7 @@ export default {
       this.hideFloatingMenu();
     },
     onClickAudio() {
-      // his.addImageAt = this.editor.view.state.tr.selection.head;
+      this.addAudioAt = this.editor.view.state.tr.selection.head;
       this.$refs.audioInput.click();
       this.hideFloatingMenu();
     },
@@ -202,9 +203,8 @@ export default {
         reader.onload = () => {
           const img = new Image();
           img.src = reader.result;
-          this.imageSrc = img.src;
           command({
-            src: { fallback: this.imageSrc },
+            src: { fallback: img.src },
             addImageAt: this.addImageAt
           });
         };
@@ -220,13 +220,10 @@ export default {
         const reader = new FileReader();
         reader.onload = () => {
           console.log(reader.result);
-          // const img = new Image();
-          // img.src = reader.result;
-          // this.imageSrc = img.src;
-          // command({
-          //   src: { fallback: this.imageSrc },
-          //   addImageAt: this.addImageAt
-          // });
+          command({
+            src: reader.result,
+            addAudioAt: this.addAudioAt
+          });
         };
         reader.readAsDataURL(audioFile);
       }
