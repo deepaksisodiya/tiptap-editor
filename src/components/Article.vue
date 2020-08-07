@@ -102,10 +102,6 @@ export default {
     getEmbeds: {
       type: Function,
       required: true
-    },
-    delayUpdateBy: {
-      type: Number,
-      required: 1000
     }
   },
   components: {
@@ -178,7 +174,7 @@ export default {
             }
           });
           this.onUpdatePost({ blocks: data, title });
-        }, this.delayUpdateBy),
+        }, 300),
         editorProps: {
           handlePaste: (view, event, slice) => {
             const singleNode =
