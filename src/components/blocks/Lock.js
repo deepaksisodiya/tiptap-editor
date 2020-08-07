@@ -48,7 +48,7 @@ export default class LockNode extends Node {
       return true;
     });
     return {
-      "Shift-l": command
+      "Ctrl-Shift-l": command
     };
   }
 
