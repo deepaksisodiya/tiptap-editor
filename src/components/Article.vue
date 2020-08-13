@@ -259,7 +259,7 @@ export default {
               return true;
             },
             keydown: (view, event) => {
-              if (browser.ios && event.keyCode === 13)
+              if (event.keyCode === 13)
                 view.selectionAtEnterKeydown = view.state.selection;
               return false;
             }
