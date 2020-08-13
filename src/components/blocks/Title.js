@@ -24,31 +24,13 @@ export default class Title extends Node {
       Enter: (state, dispatch, view) => {
         let {
           tr,
-          selection: { anchor: anchorAfterEnterKeydown },
+          selection: { anchor },
           schema: {
             nodes: { paragraph }
           }
         } = state;
-        let anchor = anchorAfterEnterKeydown;
-        let anchorAtEnterKeydown = view.selectionAtEnterKeydown.anchor;
-
-        if (browser.ios) anchor = anchorAtEnterKeydown;
-        if (tr.doc.resolve(anchor).parent.type.name !== "title") {
-          if (
-            browser.ios &&
-            anchorAfterEnterKeydown - anchorAtEnterKeydown === 2 &&
-            tr.doc.nodeAt(anchorAfterEnterKeydown).textContent
-          ) {
-            let textSelection = TextSelection.create(
-              tr.doc,
-              anchor,
-              anchor + 2
-            );
-            tr = tr.setSelection(textSelection).deleteSelection();
-            dispatch(tr);
-          }
-          return false;
-        }
+        if (browser.ios) anchor = view.lastSelection.anchor;
+        if (tr.doc.resolve(anchor).parent.type.name !== "title") return false;
         if (tr.doc.nodeAt(anchor + 3).textContent)
           tr = tr.insert(anchor + 3, paragraph.create());
         let textSelection = TextSelection.create(
