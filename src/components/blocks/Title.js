@@ -37,7 +37,7 @@ export default class Title extends Node {
           if (
             browser.ios &&
             anchorAfterEnterKeydown - anchorAtEnterKeydown === 2 &&
-            !tr.doc.resolve(anchorAtEnterKeydown).parentOffset
+            tr.doc.nodeAt(anchorAfterEnterKeydown).textContent
           ) {
             let textSelection = TextSelection.create(
               tr.doc,
