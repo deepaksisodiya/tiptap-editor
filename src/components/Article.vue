@@ -30,7 +30,6 @@ import {
   TrailingNode
 } from "tiptap-extensions";
 import { findChildren } from "prosemirror-utils";
-import _debounce from "lodash.debounce";
 
 import ErrorMessage from "./ErrorMessage.vue";
 import EditorFloatingMenu from "./EditorFloatingMenu.vue";
@@ -159,7 +158,7 @@ export default {
           new Superscript()
           // new Lock()
         ],
-        onUpdate: _debounce(({ getJSON }) => {
+        onUpdate: ({ getJSON }) => {
           const data = getJSON();
           const title = this.editor.state.doc.firstChild.textContent;
 
@@ -174,7 +173,7 @@ export default {
             }
           });
           this.onUpdatePost({ blocks: data, title });
-        }, 300),
+        },
         editorProps: {
           handlePaste: (view, event, slice) => {
             const singleNode =
