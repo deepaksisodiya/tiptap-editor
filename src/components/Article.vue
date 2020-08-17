@@ -163,14 +163,15 @@ export default {
           const title = this.editor.state.doc.firstChild.textContent;
 
           data.content.shift();
-          data.content.forEach(block => {
+          data.content = data.content.filter(block => {
             if (
               block.type === "image" &&
               block.attrs.src &&
               block.attrs.src.fallback.includes("data:")
             ) {
-              block.attrs.src = "";
+              return false;
             }
+            return true;
           });
           this.onUpdatePost({ blocks: data, title });
         },
