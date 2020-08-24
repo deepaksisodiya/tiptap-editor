@@ -30,7 +30,6 @@ import {
   TrailingNode
 } from "tiptap-extensions";
 import { findChildren } from "prosemirror-utils";
-import _debounce from "lodash.debounce";
 
 import ErrorMessage from "./ErrorMessage.vue";
 import EditorFloatingMenu from "./EditorFloatingMenu.vue";
@@ -107,10 +106,6 @@ export default {
     getEmbeds: {
       type: Function,
       required: true
-    },
-    delayUpdateBy: {
-      type: Number,
-      required: 1000
     }
   },
   components: {
@@ -172,22 +167,23 @@ export default {
           new Superscript()
           // new Lock()
         ],
-        onUpdate: _debounce(({ getJSON }) => {
+        onUpdate: ({ getJSON }) => {
           const data = getJSON();
           const title = this.editor.state.doc.firstChild.textContent;
 
           data.content.shift();
-          data.content.forEach(block => {
+          data.content = data.content.filter(block => {
             if (
               block.type === "image" &&
               block.attrs.src &&
               block.attrs.src.fallback.includes("data:")
             ) {
-              block.attrs.src = "";
+              return false;
             }
+            return true;
           });
           this.onUpdatePost({ blocks: data, title });
-        }, this.delayUpdateBy),
+        },
         editorProps: {
           handlePaste: (view, event, slice) => {
             const singleNode =
@@ -272,8 +268,8 @@ export default {
               return true;
             },
             keydown: (view, event) => {
-              if (browser.ios && event.keyCode === 13)
-                view.lastSelection = view.state.selection;
+              if (event.keyCode === 13)
+                view.selectionAtEnterKeydown = view.state.selection;
               return false;
             }
           }
