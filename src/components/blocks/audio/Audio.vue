@@ -1,6 +1,6 @@
 <template>
   <figure>
-    <audio controls="controls" :src="data" @loadedmetadata="onLoadedMetaData" />
+    <audio-player :src="data" @loadedmetadata="onLoadedMetaData" />
     <figcaption>
       <input
         v-model="caption"
@@ -14,6 +14,7 @@
 
 <script>
 import { TextSelection } from "tiptap";
+import AudioPlayer from "scroll-vue-player";
 
 export default {
   name: "Audio",
@@ -22,6 +23,9 @@ export default {
     return {
       data: this.node.attrs.src
     };
+  },
+  components: {
+    AudioPlayer
   },
   computed: {
     src: {

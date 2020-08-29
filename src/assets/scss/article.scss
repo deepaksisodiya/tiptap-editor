@@ -2,6 +2,8 @@
 @import "./modules/article/_article_typography";
 @import "./modules/article/_article_media";
 @import "./modules/article/_article_embeds";
+@import "./modules/ui_elements/audio_player";
+@import "./modules/ui_elements/_progress_bar";
 
 article {
   width: 100%;

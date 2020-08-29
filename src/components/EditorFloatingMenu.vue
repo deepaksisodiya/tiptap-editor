@@ -34,9 +34,6 @@
           </button>
         </div>
       </li>
-      <li @click="onClickAudio()" v-if="shouldShowMenu">
-        <i class="image-icon"></i>
-      </li>
       <li @click="onClickImage()" v-if="shouldShowMenu">
         <i class="image-icon"></i>
       </li>
@@ -46,6 +43,9 @@
         @click="onClickEmbed(commands.embed, 'video')"
       >
         <i class="video-icon"></i>
+      </li>
+      <li @click="onClickAudio()" v-if="shouldShowMenu">
+        <i class="audio-icon"></i>
       </li>
       <li
         v-if="shouldShowMenu"
@@ -218,9 +218,9 @@ export default {
       if (audioFile.type.match(audioType)) {
         const reader = new FileReader();
         reader.onload = () => {
-          console.log(reader.result);
           command({
-            src: reader.result,
+            src:
+              "https://nyc3.digitaloceanspaces.com/satyagrah/audio/sohtdbcmxu-1581683086.mp3",
             addAudioAt: this.addAudioAt
           });
         };

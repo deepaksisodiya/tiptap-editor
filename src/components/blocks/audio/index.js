@@ -32,7 +32,7 @@ export default class AudioNode extends Node {
           }
         }
       ],
-      toDOM: node => ["embed", node.attrs]
+      toDOM: node => ["audio", node.attrs]
     };
   }
 

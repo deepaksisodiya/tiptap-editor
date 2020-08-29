@@ -175,6 +175,7 @@ export default {
           data.content = data.content.filter(block => {
             if (
               block.type === "image" &&
+              block.type === "audio" &&
               block.attrs.src &&
               block.attrs.src.fallback.includes("data:")
             ) {

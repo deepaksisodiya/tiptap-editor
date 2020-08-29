@@ -1,0 +1,39 @@
+.player-seekbar {
+	position: relative;
+	height: 3px;
+	width: 100%;
+	margin: 0 15px;
+	padding: 4px 0;
+
+	.progress {
+		.progress-bar {
+			background-color: $golden;
+		}
+	}
+	.progress-pin {
+		display: none;
+		position: absolute;
+		background: $golden;
+		width: 12px;
+		height: 12px;
+		top: 50%;
+		transform: translateY(-50%);
+		border-radius: 9999px;
+		cursor: pointer;
+		margin-left: -1%;
+		&:active,
+		&:focus {
+			width: 18px;
+			height: 18px;
+			margin-left: -3px;
+		}
+	}
+}
+
+.audio-player-playing {
+	.player-seekbar {
+		.progress-pin {
+			display: block;
+		}
+	}
+}
