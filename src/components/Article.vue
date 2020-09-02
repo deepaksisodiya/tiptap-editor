@@ -49,8 +49,6 @@ import Placeholder from "./../extensions/Placeholder";
 import browser from "../utils/browser";
 import { keyEvent } from "../utils/dom";
 
-const EVENTS = ["online", "offline"];
-
 const defaultContent = {
   type: "doc",
   content: [
@@ -111,7 +109,6 @@ export default {
   },
   data() {
     return {
-      isOnline: navigator.onLine || false,
       error: {
         occurred: false,
         message: "",
@@ -268,19 +265,7 @@ export default {
       })
     };
   },
-  created() {
-    EVENTS.forEach(event =>
-      window.addEventListener(event, this.updateOnlineStatus)
-    );
-  },
   mounted() {
-    if (!this.isOnline) {
-      this.error.occurred = true;
-      this.error.message =
-        "You appear to be offline. Any changes to your post may not be saved.";
-      this.error.name = "offline";
-    }
-
     // init data
     const newContent = this.addTitle(
       this.content || defaultContent,
@@ -288,15 +273,7 @@ export default {
     );
     this.editor.setContent(newContent, false);
   },
-  beforeDestroy() {
-    EVENTS.forEach(event =>
-      window.removeEventListener(event, this.updateOnlineStatus)
-    );
-  },
   methods: {
-    updateOnlineStatus() {
-      this.isOnline = navigator.onLine;
-    },
     addTitle(data, title) {
       if (data.content.length === 0) return;
       let newData = data;
@@ -381,16 +358,6 @@ export default {
         this.error.message =
           "You need to add a title to your post before continuing.";
         this.error.name = "title";
-      }
-    },
-    isOnline() {
-      if (this.isOnline) {
-        this.error.occurred = false;
-      } else {
-        this.error.occurred = true;
-        this.error.message =
-          "You appear to be offline. Any changes to your post may not be saved.";
-        this.error.name = "offline";
       }
     }
   },
