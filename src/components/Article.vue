@@ -82,16 +82,6 @@ export default {
       type: String,
       required: false
     },
-    shouldShowTitleError: {
-      type: Boolean,
-      required: false,
-      default: () => false
-    },
-    hideTitleError: {
-      type: Function,
-      required: false,
-      default: Function.prototype
-    },
     uploadImage: {
       type: Function,
       required: true
@@ -307,7 +297,6 @@ export default {
       return "";
     },
     handleError(apiError) {
-      if (this.error.name === "title") this.hideTitleError();
       this.error.occurred = true;
       if (apiError.response && apiError.response.status === 413) {
         this.error.message =
@@ -322,9 +311,6 @@ export default {
     onClickCloseError() {
       this.error.occurred = false;
       this.error.message = "";
-      if (this.error.name === "title") {
-        this.hideTitleError();
-      }
     },
     handleAfterPaste({ state, dispatch }) {
       const { doc, schema, tr, selection } = state;
@@ -351,19 +337,6 @@ export default {
       this.editor.setOptions({
         editable: this.editable
       });
-    },
-    shouldDisplayTitleError() {
-      if (this.shouldShowTitleError) {
-        this.error.occurred = true;
-        this.error.message =
-          "You need to add a title to your post before continuing.";
-        this.error.name = "title";
-      }
-    }
-  },
-  computed: {
-    shouldDisplayTitleError() {
-      return this.shouldShowTitleError;
     }
   }
 };
