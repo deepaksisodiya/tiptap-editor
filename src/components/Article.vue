@@ -1,12 +1,6 @@
 <template>
   <div class="editor">
     <article>
-      <error-message
-        :onClickClose="onClickCloseError"
-        :hasError="error.occurred"
-        :errorMessage="error.message"
-        :error-name="error.name"
-      />
       <editor-menu-bubble :editor="editor" />
       <editor-floating-menu :editor="editor" ref="floatingMenu" />
       <editor-content id="editor" class="editor__content" :editor="editor" />
@@ -31,7 +25,6 @@ import {
 } from "tiptap-extensions";
 import { findChildren } from "prosemirror-utils";
 
-import ErrorMessage from "./ErrorMessage.vue";
 import EditorFloatingMenu from "./EditorFloatingMenu.vue";
 import EditorMenuBubble from "./EditorMenuBubble.vue";
 import {
@@ -92,7 +85,6 @@ export default {
     }
   },
   components: {
-    ErrorMessage,
     EditorContent,
     EditorFloatingMenu,
     EditorMenuBubble
@@ -131,12 +123,10 @@ export default {
             notAfter: ["paragraph"]
           }),
           new Image({
-            uploadImage: this.uploadImage,
-            handleError: this.handleError
+            uploadImage: this.uploadImage
           }),
           new FeatureImage({
-            uploadImage: this.uploadImage,
-            handleError: this.handleError
+            uploadImage: this.uploadImage
           }),
           new Embed({
             getEmbeds: this.getEmbeds
@@ -295,22 +285,6 @@ export default {
           return "Start writing here";
       }
       return "";
-    },
-    handleError(apiError) {
-      this.error.occurred = true;
-      if (apiError.response && apiError.response.status === 413) {
-        this.error.message =
-          "The image you are trying to upload is too big. Please resize it so that it is under 25MB.";
-        this.error.name = "imageToBig";
-      } else {
-        this.error.message =
-          "Something went wrong while uploading the image. Please try again.";
-        this.error.name = "imageError";
-      }
-    },
-    onClickCloseError() {
-      this.error.occurred = false;
-      this.error.message = "";
     },
     handleAfterPaste({ state, dispatch }) {
       const { doc, schema, tr, selection } = state;
