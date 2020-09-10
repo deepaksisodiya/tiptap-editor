@@ -219,8 +219,7 @@ export default {
         const reader = new FileReader();
         reader.onload = () => {
           command({
-            src:
-              "https://nyc3.digitaloceanspaces.com/satyagrah/audio/sohtdbcmxu-1581683086.mp3",
+            src: reader.result,
             addAudioAt: this.addAudioAt
           });
         };
