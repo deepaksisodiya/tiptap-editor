@@ -151,10 +151,12 @@ export default {
           data.content.shift();
           data.content = data.content.filter(block => {
             if (
-              block.type === "image" &&
-              block.type === "audio" &&
-              block.attrs.src &&
-              block.attrs.src.fallback.includes("data:")
+              (block.type === "image" &&
+                block.attrs.src &&
+                block.attrs.src.fallback.includes("data:")) ||
+              (block.type === "audio" &&
+                block.attrs.src &&
+                block.attrs.src.includes("data:"))
             ) {
               return false;
             }

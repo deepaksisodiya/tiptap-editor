@@ -90,11 +90,10 @@ export default {
         try {
           const response = await this.options.uploadAudio(formData);
           if (response && response.status === 200) {
-            this.src = response.data;
-            this.data = response.data;
+            this.src = response.data.audio;
+            this.data = response.data.audio;
           }
         } catch (error) {
-          this.options.handleError(error);
           this.deleteNode();
         } finally {
           audioInputEl.value = "";
