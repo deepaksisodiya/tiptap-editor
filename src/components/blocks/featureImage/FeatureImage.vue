@@ -115,8 +115,7 @@ export default {
               this.src = response.data;
               this.data = response.data;
             }
-          } catch (error) {
-            this.options.handleError(error);
+          } catch {
             this.src = "";
             this.data = "";
           }

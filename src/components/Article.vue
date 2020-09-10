@@ -1,12 +1,6 @@
 <template>
   <div class="editor">
     <article>
-      <error-message
-        :onClickClose="onClickCloseError"
-        :hasError="error.occurred"
-        :errorMessage="error.message"
-        :error-name="error.name"
-      />
       <editor-menu-bubble :editor="editor" />
       <editor-floating-menu :editor="editor" ref="floatingMenu" />
       <editor-content id="editor" class="editor__content" :editor="editor" />
@@ -31,7 +25,6 @@ import {
 } from "tiptap-extensions";
 import { findChildren } from "prosemirror-utils";
 
-import ErrorMessage from "./ErrorMessage.vue";
 import EditorFloatingMenu from "./EditorFloatingMenu.vue";
 import EditorMenuBubble from "./EditorMenuBubble.vue";
 import {
@@ -49,8 +42,6 @@ import {
 import Placeholder from "./../extensions/Placeholder";
 import browser from "../utils/browser";
 import { keyEvent } from "../utils/dom";
-
-const EVENTS = ["online", "offline"];
 
 const defaultContent = {
   type: "doc",
@@ -85,16 +76,6 @@ export default {
       type: String,
       required: false
     },
-    shouldShowTitleError: {
-      type: Boolean,
-      required: false,
-      default: () => false
-    },
-    hideTitleError: {
-      type: Function,
-      required: false,
-      default: Function.prototype
-    },
     uploadImage: {
       type: Function,
       required: true
@@ -109,14 +90,12 @@ export default {
     }
   },
   components: {
-    ErrorMessage,
     EditorContent,
     EditorFloatingMenu,
     EditorMenuBubble
   },
   data() {
     return {
-      isOnline: navigator.onLine || false,
       error: {
         occurred: false,
         message: "",
@@ -149,16 +128,14 @@ export default {
             notAfter: ["paragraph"]
           }),
           new Image({
-            uploadImage: this.uploadImage,
-            handleError: this.handleError
+            uploadImage: this.uploadImage
           }),
           new Audio({
             uploadAudio: this.uploadAudio,
             handleError: this.handleError
           }),
           new FeatureImage({
-            uploadImage: this.uploadImage,
-            handleError: this.handleError
+            uploadImage: this.uploadImage
           }),
           new Embed({
             getEmbeds: this.getEmbeds
@@ -278,19 +255,7 @@ export default {
       })
     };
   },
-  created() {
-    EVENTS.forEach(event =>
-      window.addEventListener(event, this.updateOnlineStatus)
-    );
-  },
   mounted() {
-    if (!this.isOnline) {
-      this.error.occurred = true;
-      this.error.message =
-        "You appear to be offline. Any changes to your post may not be saved.";
-      this.error.name = "offline";
-    }
-
     // init data
     const newContent = this.addTitle(
       this.content || defaultContent,
@@ -298,15 +263,7 @@ export default {
     );
     this.editor.setContent(newContent, false);
   },
-  beforeDestroy() {
-    EVENTS.forEach(event =>
-      window.removeEventListener(event, this.updateOnlineStatus)
-    );
-  },
   methods: {
-    updateOnlineStatus() {
-      this.isOnline = navigator.onLine;
-    },
     addTitle(data, title) {
       if (data.content.length === 0) return;
       let newData = data;
@@ -339,26 +296,6 @@ export default {
       }
       return "";
     },
-    handleError(apiError) {
-      if (this.error.name === "title") this.hideTitleError();
-      this.error.occurred = true;
-      if (apiError.response && apiError.response.status === 413) {
-        this.error.message =
-          "The image you are trying to upload is too big. Please resize it so that it is under 25MB.";
-        this.error.name = "imageToBig";
-      } else {
-        this.error.message =
-          "Something went wrong while uploading the image. Please try again.";
-        this.error.name = "imageError";
-      }
-    },
-    onClickCloseError() {
-      this.error.occurred = false;
-      this.error.message = "";
-      if (this.error.name === "title") {
-        this.hideTitleError();
-      }
-    },
     handleAfterPaste({ state, dispatch }) {
       const { doc, schema, tr, selection } = state;
       const childAfterCursor = doc.childAfter(selection.anchor + 1);
@@ -384,29 +321,6 @@ export default {
       this.editor.setOptions({
         editable: this.editable
       });
-    },
-    shouldDisplayTitleError() {
-      if (this.shouldShowTitleError) {
-        this.error.occurred = true;
-        this.error.message =
-          "You need to add a title to your post before continuing.";
-        this.error.name = "title";
-      }
-    },
-    isOnline() {
-      if (this.isOnline) {
-        this.error.occurred = false;
-      } else {
-        this.error.occurred = true;
-        this.error.message =
-          "You appear to be offline. Any changes to your post may not be saved.";
-        this.error.name = "offline";
-      }
-    }
-  },
-  computed: {
-    shouldDisplayTitleError() {
-      return this.shouldShowTitleError;
     }
   }
 };
