@@ -101,9 +101,9 @@ export default {
             this.data = response.data.audio;
           }
         } catch (error) {
-          // this.deleteNode();
+          this.deleteNode();
         } finally {
-          // audioInputEl.value = "";
+          audioInputEl.value = "";
         }
       }
     }
