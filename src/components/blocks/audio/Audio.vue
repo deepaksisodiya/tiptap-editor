@@ -1,6 +1,10 @@
 <template>
   <figure>
-    <audio-player :src="data" @loadedmetadata="onLoadedMetaData" />
+    <audio-player
+      :src="data"
+      :disabled="disabled"
+      @loadedmetadata="onLoadedMetaData"
+    />
     <figcaption>
       <input
         v-model="caption"
@@ -47,6 +51,9 @@ export default {
           caption
         });
       }
+    },
+    disabled() {
+      return this.data.includes("data:");
     }
   },
   mounted() {
@@ -94,9 +101,9 @@ export default {
             this.data = response.data.audio;
           }
         } catch (error) {
-          this.deleteNode();
+          // this.deleteNode();
         } finally {
-          audioInputEl.value = "";
+          // audioInputEl.value = "";
         }
       }
     }
