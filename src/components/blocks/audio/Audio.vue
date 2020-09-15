@@ -1,7 +1,7 @@
 <template>
   <figure :class="['audio-player-container', { selected: shouldShowClose }]">
-    <div @click="deleteNode">
-      <i class="add-icon close-icon"></i>
+    <div class="close-button" @click="deleteNode">
+      <i class="close-icon"></i>
     </div>
     <audio-player
       :src="data"
