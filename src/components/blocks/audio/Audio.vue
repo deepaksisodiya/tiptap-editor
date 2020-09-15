@@ -1,8 +1,12 @@
 <template>
-  <figure>
+  <figure :class="['audio-player-container', { selected: shouldShowClose }]">
+    <div @click="deleteNode">
+      <i class="add-icon close-icon"></i>
+    </div>
     <audio-player
       :src="data"
       :disabled="disabled"
+      @click="handlePlayerClick"
       @error="handlePlayerError"
       @loadedmetadata="onLoadedMetaData"
     />
@@ -20,13 +24,15 @@
 <script>
 import { TextSelection } from "tiptap";
 import AudioPlayer from "scroll-vue-player";
+import { isDataURL } from "./../../../utils";
 
 export default {
   name: "Audio",
   props: ["node", "updateAttrs", "view", "getPos", "options"],
   data() {
     return {
-      data: this.node.attrs.src
+      data: this.node.attrs.src,
+      shouldShowClose: false
     };
   },
   components: {
@@ -89,6 +95,9 @@ export default {
     },
     handlePlayerError(e) {
       this.options.handleError(e, "audio-media");
+    },
+    handlePlayerClick() {
+      if (!isDataURL(this.data)) this.shouldShowClose = !this.shouldShowClose;
     },
     async onLoadedMetaData() {
       const audioInputEl = document.getElementById("audio-input");
