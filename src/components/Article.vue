@@ -87,6 +87,10 @@ export default {
     getEmbeds: {
       type: Function,
       required: true
+    },
+    handleError: {
+      type: Function,
+      default: () => {}
     }
   },
   components: {

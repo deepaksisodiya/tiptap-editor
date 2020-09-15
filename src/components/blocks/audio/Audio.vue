@@ -3,6 +3,7 @@
     <audio-player
       :src="data"
       :disabled="disabled"
+      @error="handlePlayerError"
       @loadedmetadata="onLoadedMetaData"
     />
     <figcaption>
@@ -85,6 +86,9 @@ export default {
         tr.setSelection(textSelection).deleteSelection(this.src)
       );
       this.view.focus();
+    },
+    handlePlayerError(e) {
+      this.options.handleError(e, "audio-media");
     },
     async onLoadedMetaData() {
       const audioInputEl = document.getElementById("audio-input");
