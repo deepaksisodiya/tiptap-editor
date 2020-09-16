@@ -198,7 +198,7 @@ export default {
       const file = this.$refs.imageInput.files[0];
 
       const imageType = /image.*/;
-      if (file.type.match(imageType)) {
+      if (file && file.type.match(imageType)) {
         const reader = new FileReader();
         reader.onload = () => {
           const img = new Image();
@@ -215,7 +215,7 @@ export default {
       const audioFile = this.$refs.audioInput.files[0];
       const audioType = /audio.*/;
 
-      if (audioFile.type.match(audioType)) {
+      if (audioFile && audioFile.type.match(audioType)) {
         const reader = new FileReader();
         reader.onload = () => {
           command({
