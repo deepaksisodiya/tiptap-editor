@@ -90,7 +90,9 @@ export default {
     handlePlayerError(e) {
       this.options.handleError(e, "audio-media");
     },
-    handlePlayerClick() {
+    handlePlayerClick({ target }) {
+      const button = this.$el.querySelector(".player-button");
+      if (button.contains(target)) return;
       if (!isDataURL(this.data)) this.shouldShowClose = !this.shouldShowClose;
     },
     async onLoadedMetaData() {
