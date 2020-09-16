@@ -63,12 +63,6 @@ export default {
       return this.data.includes("data:");
     }
   },
-  mounted() {
-    this.$nextTick(() => {
-      // this.view.focus();
-      // this.$el.scrollIntoView(true);
-    });
-  },
   methods: {
     handleKeydown(event) {
       let {
