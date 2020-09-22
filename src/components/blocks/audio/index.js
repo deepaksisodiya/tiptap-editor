@@ -51,7 +51,7 @@ export default class AudioNode extends Node {
 
   get view() {
     return {
-      props: ["node", "updateAttrs", "view", "getPos", "options"],
+      props: ["node", "updateAttrs", "view", "getPos", "options", "editor"],
       components: {
         Audio
       },
@@ -62,6 +62,7 @@ export default class AudioNode extends Node {
           :view='this.view'
           :getPos='this.getPos'
           :options='this.options'
+          :editor='this.editor'
         ></Audio>
       `
     };

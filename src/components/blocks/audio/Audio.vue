@@ -28,7 +28,7 @@ import { isDataURL } from "./../../../utils";
 
 export default {
   name: "Audio",
-  props: ["node", "updateAttrs", "view", "getPos", "options"],
+  props: ["node", "updateAttrs", "view", "getPos", "options", "editor"],
   data() {
     return {
       data: this.node.attrs.src,
@@ -92,6 +92,7 @@ export default {
     },
     handlePlayerClick({ target }) {
       const button = this.$el.querySelector(".player-button");
+      this.setCursorBelowBlock();
       if (button.contains(target)) return;
       if (!isDataURL(this.data)) this.shouldShowClose = !this.shouldShowClose;
     },
@@ -115,6 +116,10 @@ export default {
           audioInputEl.value = "";
         }
       }
+    },
+    setCursorBelowBlock() {
+      const newPos = this.getPos() + 2;
+      this.editor.focus(newPos, newPos);
     }
   }
 };
