@@ -26,7 +26,6 @@ export default class AudioNode extends Node {
           getAttrs: dom => {
             return {
               src: dom.getAttribute("src"),
-              alt: dom.getAttribute("alt"),
               caption: dom.getAttribute("caption")
             };
           }
