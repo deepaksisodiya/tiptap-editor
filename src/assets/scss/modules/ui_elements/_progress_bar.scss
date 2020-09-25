@@ -1,0 +1,38 @@
+.progress {
+	//position: absolute;
+	height: 3px;
+	width: 100%;
+	background-color: $lightest-gray;
+	border-radius: 999px;
+	.progress-bar {
+		height: 100%;
+		text-align: center;
+		background-color: $yellow;
+		-webkit-transition: width 0.6s ease;
+		-o-transition: width 0.6s ease;
+		transition: width 0.6s ease;
+		border-radius: 999px;
+		&.processing-progress-bar {
+			background-color: $green;
+			@include zebraStripeAnimation();
+			animation-duration: 0.45s;
+		}
+	}
+	&.indeterminate-progress {
+		overflow: hidden;
+		.progress-bar {
+			-webkit-animation: indeterminate 2800ms infinite linear;
+			-moz-animation: indeterminate 2800ms infinite linear;
+			-ms-animation: indeterminate 2800ms infinite linear;
+			-o-animation: indeterminate 2800ms infinite linear;
+			animation: indeterminate 2800ms infinite linear;
+		}
+	}
+}
+
+nav {
+	.progress {
+		position: absolute;
+		bottom: 0;
+	}
+}

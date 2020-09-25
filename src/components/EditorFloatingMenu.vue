@@ -11,6 +11,13 @@
       v-show="false"
       @change="previewFiles(commands.image)"
     />
+    <input
+      type="file"
+      id="audio-input"
+      ref="audioInput"
+      v-show="false"
+      @change="previewAudio(commands.audio)"
+    />
     <ul class="kitchensink">
       <li @click="toggleMenu">
         <i class="add-icon" :class="{ 'close-icon': shouldShowMenu }"></i>
@@ -36,6 +43,9 @@
         @click="onClickEmbed(commands.embed, 'video')"
       >
         <i class="video-icon"></i>
+      </li>
+      <li @click="onClickAudio()" v-if="shouldShowMenu">
+        <i class="audio-icon"></i>
       </li>
       <li
         v-if="shouldShowMenu"
@@ -97,6 +107,7 @@ export default {
         bottom: 0
       },
       addImageAt: null,
+      addAudioAt: null,
       shouldShowMenu: false,
       showTooltip: localStorage && !localStorage.getItem("editorTour")
     };
@@ -178,22 +189,41 @@ export default {
       this.$refs.imageInput.click();
       this.hideFloatingMenu();
     },
+    onClickAudio() {
+      this.addAudioAt = this.editor.view.state.tr.selection.head;
+      this.$refs.audioInput.click();
+      this.hideFloatingMenu();
+    },
     previewFiles(command) {
       const file = this.$refs.imageInput.files[0];
 
       const imageType = /image.*/;
-      if (file.type.match(imageType)) {
+      if (file && file.type.match(imageType)) {
         const reader = new FileReader();
         reader.onload = () => {
           const img = new Image();
           img.src = reader.result;
-          this.imageSrc = img.src;
           command({
-            src: { fallback: this.imageSrc },
+            src: { fallback: img.src },
             addImageAt: this.addImageAt
           });
         };
         reader.readAsDataURL(file);
+      }
+    },
+    previewAudio(command) {
+      const audioFile = this.$refs.audioInput.files[0];
+      const audioType = /audio.*/;
+
+      if (audioFile && audioFile.type.match(audioType)) {
+        const reader = new FileReader();
+        reader.onload = () => {
+          command({
+            src: reader.result,
+            addAudioAt: this.addAudioAt
+          });
+        };
+        reader.readAsDataURL(audioFile);
       }
     },
     toggleMenu(e) {

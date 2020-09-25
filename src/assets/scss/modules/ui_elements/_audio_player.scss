@@ -1,0 +1,35 @@
+@import "./audio_modules/_player_button";
+@import "./audio_modules/_player_seekbar";
+@import "./audio_modules/_player_time";
+
+.audio-player-container {
+	audio {
+		display: none;
+	}
+}
+
+.audio-player {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 22px 35px;
+	margin-bottom: 20px;
+	box-sizing: border-box;
+	box-shadow: 5px 0px 10px 2px rgba(155, 155, 155, 0.1),
+		0px 5px 10px 2px rgba(155, 155, 155, 0.1);
+	border: 1px solid transparent;
+	border-radius: 12px;
+	&.audio-player-disabled {
+		filter: grayscale(100%);
+		opacity: 0.75;
+		cursor: default;
+		box-shadow: none;
+		border: 1px solid rgba($dark-silver, 0.25);
+	}
+}
+
+@media (max-width: 767px) {
+	.audio-player {
+		padding: 15px 20px;
+	}
+}

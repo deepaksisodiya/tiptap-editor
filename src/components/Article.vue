@@ -36,7 +36,8 @@ import {
   Title,
   HorizontalRule,
   Header,
-  Superscript
+  Superscript,
+  Audio
 } from "./blocks";
 import Placeholder from "./../extensions/Placeholder";
 import browser from "../utils/browser";
@@ -79,9 +80,17 @@ export default {
       type: Function,
       required: true
     },
+    uploadAudio: {
+      type: Function,
+      required: true
+    },
     getEmbeds: {
       type: Function,
       required: true
+    },
+    handleError: {
+      type: Function,
+      default: () => {}
     }
   },
   components: {
@@ -125,6 +134,10 @@ export default {
           new Image({
             uploadImage: this.uploadImage
           }),
+          new Audio({
+            uploadAudio: this.uploadAudio,
+            handleError: this.handleError
+          }),
           new FeatureImage({
             uploadImage: this.uploadImage
           }),
@@ -142,9 +155,12 @@ export default {
           data.content.shift();
           data.content = data.content.filter(block => {
             if (
-              block.type === "image" &&
-              block.attrs.src &&
-              block.attrs.src.fallback.includes("data:")
+              (block.type === "image" &&
+                block.attrs.src &&
+                block.attrs.src.fallback.includes("data:")) ||
+              (block.type === "audio" &&
+                block.attrs.src &&
+                block.attrs.src.includes("data:"))
             ) {
               return false;
             }

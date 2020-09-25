@@ -5,7 +5,7 @@
         :onUpdatePost="onUpdatePost"
         :uploadImage="uploadImage"
         :getEmbeds="getEmbeds"
-        delayUpdateBy="10000"
+        delayUpdateBy="300"
       />
     </div>
     <vue-json-pretty :path="'res'" :data="blocks"></vue-json-pretty>
