@@ -9,6 +9,7 @@
       id="image-input"
       ref="imageInput"
       v-show="false"
+      accept="image/*"
       @change="previewFiles(commands.image)"
     />
     <input
@@ -16,6 +17,7 @@
       id="audio-input"
       ref="audioInput"
       v-show="false"
+      accept="audio/*"
       @change="previewAudio(commands.audio)"
     />
     <ul class="kitchensink">
@@ -197,8 +199,7 @@ export default {
     previewFiles(command) {
       const file = this.$refs.imageInput.files[0];
 
-      const imageType = /image.*/;
-      if (file && file.type.match(imageType)) {
+      if (file) {
         const reader = new FileReader();
         reader.onload = () => {
           const img = new Image();
@@ -213,9 +214,8 @@ export default {
     },
     previewAudio(command) {
       const audioFile = this.$refs.audioInput.files[0];
-      const audioType = /audio.*/;
 
-      if (audioFile && audioFile.type.match(audioType)) {
+      if (audioFile) {
         const reader = new FileReader();
         reader.onload = () => {
           command({
