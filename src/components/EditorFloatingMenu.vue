@@ -213,8 +213,9 @@ export default {
     },
     previewAudio(command) {
       const audioFile = this.$refs.audioInput.files[0];
+      const audioType = /audio.*/;
 
-      if (audioFile) {
+      if (audioFile && audioFile.type.match(audioType)) {
         const reader = new FileReader();
         reader.onload = () => {
           command({
