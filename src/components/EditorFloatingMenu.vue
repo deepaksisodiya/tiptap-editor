@@ -17,7 +17,6 @@
       id="audio-input"
       ref="audioInput"
       v-show="false"
-      accept="audio/*"
       @change="previewAudio(commands.audio)"
     />
     <ul class="kitchensink">
