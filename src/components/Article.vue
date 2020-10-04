@@ -2,7 +2,11 @@
   <div class="editor">
     <article>
       <editor-menu-bubble :editor="editor" />
-      <editor-floating-menu :editor="editor" ref="floatingMenu" />
+      <editor-floating-menu
+        :editor="editor"
+        ref="floatingMenu"
+        :before-upload="beforeUpload"
+      />
       <editor-content id="editor" class="editor__content" :editor="editor" />
       <div class="ios-test-fix">empt</div>
     </article>
@@ -91,6 +95,10 @@ export default {
     handleError: {
       type: Function,
       default: () => {}
+    },
+    beforeUpload: {
+      type: Function,
+      default: () => true
     }
   },
   components: {

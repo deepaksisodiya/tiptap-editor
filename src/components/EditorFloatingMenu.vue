@@ -98,6 +98,10 @@ export default {
     editor: {
       default: null,
       type: Object
+    },
+    beforeUpload: {
+      type: Function,
+      default: () => true
     }
   },
   data() {
@@ -197,6 +201,7 @@ export default {
     },
     previewFiles(command) {
       const file = this.$refs.imageInput.files[0];
+      if (!this.beforeUpload(file, "image")) return;
 
       if (file) {
         const reader = new FileReader();
@@ -214,6 +219,8 @@ export default {
     previewAudio(command) {
       const audioFile = this.$refs.audioInput.files[0];
       const audioType = /audio.*/;
+
+      if (!this.beforeUpload(audioFile, "audio")) return;
 
       if (audioFile && audioFile.type.match(audioType)) {
         const reader = new FileReader();
