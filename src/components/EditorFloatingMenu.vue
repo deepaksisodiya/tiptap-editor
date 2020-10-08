@@ -203,7 +203,7 @@ export default {
       const { imageInput } = this.$refs;
       const imageFile = imageInput.files[0];
 
-      if (!this.beforeUpload(imageFile, "image")) {
+      if (imageFile && !this.beforeUpload(imageFile, "image")) {
         imageInput.value = "";
         return;
       }
@@ -225,7 +225,7 @@ export default {
       const { audioInput } = this.$refs;
       const audioFile = audioInput.files[0];
 
-      if (!this.beforeUpload(audioFile, "audio")) {
+      if (audioFile && !this.beforeUpload(audioFile, "audio")) {
         audioInput.value = "";
         return;
       }
