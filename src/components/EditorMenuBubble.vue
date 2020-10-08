@@ -144,7 +144,9 @@ export default {
                 onUpdate: menu => {
                   // the second check ensures event is fired only once
                   if (menu.isActive && this.menu.isActive === false) {
-                    this.fixMenuEl();
+                    if (this.ios) {
+                      this.fixMenuEl();
+                    }
                     this.$emit("show", menu);
                   } else if (!menu.isActive && this.menu.isActive === true) {
                     this.$emit("hide", menu);
