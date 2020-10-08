@@ -200,10 +200,15 @@ export default {
       this.hideFloatingMenu();
     },
     previewFiles(command) {
-      const file = this.$refs.imageInput.files[0];
-      if (!this.beforeUpload(file, "image")) return;
+      const { imageInput } = this.$refs;
+      const imageFile = imageInput.files[0];
 
-      if (file) {
+      if (!this.beforeUpload(imageFile, "image")) {
+        imageInput.value = "";
+        return;
+      }
+
+      if (imageFile) {
         const reader = new FileReader();
         reader.onload = () => {
           const img = new Image();
@@ -213,16 +218,19 @@ export default {
             addImageAt: this.addImageAt
           });
         };
-        reader.readAsDataURL(file);
+        reader.readAsDataURL(imageFile);
       }
     },
     previewAudio(command) {
-      const audioFile = this.$refs.audioInput.files[0];
-      const audioType = /audio.*/;
+      const { audioInput } = this.$refs;
+      const audioFile = audioInput.files[0];
 
-      if (!this.beforeUpload(audioFile, "audio")) return;
+      if (!this.beforeUpload(audioFile, "audio")) {
+        audioInput.value = "";
+        return;
+      }
 
-      if (audioFile && audioFile.type.match(audioType)) {
+      if (audioFile) {
         const reader = new FileReader();
         reader.onload = () => {
           command({
