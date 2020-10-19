@@ -23,18 +23,6 @@
       <li @click="toggleMenu">
         <i class="add-icon" :class="{ 'close-icon': shouldShowMenu }"></i>
       </li>
-      <li v-if="showTooltip" class="popover right-popover">
-        <div class="popover-content">
-          <h3>WELCOME TO SCROLLSTACK</h3>
-          <p>
-            Tap the (+) button to add images, videos, embeds and more to your
-            story.
-          </p>
-          <button @click="onClickOk" class="dark-button">
-            <span>OK, Got it</span>
-          </button>
-        </div>
-      </li>
       <li @click="onClickImage()" v-if="shouldShowMenu">
         <i class="image-icon"></i>
       </li>
@@ -113,8 +101,7 @@ export default {
       },
       addImageAt: null,
       addAudioAt: null,
-      shouldShowMenu: false,
-      showTooltip: localStorage && !localStorage.getItem("editorTour")
+      shouldShowMenu: false
     };
   },
   computed: {
@@ -249,16 +236,8 @@ export default {
         });
         this.editor.setSelection(nodePos.pos, nodePos.pos);
       }
-      if (localStorage && !localStorage.getItem("editorTour")) {
-        this.onClickOk();
-      }
       this.shouldShowMenu = !this.shouldShowMenu;
       this.editor.setOptions({});
-    },
-    onClickOk() {
-      if (!localStorage) return;
-      localStorage.setItem("editorTour", true);
-      this.showTooltip = false;
     },
     onClickEmbed(command, type) {
       command({ type });
