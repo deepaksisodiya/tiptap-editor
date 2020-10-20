@@ -99,18 +99,7 @@ export default {
   },
   mounted() {
     if (this.url) {
-      const data = {
-        title: this.node.attrs.title,
-        url: this.node.attrs.url,
-        thumbnail_url: this.node.attrs.thumbnail_url,
-        thumbnail_width: this.node.attrs.thumbnail_width,
-        thumbnail_height: this.node.attrs.thumbnail_height,
-        provider: this.node.attrs.provider,
-        type: this.node.attrs.type,
-        description: this.node.attrs.description,
-        html: this.node.attrs.html
-      };
-      this.embeds.data = data;
+      this.embeds.data = this.getEmbedsData(this.node.attrs);
 
       if (this.embeds.data.type === "link") {
         this.$nextTick(() => {
@@ -236,18 +225,7 @@ export default {
       try {
         const url = encodeURIComponent(validURL.trim());
         const response = await this.options.getEmbeds(url);
-        // TODO: refactor here and similar code in mounted hook
-        this.embeds.data = {
-          title: response.data.attrs.title,
-          description: response.data.attrs.description,
-          url: response.data.attrs.url,
-          provider: response.data.attrs.provider,
-          thumbnail_url: response.data.attrs.thumbnail_url,
-          thumbnail_width: response.data.attrs.thumbnail_width,
-          thumbnail_height: response.data.attrs.thumbnail_height,
-          html: response.data.attrs.html,
-          type: response.data.attrs.type
-        };
+        this.embeds.data = this.getEmbedsData(response.data.attrs);
         // for copy pasting to work
         this.updateAttrs(this.embeds.data);
 
@@ -333,6 +311,19 @@ export default {
         tr.setSelection(textSelection).deleteSelection(this.src)
       );
       this.view.focus();
+    },
+    getEmbedsData(data) {
+      return {
+        title: data.title,
+        description: data.description,
+        url: data.url,
+        provider: data.provider,
+        thumbnail_url: data.thumbnail_url,
+        thumbnail_width: data.thumbnail_width,
+        thumbnail_height: data.thumbnail_height,
+        html: data.html,
+        type: data.type
+      };
     }
   }
 };
