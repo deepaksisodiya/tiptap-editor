@@ -12,7 +12,7 @@
         <input
           ref="embedInput"
           :placeholder="placeholderText"
-          type="text"
+          type="url"
           @paste.stop
           @keyup.enter="onClickAdd"
           v-model="url"
