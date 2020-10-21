@@ -1,6 +1,6 @@
 <template>
   <div>
-    <ul v-if="!embeds.data.url" class="kitchensink">
+    <ul v-if="!embeds.data.url" class="kitchensink embed-input-open">
       <li @click="deleteNode">
         <i class="add-icon close-icon"></i>
       </li>
