@@ -35,6 +35,7 @@ export default {
       shouldShowClose: false
     };
   },
+  inject: ["getEditorVm"],
   components: {
     AudioPlayer
   },
@@ -62,6 +63,12 @@ export default {
     disabled() {
       return this.data.includes("data:");
     }
+  },
+  mounted() {
+    this.getEditorVm().$watch("selectedEl", value => {
+      if (this.shouldShowClose && value !== this.$el)
+        this.shouldShowClose = false;
+    });
   },
   methods: {
     handleKeydown(event) {
@@ -95,6 +102,7 @@ export default {
       this.setCursorBelowBlock();
       if (button.contains(target)) return;
       if (!isDataURL(this.data)) this.shouldShowClose = !this.shouldShowClose;
+      this.options.onSelection(this.shouldShowClose ? this.$el : "");
     },
     async onLoadedMetaData() {
       const audioInputEl = document.getElementById("audio-input");
