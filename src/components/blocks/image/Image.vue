@@ -34,6 +34,7 @@ export default {
       shouldShowClose: false
     };
   },
+  inject: ["getEditorVm"],
   computed: {
     src: {
       get() {
@@ -60,6 +61,10 @@ export default {
     this.$nextTick(() => {
       this.view.focus();
       this.$el.scrollIntoView(true);
+    });
+    this.getEditorVm().$watch("selectedEl", value => {
+      if (this.shouldShowClose && value !== this.$el)
+        this.shouldShowClose = false;
     });
   },
   methods: {
@@ -89,6 +94,7 @@ export default {
     onImageClick() {
       if (isDataURL(this.data && this.data.fallback) === false)
         this.shouldShowClose = !this.shouldShowClose;
+      this.options.onSelection(this.shouldShowClose ? this.$el : "");
     },
     async loaded() {
       const imageInputEl = document.getElementById("image-input");

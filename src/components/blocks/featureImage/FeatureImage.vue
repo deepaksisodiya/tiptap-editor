@@ -53,6 +53,7 @@ export default {
       shouldShowClose: false
     };
   },
+  inject: ["getEditorVm"],
   watch: {
     "node.attrs.src"(newValue) {
       if (!this.data.fallback) this.data = newValue;
@@ -82,6 +83,10 @@ export default {
   },
   mounted() {
     this.view.featureImageInstance = this;
+    this.getEditorVm().$watch("selectedEl", value => {
+      if (this.shouldShowClose && value !== this.$el)
+        this.shouldShowClose = false;
+    });
   },
   methods: {
     handleKeydown(event) {
@@ -137,6 +142,7 @@ export default {
     onImageClick() {
       if (isDataURL(this.data && this.data.fallback) === false)
         this.shouldShowClose = !this.shouldShowClose;
+      this.options.onSelection(this.shouldShowClose ? this.$el : "");
     }
   }
 };

@@ -115,6 +115,7 @@ export default {
       },
       data: this.content,
       editable: true,
+      selectedEl: undefined,
       editor: new Editor({
         autoFocus: false,
         editable: true,
@@ -140,17 +141,21 @@ export default {
             notAfter: ["paragraph"]
           }),
           new Image({
-            uploadImage: this.uploadImage
+            uploadImage: this.uploadImage,
+            onSelection: this.onSelection
           }),
           new Audio({
             uploadAudio: this.uploadAudio,
-            handleError: this.handleError
+            handleError: this.handleError,
+            onSelection: this.onSelection
           }),
           new FeatureImage({
-            uploadImage: this.uploadImage
+            uploadImage: this.uploadImage,
+            onSelection: this.onSelection
           }),
           new Embed({
-            getEmbeds: this.getEmbeds
+            getEmbeds: this.getEmbeds,
+            onSelection: this.onSelection
           }),
           new HorizontalRule(),
           new Superscript()
@@ -269,6 +274,13 @@ export default {
       })
     };
   },
+  provide() {
+    return {
+      getEditorVm: () => {
+        return this;
+      }
+    };
+  },
   mounted() {
     // init data
     const newContent = this.addTitle(
@@ -328,6 +340,9 @@ export default {
         dispatch(transaction);
         this.editor.setSelection(selection.anchor + 2, selection.anchor + 2);
       }
+    },
+    onSelection(el) {
+      this.selectedEl = el;
     }
   },
   watch: {

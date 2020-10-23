@@ -97,7 +97,12 @@ export default {
       }
     };
   },
+  inject: ["getEditorVm"],
   mounted() {
+    this.getEditorVm().$watch("selectedEl", value => {
+      if (this.shouldShowClose && value !== this.$el)
+        this.shouldShowClose = false;
+    });
     if (this.url) {
       const data = {
         title: this.node.attrs.title,
@@ -322,6 +327,7 @@ export default {
     onClickEmbed() {
       this.editor.blur();
       this.shouldShowClose = !this.shouldShowClose;
+      this.options.onSelection(this.shouldShowClose ? this.$el : "");
     },
     deleteNode() {
       let {
