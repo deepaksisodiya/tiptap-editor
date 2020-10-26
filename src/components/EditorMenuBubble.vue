@@ -204,6 +204,9 @@ export default {
     hideInput() {
       this.href = null;
       this.isInputActive = false;
+      this.$nextTick(() => {
+        if (this.ios) this.fixMenuEl();
+      });
     },
     isTitleSelected() {
       const { $from, $to } = this.editor.view.state.tr.selection;
