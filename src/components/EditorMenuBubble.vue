@@ -144,6 +144,9 @@ export default {
                 onUpdate: menu => {
                   // the second check ensures event is fired only once
                   if (menu.isActive && this.menu.isActive === false) {
+                    if (this.ios) {
+                      this.fixMenuEl();
+                    }
                     this.$emit("show", menu);
                   } else if (!menu.isActive && this.menu.isActive === true) {
                     this.$emit("hide", menu);
@@ -162,11 +165,19 @@ export default {
   },
   mounted() {
     if (this.ios) {
-      this.menuElTimer = setInterval(() => this.fixMenuEl(), 100);
+      window.addEventListener("scroll", this.fixMenuEl);
+      window.addEventListener("resize", this.fixMenuEl);
+      window.visualViewport.addEventListener("scroll", this.fixMenuEl);
+      window.visualViewport.addEventListener("resize", this.fixMenuEl);
     }
   },
   beforeDestroy() {
-    if (this.menuElTimer) clearInterval(this.menuElTimer);
+    if (this.ios) {
+      window.removeEventListener("scroll", this.fixMenuEl);
+      window.removeEventListener("resize", this.fixMenuEl);
+      window.visualViewport.removeEventListener("scroll", this.fixMenuEl);
+      window.visualViewport.removeEventListener("resize", this.fixMenuEl);
+    }
     this.editor.unregisterPlugin("menu_bubble");
   },
   methods: {

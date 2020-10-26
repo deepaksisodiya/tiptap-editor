@@ -4,7 +4,9 @@
       <Article
         :onUpdatePost="onUpdatePost"
         :uploadImage="uploadImage"
+        :uploadAudio="uploadAudio"
         :getEmbeds="getEmbeds"
+        :content="getContent()"
         delayUpdateBy="300"
       />
     </div>
@@ -19,6 +21,23 @@ import Article from "./components/Article.vue";
 import "@/assets/scss/base.scss";
 import "@/assets/scss/editor.scss";
 import "@/assets/scss/article.scss";
+
+const defaultContent = {
+  type: "doc",
+  content: [
+    {
+      type: "featuredimage",
+      attrs: {
+        src: "",
+        caption: "",
+        alt: ""
+      }
+    },
+    {
+      type: "paragraph"
+    }
+  ]
+};
 
 export default {
   name: "Demo",
@@ -36,12 +55,19 @@ export default {
       // return promise with upload image url
       console.log(formData);
     },
+    uploadAudio(formData) {
+      // return promise with upload Audio
+      console.log(formData);
+    },
     getEmbeds(url) {
       // Should return promise with embed URL data
       console.log(url);
     },
     onUpdatePost({ blocks, title = "" }) {
       this.blocks = { title, ...blocks };
+    },
+    getContent() {
+      return defaultContent;
     }
   }
 };

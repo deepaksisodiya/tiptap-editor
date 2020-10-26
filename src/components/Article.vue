@@ -73,7 +73,9 @@ export default {
     },
     content: {
       type: Object,
-      default: defaultContent,
+      default: function() {
+        return defaultContent;
+      },
       required: true
     },
     title: {
