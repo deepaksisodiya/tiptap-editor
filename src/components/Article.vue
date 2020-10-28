@@ -25,9 +25,14 @@ import {
   Italic,
   Link,
   History,
-  TrailingNode
+  TrailingNode,
+  CodeBlockHighlight
 } from "tiptap-extensions";
 import { findChildren } from "prosemirror-utils";
+
+import javascript from "highlight.js/lib/languages/javascript";
+import css from "highlight.js/lib/languages/css";
+// import "highlight.js/styles/github.css";
 
 import EditorFloatingMenu from "./EditorFloatingMenu.vue";
 import EditorMenuBubble from "./EditorMenuBubble.vue";
@@ -160,7 +165,13 @@ export default {
             onSelection: this.onSelection
           }),
           new HorizontalRule(),
-          new Superscript()
+          new Superscript(),
+          new CodeBlockHighlight({
+            languages: {
+              javascript,
+              css
+            }
+          })
           // new Lock()
         ],
         onUpdate: ({ getJSON }) => {
@@ -396,5 +407,77 @@ export default {
 .ios-test-fix {
   visibility: hidden;
   height: 500px;
+}
+pre {
+  &::before {
+    content: attr(data-language);
+    text-transform: uppercase;
+    display: block;
+    text-align: right;
+    font-weight: bold;
+    font-size: 0.7rem;
+  }
+  code {
+    .hljs-comment,
+    .hljs-quote {
+      color: #999999;
+    }
+    .hljs-variable,
+    .hljs-template-variable,
+    .hljs-attribute,
+    .hljs-tag,
+    .hljs-name,
+    .hljs-regexp,
+    .hljs-link,
+    .hljs-name,
+    .hljs-selector-id,
+    .hljs-selector-class {
+      color: #f2777a;
+    }
+    .hljs-number,
+    .hljs-meta,
+    .hljs-built_in,
+    .hljs-builtin-name,
+    .hljs-literal,
+    .hljs-type,
+    .hljs-params {
+      color: #f99157;
+    }
+    .hljs-string,
+    .hljs-symbol,
+    .hljs-bullet {
+      color: #99cc99;
+    }
+    .hljs-title,
+    .hljs-section {
+      color: #ffcc66;
+    }
+    .hljs-keyword,
+    .hljs-selector-tag {
+      color: #6699cc;
+    }
+    .hljs-emphasis {
+      font-style: italic;
+    }
+    .hljs-strong {
+      font-weight: 700;
+    }
+  }
+}
+.ProseMirror,
+.ProseMirror pre {
+  white-space: pre-wrap;
+}
+.editor__content pre {
+  padding: 0.7rem 1rem;
+  border-radius: 5px;
+  background-color: #f6f8fa;
+  color: #24292e;
+  line-height: 22px;
+  overflow-x: auto;
+  margin: 40px 0px;
+}
+.editor__content * {
+  caret-color: currentColor;
 }
 </style>
