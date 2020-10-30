@@ -28,6 +28,7 @@ import {
   TrailingNode
 } from "tiptap-extensions";
 import { findChildren } from "prosemirror-utils";
+import low from "lowlight/lib/core";
 
 import javascript from "highlight.js/lib/languages/javascript";
 import css from "highlight.js/lib/languages/css";
