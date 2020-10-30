@@ -25,8 +25,7 @@ import {
   Italic,
   Link,
   History,
-  TrailingNode,
-  CodeBlockHighlight
+  TrailingNode
 } from "tiptap-extensions";
 import { findChildren } from "prosemirror-utils";
 
@@ -46,7 +45,8 @@ import {
   HorizontalRule,
   Header,
   Superscript,
-  Audio
+  Audio,
+  CodeBlockHighlightWithLanguage
 } from "./blocks";
 import Placeholder from "./../extensions/Placeholder";
 import browser from "../utils/browser";
@@ -166,7 +166,7 @@ export default {
           }),
           new HorizontalRule(),
           new Superscript(),
-          new CodeBlockHighlight({
+          new CodeBlockHighlightWithLanguage({
             languages: {
               javascript,
               css,
