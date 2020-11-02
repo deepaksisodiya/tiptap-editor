@@ -30,10 +30,6 @@ import {
 import { findChildren } from "prosemirror-utils";
 import low from "lowlight/lib/core";
 
-import javascript from "highlight.js/lib/languages/javascript";
-import css from "highlight.js/lib/languages/css";
-import python from "highlight.js/lib/languages/python";
-
 import EditorFloatingMenu from "./EditorFloatingMenu.vue";
 import EditorMenuBubble from "./EditorMenuBubble.vue";
 import {
@@ -167,13 +163,7 @@ export default {
           }),
           new HorizontalRule(),
           new Superscript(),
-          new CodeBlockHighlightWithLanguage({
-            languages: {
-              javascript,
-              css,
-              python
-            }
-          })
+          new CodeBlockHighlightWithLanguage()
           // new Lock()
         ],
         onUpdate: ({ getJSON }) => {
