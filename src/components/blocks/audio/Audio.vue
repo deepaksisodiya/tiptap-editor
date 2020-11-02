@@ -117,7 +117,6 @@ export default {
           if (response && response.status === 200) {
             this.updateAttrs(response.data);
             this.src = response.data.audio;
-            this.duration = response.data.duration;
             this.data = response.data.audio;
           }
         } catch (error) {
