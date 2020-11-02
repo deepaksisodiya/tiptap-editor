@@ -28,7 +28,6 @@ import {
   TrailingNode
 } from "tiptap-extensions";
 import { findChildren } from "prosemirror-utils";
-import low from "lowlight/lib/core";
 
 import EditorFloatingMenu from "./EditorFloatingMenu.vue";
 import EditorMenuBubble from "./EditorMenuBubble.vue";
