@@ -16,6 +16,9 @@ export default class AudioNode extends Node {
         },
         caption: {
           default: ""
+        },
+        duration: {
+          default: 0
         }
       },
       group: "block",
