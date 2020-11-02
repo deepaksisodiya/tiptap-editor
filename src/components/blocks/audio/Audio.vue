@@ -50,6 +50,16 @@ export default {
         });
       }
     },
+    duration: {
+      get() {
+        return this.node.attrs.duration;
+      },
+      set(duration) {
+        this.updateAttrs({
+          duration
+        });
+      }
+    },
     caption: {
       get() {
         return this.node.attrs.caption;
@@ -116,6 +126,7 @@ export default {
           const response = await this.options.uploadAudio(formData);
           if (response && response.status === 200) {
             this.src = response.data.audio;
+            this.duration = response.data.duration;
             this.data = response.data.audio;
           }
         } catch (error) {
