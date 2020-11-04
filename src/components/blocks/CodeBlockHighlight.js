@@ -1,4 +1,7 @@
-import { CodeBlockHighlight, Highlight } from "tiptap-extensions";
+import {
+  CodeBlockHighlight as TiptapCodeBlockHighlight,
+  Highlight
+} from "tiptap-extensions";
 import low from "lowlight/lib/core";
 
 import bash from "highlight.js/lib/languages/bash";
@@ -14,11 +17,11 @@ import ruby from "highlight.js/lib/languages/ruby";
 import scala from "highlight.js/lib/languages/scala";
 import sql from "highlight.js/lib/languages/sql";
 import typescript from "highlight.js/lib/languages/typescript";
-
+import xml from "highlight.js/lib/languages/xml";
 
 import { Plugin } from "tiptap";
 
-export default class CodeBlockHighlightWithLanguage extends CodeBlockHighlight {
+export default class CodeBlockHighlight extends TiptapCodeBlockHighlight {
   get name() {
     return "code_block";
   }
@@ -38,7 +41,8 @@ export default class CodeBlockHighlightWithLanguage extends CodeBlockHighlight {
         ruby,
         scala,
         sql,
-        typescript
+        typescript,
+        xml
       }
     };
   }

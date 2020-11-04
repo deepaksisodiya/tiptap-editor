@@ -42,7 +42,7 @@ import {
   Header,
   Superscript,
   Audio,
-  CodeBlockHighlightWithLanguage
+  CodeBlockHighlight
 } from "./blocks";
 import Placeholder from "./../extensions/Placeholder";
 import browser from "../utils/browser";
@@ -162,7 +162,7 @@ export default {
           }),
           new HorizontalRule(),
           new Superscript(),
-          new CodeBlockHighlightWithLanguage()
+          new CodeBlockHighlight(),
           // new Lock()
         ],
         onUpdate: ({ getJSON }) => {
