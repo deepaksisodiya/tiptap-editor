@@ -71,7 +71,7 @@ export default class CodeBlockHighlight extends TiptapCodeBlockHighlight {
           }
         }
       ],
-      toDOM: () => ["pre", ["code", 0]]
+      toDOM: () => ["pre", ["code", { class: "hljs" }, 0]]
     };
   }
 
