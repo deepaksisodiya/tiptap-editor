@@ -21,7 +21,7 @@
 
 <script>
 import { TextSelection } from "tiptap";
-// import { isDataURL } from "./../../../utils";
+import { isDataURL } from "./../../../utils";
 
 export default {
   name: "ImageBlock",
@@ -92,7 +92,7 @@ export default {
       this.view.focus();
     },
     onImageClick() {
-      // if (isDataURL(this.data && this.data.fallback) === false)
+      if (isDataURL(this.data && this.data.fallback) === false)
         this.shouldShowClose = !this.shouldShowClose;
       this.options.onSelection(this.shouldShowClose ? this.$el : "");
     },
