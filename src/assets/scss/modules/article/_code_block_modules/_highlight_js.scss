@@ -1,0 +1,14 @@
+// highlight.js code
+
+.hljs-symbol,
+.hljs-bullet,
+.hljs-link,
+.hljs-meta,
+.hljs-selector-id,
+.hljs-title {
+	color: $hue-2;
+}
+
+.hljs-link {
+	text-decoration: underline;
+}
