@@ -70,7 +70,7 @@
       :style="getStyle(menu)"
     >
       <input
-        type="text"
+        type="url"
         v-model="href"
         placeholder="Paste or type a link"
         @keydown.enter.prevent="addAnchor(editor.commands.link, href)"
