@@ -184,6 +184,9 @@ export default {
           this.onUpdatePost({ blocks: data, title });
         },
         editorProps: {
+          handleClick: () => {
+            this.selectedEl = null;
+          },
           handlePaste: (view, event, slice) => {
             const singleNode =
               slice.openStart == 0 &&

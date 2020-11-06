@@ -115,8 +115,9 @@ export default {
         try {
           const response = await this.options.uploadAudio(formData);
           if (response && response.status === 200) {
-            this.src = response.data.audio;
-            this.data = response.data.audio;
+            const { audio: src, duration } = response.data;
+            this.updateAttrs({ src, duration });
+            this.data = src;
           }
         } catch (error) {
           this.deleteNode();
