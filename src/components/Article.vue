@@ -162,7 +162,7 @@ export default {
           }),
           new HorizontalRule(),
           new Superscript(),
-          new CodeBlockHighlight(),
+          new CodeBlockHighlight()
           // new Lock()
         ],
         onUpdate: ({ getJSON }) => {

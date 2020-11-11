@@ -21,6 +21,22 @@ import xml from "highlight.js/lib/languages/xml";
 
 import { Plugin } from "tiptap";
 
+function addIndentation() {
+  return function(state, dispatch) {
+    function isInCode(state) {
+      let $head = state.selection.$head;
+      for (let d = $head.depth; d > 0; d--) {
+        if ($head.node(d).type.spec.code) return true;
+      }
+      return false;
+    }
+
+    if (!isInCode(state)) return false;
+    dispatch(state.tr.insertText("  ", state.selection.from, state.selection.to));
+    return true;
+  };
+}
+
 export default class CodeBlockHighlight extends TiptapCodeBlockHighlight {
   get name() {
     return "code_block";
@@ -72,6 +88,12 @@ export default class CodeBlockHighlight extends TiptapCodeBlockHighlight {
         }
       ],
       toDOM: () => ["pre", ["code", { class: "hljs" }, 0]]
+    };
+  }
+
+  keys() {
+    return {
+      Tab: addIndentation()
     };
   }
 
