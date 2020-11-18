@@ -15,6 +15,7 @@ import php from "highlight.js/lib/languages/php";
 import python from "highlight.js/lib/languages/python";
 import ruby from "highlight.js/lib/languages/ruby";
 import scala from "highlight.js/lib/languages/scala";
+import scss from "highlight.js/lib/languages/scss";
 import sql from "highlight.js/lib/languages/sql";
 import typescript from "highlight.js/lib/languages/typescript";
 import xml from "highlight.js/lib/languages/xml";
@@ -32,7 +33,7 @@ function addIndentation() {
     }
 
     if (!isInCode(state)) return false;
-    dispatch(state.tr.insertText("  ", state.selection.from, state.selection.to));
+    dispatch(state.tr.insertText("  ", state.selection.from));
     return true;
   };
 }
@@ -56,6 +57,7 @@ export default class CodeBlockHighlight extends TiptapCodeBlockHighlight {
         python,
         ruby,
         scala,
+        scss,
         sql,
         typescript,
         xml
