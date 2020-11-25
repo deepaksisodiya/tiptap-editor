@@ -22,6 +22,7 @@
         <div class="close-button" @click="removeImage">
           <i class="close-icon"></i>
         </div>
+        <upload-progress :progress="progress" :failed="failed" />
         <picture @click="onImageClick">
           <source v-if="data.image" :srcset="data.image" type="image" />
           <source :srcset="data.fallback" type="image" />
@@ -43,14 +44,20 @@
 <script>
 import { TextSelection } from "tiptap";
 import { isDataURL } from "./../../../utils";
+import UploadProgress from "../../UploadProgress";
 
 export default {
   name: "FeatureImage",
   props: ["node", "updateAttrs", "view", "getPos", "options"],
+  components: {
+    UploadProgress
+  },
   data() {
     return {
       data: this.node.attrs.src,
-      shouldShowClose: false
+      shouldShowClose: false,
+      progress: 0,
+      failed: false
     };
   },
   inject: ["getEditorVm"],
@@ -101,6 +108,9 @@ export default {
         event.preventDefault();
       }
     },
+    onProgress(progress) {
+      this.progress = progress;
+    },
     previewFiles() {
       const file = this.$refs.fileInput.files[0];
 
@@ -115,7 +125,10 @@ export default {
           const formData = new FormData();
           formData.append("image", file);
           try {
-            const response = await this.options.uploadImage(formData);
+            const response = await this.options.uploadImage(
+              formData,
+              this.onProgress
+            );
             if (response && response.status === 200) {
               this.src = response.data;
               this.data = response.data;
