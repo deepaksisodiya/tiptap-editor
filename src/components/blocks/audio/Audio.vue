@@ -3,6 +3,7 @@
     <div class="close-button" @click="deleteNode">
       <i class="close-icon"></i>
     </div>
+    <upload-progress :progress="progress" :failed="failed" />
     <audio-player
       :src="data"
       :disabled="disabled"
@@ -25,6 +26,7 @@
 import { TextSelection } from "tiptap";
 import AudioPlayer from "scroll-vue-player";
 import { isDataURL } from "./../../../utils";
+import UploadProgress from "../../UploadProgress";
 
 export default {
   name: "Audio",
@@ -32,12 +34,15 @@ export default {
   data() {
     return {
       data: this.node.attrs.src,
-      shouldShowClose: false
+      shouldShowClose: false,
+      failed: false,
+      progress: 0
     };
   },
   inject: ["getEditorVm"],
   components: {
-    AudioPlayer
+    AudioPlayer,
+    UploadProgress
   },
   computed: {
     src: {
@@ -104,6 +109,9 @@ export default {
       if (!isDataURL(this.data)) this.shouldShowClose = !this.shouldShowClose;
       this.options.onSelection(this.shouldShowClose ? this.$el : "");
     },
+    onProgress(progress) {
+      this.progress = progress;
+    },
     async onLoadedMetaData() {
       const audioInputEl = document.getElementById("audio-input");
 
@@ -113,7 +121,10 @@ export default {
         formData.append("audio", file);
 
         try {
-          const response = await this.options.uploadAudio(formData);
+          const response = await this.options.uploadAudio(
+            formData,
+            this.onProgress
+          );
           if (response && response.status === 200) {
             const { audio: src, duration } = response.data;
             this.updateAttrs({ src, duration });

@@ -7,6 +7,7 @@
       <source v-if="data.image" :srcset="data.image" type="image" />
       <source :srcset="data.fallback" type="image" />
       <img :src="data.fallback" @load="loaded" />
+      <upload-progress :progress="progress" :failed="failed" />
     </picture>
     <figcaption>
       <input
@@ -22,16 +23,21 @@
 <script>
 import { TextSelection } from "tiptap";
 import { isDataURL } from "./../../../utils";
+import UploadProgress from "../../UploadProgress";
 
 export default {
   name: "ImageBlock",
   props: ["node", "updateAttrs", "view", "getPos", "options"],
+  components: {
+    UploadProgress
+  },
   data() {
     return {
       height: "",
       width: "",
       data: this.node.attrs.src,
-      shouldShowClose: false
+      progress: 0,
+      failed: false
     };
   },
   inject: ["getEditorVm"],
@@ -96,6 +102,9 @@ export default {
         this.shouldShowClose = !this.shouldShowClose;
       this.options.onSelection(this.shouldShowClose ? this.$el : "");
     },
+    onProgress(progress) {
+      this.progress = progress;
+    },
     async loaded() {
       const imageInputEl = document.getElementById("image-input");
 
@@ -108,13 +117,16 @@ export default {
         formData.append("image", file);
 
         try {
-          const response = await this.options.uploadImage(formData);
+          const response = await this.options.uploadImage(
+            formData,
+            this.onProgress
+          );
           if (response && response.status === 200) {
             this.src = response.data;
             this.data = response.data;
           }
         } catch {
-          this.deleteNode();
+          this.failed = true;
         } finally {
           imageInputEl.value = "";
         }
