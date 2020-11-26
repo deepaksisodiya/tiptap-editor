@@ -1,6 +1,5 @@
 <template>
   <div
-    v-show="progress < 100"
     :class="[
       'progress',
       'media-progress',
@@ -12,13 +11,13 @@
       <i class="icon retry-uploading-icon"></i>
     </div>
     <div
-      else
+      v-else
       class="progress-bar"
       role="progressbar"
-      aria-valuenow="45"
+      :aria-valuenow="progress"
       aria-valuemin="0"
       aria-valuemax="100"
-      :style="{ width: progress }"
+      :style="{ width: progress + '%' }"
     />
   </div>
 </template>
@@ -30,10 +29,6 @@ export default {
     progress: {
       default: 0,
       type: Number
-    },
-    show: {
-      default: false,
-      type: Boolean
     },
     failed: {
       default: false,
