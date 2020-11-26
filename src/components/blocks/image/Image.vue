@@ -40,6 +40,7 @@ export default {
       height: "",
       width: "",
       data: this.node.attrs.src,
+      shouldShowClose: false,
       upload: {
         progress: 0,
         failed: false,
@@ -139,12 +140,20 @@ export default {
             this.upload.complted = true;
           }
         } catch {
+          const editorVm = this.getEditorVm();
+
+          editorVm.failedBlocks = editorVm.failedBlocks + 1;
           this.upload.failed = true;
         } finally {
           imageInputEl.value = "";
         }
       }
     }
+  },
+  destroyed() {
+    const editorVm = this.getEditorVm();
+
+    editorVm.failedBlocks = editorVm.failedBlocks - 1;
   }
 };
 </script>

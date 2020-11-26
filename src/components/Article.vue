@@ -101,6 +101,10 @@ export default {
     beforeUpload: {
       type: Function,
       default: () => true
+    },
+    setUploadsCount: {
+      type: Function,
+      deafult: () => 0
     }
   },
   components: {
@@ -276,7 +280,8 @@ export default {
             }
           }
         }
-      })
+      }),
+      failedBlocks: 0
     };
   },
   provide() {
@@ -355,6 +360,9 @@ export default {
       this.editor.setOptions({
         editable: this.editable
       });
+    },
+    failedBlocks() {
+      this.setUploadsCount(this.failedBlocks);
     }
   }
 };
