@@ -8,7 +8,7 @@
       <source :srcset="data.fallback" type="image" />
       <img :src="data.fallback" @load="loaded" />
       <upload-progress
-        v-show="shouldHideProgress"
+        v-show="!shouldHideProgress"
         :progress="upload.progress"
         :failed="upload.failed"
       />

@@ -23,7 +23,7 @@
           <i class="close-icon"></i>
         </div>
         <upload-progress
-          v-show="shouldHideProgress"
+          v-show="!shouldHideProgress"
           :progress="upload.progress"
           :failed="upload.failed"
         />
