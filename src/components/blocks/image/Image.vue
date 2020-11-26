@@ -7,7 +7,11 @@
       <source v-if="data.image" :srcset="data.image" type="image" />
       <source :srcset="data.fallback" type="image" />
       <img :src="data.fallback" @load="loaded" />
-      <upload-progress :progress="progress" :failed="failed" />
+      <upload-progress
+        v-show="shouldHideProgress"
+        :progress="upload.progress"
+        :failed="upload.failed"
+      />
     </picture>
     <figcaption>
       <input
@@ -36,8 +40,11 @@ export default {
       height: "",
       width: "",
       data: this.node.attrs.src,
-      progress: 0,
-      failed: false
+      upload: {
+        progress: 0,
+        failed: false,
+        complted: false
+      }
     };
   },
   inject: ["getEditorVm"],
@@ -61,6 +68,11 @@ export default {
           caption
         });
       }
+    },
+    shouldHideProgress() {
+      return (
+        this.upload.complted || !isDataURL(this.data && this.data.fallback)
+      );
     }
   },
   mounted() {
@@ -103,7 +115,7 @@ export default {
       this.options.onSelection(this.shouldShowClose ? this.$el : "");
     },
     onProgress(progress) {
-      this.progress = progress;
+      this.upload.progress = progress;
     },
     async loaded() {
       const imageInputEl = document.getElementById("image-input");
@@ -124,9 +136,10 @@ export default {
           if (response && response.status === 200) {
             this.src = response.data;
             this.data = response.data;
+            this.upload.complted = true;
           }
         } catch {
-          this.failed = true;
+          this.upload.failed = true;
         } finally {
           imageInputEl.value = "";
         }

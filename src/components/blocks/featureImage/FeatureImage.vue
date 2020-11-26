@@ -22,7 +22,11 @@
         <div class="close-button" @click="removeImage">
           <i class="close-icon"></i>
         </div>
-        <upload-progress :progress="progress" :failed="failed" />
+        <upload-progress
+          v-show="shouldHideProgress"
+          :progress="upload.progress"
+          :failed="upload.failed"
+        />
         <picture @click="onImageClick">
           <source v-if="data.image" :srcset="data.image" type="image" />
           <source :srcset="data.fallback" type="image" />
@@ -56,8 +60,11 @@ export default {
     return {
       data: this.node.attrs.src,
       shouldShowClose: false,
-      progress: 0,
-      failed: false
+      upload: {
+        progress: 0,
+        failed: false,
+        complted: false
+      }
     };
   },
   inject: ["getEditorVm"],
@@ -86,6 +93,11 @@ export default {
           caption
         });
       }
+    },
+    shouldHideProgress() {
+      return (
+        this.upload.complted || !isDataURL(this.data && this.data.fallback)
+      );
     }
   },
   mounted() {
@@ -109,7 +121,7 @@ export default {
       }
     },
     onProgress(progress) {
-      this.progress = progress;
+      this.upload.progress = progress;
     },
     previewFiles() {
       const file = this.$refs.fileInput.files[0];
@@ -132,6 +144,7 @@ export default {
             if (response && response.status === 200) {
               this.src = response.data;
               this.data = response.data;
+              this.upload.complted = false;
             }
           } catch {
             this.src = "";
