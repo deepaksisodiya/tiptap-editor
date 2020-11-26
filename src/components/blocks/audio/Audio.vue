@@ -3,7 +3,11 @@
     <div class="close-button" @click="deleteNode">
       <i class="close-icon"></i>
     </div>
-    <upload-progress :progress="progress" :failed="failed" />
+    <upload-progress
+      v-show="shouldHideProgress"
+      :progress="upload.progress"
+      :failed="upload.failed"
+    />
     <audio-player
       :src="data"
       :disabled="disabled"
@@ -35,8 +39,11 @@ export default {
     return {
       data: this.node.attrs.src,
       shouldShowClose: false,
-      failed: false,
-      progress: 0
+      upload: {
+        progress: 0,
+        failed: false,
+        complted: false
+      }
     };
   },
   inject: ["getEditorVm"],
@@ -64,6 +71,11 @@ export default {
           caption
         });
       }
+    },
+    shouldHideProgress() {
+      return (
+        this.upload.complted || !isDataURL(this.data && this.data.fallback)
+      );
     },
     disabled() {
       return this.data.includes("data:");
@@ -110,7 +122,7 @@ export default {
       this.options.onSelection(this.shouldShowClose ? this.$el : "");
     },
     onProgress(progress) {
-      this.progress = progress;
+      this.upload.progress = progress;
     },
     async onLoadedMetaData() {
       const audioInputEl = document.getElementById("audio-input");
@@ -129,6 +141,7 @@ export default {
             const { audio: src, duration } = response.data;
             this.updateAttrs({ src, duration });
             this.data = src;
+            this.upload.completed = false;
           }
         } catch (error) {
           this.deleteNode();
