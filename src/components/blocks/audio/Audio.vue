@@ -73,9 +73,7 @@ export default {
       }
     },
     shouldHideProgress() {
-      return (
-        this.upload.complted || !isDataURL(this.data && this.data.fallback)
-      );
+      return this.upload.complted || !isDataURL(this.data);
     },
     disabled() {
       return this.data.includes("data:");
@@ -86,6 +84,11 @@ export default {
       if (this.shouldShowClose && value !== this.$el)
         this.shouldShowClose = false;
     });
+  },
+  destroyed() {
+    const editorVm = this.getEditorVm();
+
+    editorVm.failedBlocks = editorVm.failedBlocks - 1;
   },
   methods: {
     handleKeydown(event) {
@@ -144,7 +147,10 @@ export default {
             this.upload.completed = false;
           }
         } catch (error) {
-          this.deleteNode();
+          const editorVm = this.getEditorVm();
+
+          editorVm.failedBlocks = editorVm.failedBlocks + 1;
+          this.upload.failed = true;
         } finally {
           audioInputEl.value = "";
         }
