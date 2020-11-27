@@ -41,7 +41,8 @@ import {
   HorizontalRule,
   Header,
   Superscript,
-  Audio
+  Audio,
+  CodeBlockHighlight
 } from "./blocks";
 import Placeholder from "./../extensions/Placeholder";
 import browser from "../utils/browser";
@@ -164,7 +165,8 @@ export default {
             onSelection: this.onSelection
           }),
           new HorizontalRule(),
-          new Superscript()
+          new Superscript(),
+          new CodeBlockHighlight()
           // new Lock()
         ],
         onUpdate: ({ getJSON }) => {

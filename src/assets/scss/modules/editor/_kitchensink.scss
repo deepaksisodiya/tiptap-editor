@@ -1,127 +1,159 @@
 .editor {
-  position: relative;
-  max-width: 680px;
-  margin: 0 auto;
-  &__floating-menu {
-    position: absolute;
-    z-index: 1;
-    margin-top: -0.25rem;
-    visibility: hidden;
-    opacity: 0;
-    transition: opacity 0.2s, visibility 0.2s;
-    &.is-plus-active {
-      opacity: 1;
-      visibility: visible;
-    }
-  }
+	position: relative;
+	max-width: 680px;
+	margin: 0 auto;
+	&__floating-menu {
+		position: absolute;
+		z-index: 1;
+		margin-top: -0.25rem;
+		visibility: hidden;
+		opacity: 0;
+		transition: opacity 0.2s, visibility 0.2s;
+		&.is-plus-active {
+			opacity: 1;
+			visibility: visible;
+		}
+	}
 }
 
 .kitchensink {
-  @include Serif();
-  display: flex;
-  flex-direction: row;
-  box-sizing: border-box;
-  width: calc(100% + 39px);
-  padding: 0;
-  margin: 0;
-  margin-left: -39px;
-  list-style: none;
-  li {
-    margin: 18px 0;
-    list-style: none;
-    margin-right: 10px;
-  }
-  i {
-    display: inline-block;
-    position: relative;
-    vertical-align: middle;
-    background-image: url($stack-sprite);
-    width: 29px;
-    height: 29px;
-    box-shadow: 5px 0px 10px 2px rgba(155, 155, 155, 0.1),
-      0px 5px 10px 2px rgba(155, 155, 155, 0.1);
-    border-radius: 999px;
-  }
-  .add-icon {
-    background-position: 0px -713px;
-  }
-  .close-icon {
-    transform: rotate(-45deg);
-  }
-  .image-icon {
-    background-position: -37px -713px;
-  }
-  .video-icon {
-    background-position: -74px -713px;
-  }
-  .list-icon {
-    background-position: -112px -713px;
-  }
-  .link-icon {
-    background-position: -150px -713px;
-  }
-  .separator-icon {
-    background-position: -188px -713px;
-  }
-  .lock-icon {
-    background-position: -236px -713px;
-    box-shadow: none;
-  }
-  .audio-icon {
-    background-position: -267px -713px;
-  }
-  .kitchensink-divider {
-    background-position: -227px -713px;
-    width: 1px;
-  }
-  .embed-input {
-    .loading-icon {
-      background-position: -348px -719px;
-      height: 17px;
-      width: 15px;
-      margin: 0 5px 0 15px;
-      -webkit-animation: rotating 2s linear infinite;
-      -moz-animation: rotating 2s linear infinite;
-      -ms-animation: rotating 2s linear infinite;
-      -o-animation: rotating 2s linear infinite;
-      animation: rotating 2s linear infinite;
-    }
-  }
+	@include Serif();
+	display: flex;
+	flex-direction: row;
+	box-sizing: border-box;
+	width: calc(100% + 40px);
+	padding: 0;
+	margin: 0;
+	margin-left: -40px;
+	list-style: none;
+	li {
+		margin: 18px 0;
+		list-style: none;
+		cursor: pointer;
+		&:hover {
+			i {
+				box-shadow: 5px 0px 10px 3px rgba(155, 155, 155, 0.12),
+					0px 5px 10px 5px rgba(155, 155, 155, 0.12);
+				transition: all 0.35s ease;
+			}
+		}
+	}
+	i {
+		display: inline-block;
+		position: relative;
+		vertical-align: middle;
+		background-color: $white;
+		background-image: url($stack-sprite);
+		width: 32px;
+		height: 32px;
+		box-shadow: 5px 0px 10px 2px rgba(155, 155, 155, 0.1),
+			0px 5px 10px 2px rgba(155, 155, 155, 0.1);
+		border-radius: 999px;
+		margin-right: 15px;
+	}
+	.add-icon {
+		background-color: $black;
+		background-position: -1px -714px;
+	}
+	.close-icon {
+		background-color: $black;
+		transform: rotate(-45deg);
+	}
+	.image-icon {
+		background-position: -43px -714px;
+	}
+	.video-icon {
+		background-position: -85px -714px;
+	}
+	.audio-icon {
+		background-position: -257px -714px;
+	}
+	.list-icon {
+		background-position: -128px -714px;
+	}
+	.link-icon {
+		background-position: -171px -714px;
+	}
+	.separator-icon {
+		background-position: -214px -714px;
+	}
+	.code-icon {
+		background-position: -300px -714px;
+	}
+	.embed-input {
+		.loading-icon {
+			background-position: -348px -719px;
+			height: 17px;
+			width: 15px;
+			margin: 0 5px 0 15px;
+			-webkit-animation: rotating 2s linear infinite;
+			-moz-animation: rotating 2s linear infinite;
+			-ms-animation: rotating 2s linear infinite;
+			-o-animation: rotating 2s linear infinite;
+			animation: rotating 2s linear infinite;
+			box-shadow: none;
+		}
+	}
+	&.embed-input-open {
+		li {
+			margin-top: -3px;
+			&.embed-input {
+				margin-right: 0;
+			}
+		}
+	}
 }
 
 // Media Query
 
 @media only screen and (max-width: 767px) {
-  .kitchensink {
-    li {
-      margin: 20px 0;
-      margin-right: 10px;
-    }
-  }
+	.kitchensink {
+		li {
+			margin: 20px 0;
+		}
+		i {
+			margin-right: 12px;
+		}
+		&.embed-input-open {
+			li {
+				margin-top: 5px;
+			}
+		}
+	}
+}
+
+// Iphone 5/5E Media Query [portrait]
+
+@media only screen and (min-device-width: 320px) and (max-device-width: 568px) and (-webkit-device-pixel-ratio: 2) and (device-aspect-ratio: 40/71) and (orientation: portrait) {
+	.kitchensink {
+		.code-icon {
+			display: none;
+		}
+	}
 }
 
 // Retina (2x)
 
 @media only screen and (-webkit-min-device-pixel-ratio: 2),
-  only screen and (min--moz-device-pixel-ratio: 2),
-  only screen and (min-device-pixel-ratio: 2) {
-  .kitchensink i {
-    background-image: url($stack-sprite-2x);
-    background-size: 900px 900px;
-    -webkit-background-size: 900px 900px;
-    -moz-background-size: 900px 900px;
-  }
+	only screen and (min--moz-device-pixel-ratio: 2),
+	only screen and (min-device-pixel-ratio: 2) {
+	.kitchensink i {
+		background-image: url($stack-sprite-2x);
+		background-size: 900px 900px;
+		-webkit-background-size: 900px 900px;
+		-moz-background-size: 900px 900px;
+	}
 }
 
 // Retina (3x)
 
 @media only screen and (-webkit-min-device-pixel-ratio: 3),
-  only screen and (min--moz-device-pixel-ratio: 3),
-  only screen and (min-device-pixel-ratio: 3) {
-  .kitchensink i {
-    background-image: url($stack-sprite-3x);
-    background-size: 900px 900px;
-    -webkit-background-size: 900px 900px;
-    -moz-background-size: 900px 900px;
-  }
+	only screen and (min--moz-device-pixel-ratio: 3),
+	only screen and (min-device-pixel-ratio: 3) {
+	.kitchensink i {
+		background-image: url($stack-sprite-3x);
+		background-size: 900px 900px;
+		-webkit-background-size: 900px 900px;
+		-moz-background-size: 900px 900px;
+	}
 }

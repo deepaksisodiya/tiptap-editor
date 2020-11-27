@@ -8,3 +8,4 @@ export { default as Header } from "./Header";
 export { default as FeatureImage } from "./featureImage";
 export { default as Superscript } from "./Superscript";
 export { default as Audio } from "./audio";
+export { default as CodeBlockHighlight } from "./CodeBlockHighlight";

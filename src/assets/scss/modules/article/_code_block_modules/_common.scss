@@ -1,0 +1,144 @@
+// Common code between highlight.js and pygment
+
+/* Base */
+
+.hljs,
+.highlight pre {
+	background: $base;
+	display: block;
+	@include Mono();
+	color: $mono-1;
+	font-size: 16px;
+	line-height: 26px;
+	white-space: pre;
+	margin: 45px 0;
+	padding: 25px;
+	border-radius: 8px;
+	overflow-x: auto;
+}
+
+/* Comment */
+
+.hljs-comment,
+.hljs-quote,
+.highlight .c,
+.highlight .cm,
+.highlight .cp,
+.highlight .c1,
+.highlight .cs {
+	color: $mono-3;
+	font-style: italic;
+}
+
+/* Keyword */
+
+.hljs-doctag,
+.hljs-keyword,
+.hljs-formula,
+.highlight .k,
+.highlight .kc,
+.highlight .kd,
+.highlight .kn,
+.highlight .kp,
+.highlight .kr,
+.highlight .kt {
+	color: $hue-3;
+}
+
+/* Section, Name, Selector, Deletion, and more */
+
+.hljs-section,
+.hljs-name,
+.hljs-selector-tag,
+.hljs-deletion,
+.hljs-subst,
+.highlight .nt,
+.highlight .vi,
+.highlight .gd,
+.highlight .err {
+	color: $hue-5;
+}
+
+/* Literal */
+
+.hljs-literal,
+.highlight .sr,
+.highlight .ss {
+	color: $hue-1;
+}
+
+/* String, Regex, Addition, Attribution, String */
+
+.hljs-string,
+.hljs-regexp,
+.hljs-addition,
+.hljs-attribute,
+.hljs-meta-string,
+.highlight .l,
+.highlight .ld,
+.highlight .s,
+.highlight .sb,
+.highlight .sc,
+.highlight .sd,
+.highlight .s2,
+.highlight .se,
+.highlight .sh,
+.highlight .si,
+.highlight .sx,
+.highlight .s1,
+.highlight .gi {
+	color: $hue-4;
+}
+
+/* Generic Emphasis and Strong */
+
+.hljs-emphasis,
+.highlight .ge {
+	font-style: italic;
+}
+
+.hljs-strong,
+.highlight .gs {
+	font-weight: 700;
+}
+
+/* Attr, Variable, Type, Selector, Number and more */
+
+.hljs-attr,
+.hljs-variable,
+.hljs-template-variable,
+.hljs-type,
+.hljs-selector-class,
+.hljs-selector-attr,
+.hljs-selector-pseudo,
+.hljs-number,
+.highlight .m,
+.highlight .na,
+.highlight .mf,
+.highlight .mh,
+.highlight .mi,
+.highlight .mo,
+.highlight .il {
+	color: $hue-6;
+}
+
+/* Name BuiltIn and more  */
+
+.hljs-built_in,
+.hljs-class .hljs-title,
+.highlight .nb,
+.highlight .nc,
+.highlight .no,
+.highlight .nd,
+.highlight .ni,
+.highlight .ne,
+.highlight .nl,
+.highlight .py,
+.highlight .nv,
+.highlight .bp,
+.highlight .vc,
+.highlight .vg {
+	color: $hue-6-2;
+}
+
+// End of Common code
