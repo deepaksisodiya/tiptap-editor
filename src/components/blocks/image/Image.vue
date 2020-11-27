@@ -111,7 +111,10 @@ export default {
       this.view.focus();
     },
     onImageClick() {
-      if (isDataURL(this.data && this.data.fallback) === false)
+      if (
+        isDataURL(this.data && this.data.fallback) === false ||
+        this.upload.failed
+      )
         this.shouldShowClose = !this.shouldShowClose;
       this.options.onSelection(this.shouldShowClose ? this.$el : "");
     },
@@ -150,10 +153,10 @@ export default {
       }
     }
   },
-  destroyed() {
+  beforeDestroy() {
     const editorVm = this.getEditorVm();
 
-    editorVm.failedBlocks = editorVm.failedBlocks - 1;
+    if (this.upload.failed) editorVm.failedBlocks = editorVm.failedBlocks - 1;
   }
 };
 </script>
