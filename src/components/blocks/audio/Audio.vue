@@ -85,10 +85,10 @@ export default {
         this.shouldShowClose = false;
     });
   },
-  destroyed() {
+  beforeDestroy() {
     const editorVm = this.getEditorVm();
 
-    editorVm.failedBlocks = editorVm.failedBlocks - 1;
+    if (this.upload.failed) editorVm.failedBlocks = editorVm.failedBlocks - 1;
   },
   methods: {
     handleKeydown(event) {
@@ -121,7 +121,8 @@ export default {
       const button = this.$el.querySelector(".player-button");
       this.setCursorBelowBlock();
       if (button.contains(target)) return;
-      if (!isDataURL(this.data)) this.shouldShowClose = !this.shouldShowClose;
+      if (!isDataURL(this.data) || this.upload.failed)
+        this.shouldShowClose = !this.shouldShowClose;
       this.options.onSelection(this.shouldShowClose ? this.$el : "");
     },
     onProgress(progress) {
