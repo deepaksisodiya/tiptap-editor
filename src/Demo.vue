@@ -53,15 +53,15 @@ export default {
   methods: {
     uploadImage(formData) {
       // return promise with upload image url
-      console.log(formData);
+      alert(formData);
     },
     uploadAudio(formData) {
       // return promise with upload Audio
-      console.log(formData);
+      alert(formData);
     },
     getEmbeds(url) {
       // Should return promise with embed URL data
-      console.log(url);
+      alert(url);
     },
     onUpdatePost({ blocks, title = "" }) {
       this.blocks = { title, ...blocks };

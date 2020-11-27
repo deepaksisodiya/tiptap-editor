@@ -1,7 +1,11 @@
 @mixin Sans() {
-    font-family: 'IBM Plex Sans', sans-serif;
+	font-family: "IBM Plex Sans", sans-serif;
 }
 
 @mixin Serif() {
-    font-family: 'IBM Plex Serif', serif;
+	font-family: "IBM Plex Serif", serif;
+}
+
+@mixin Mono() {
+	font-family: "IBM Plex Mono", monospace;
 }

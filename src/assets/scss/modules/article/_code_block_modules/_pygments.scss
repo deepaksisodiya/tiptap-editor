@@ -1,0 +1,28 @@
+// pygment code
+
+/* Name, Operator, Punctuation, Function */
+
+.highlight {
+	.n,
+	.nn,
+	.nx,
+	.nf,
+	.o,
+	.p {
+		color: $mono-1;
+	}
+
+	/* Operator.Word */
+	.ow {
+		font-weight: 700;
+	}
+
+	/* Text.Whitespace */
+	.w {
+		color: $base;
+	}
+
+	.gu {
+		color: $mono-2;
+	}
+}
