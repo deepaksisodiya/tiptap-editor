@@ -108,11 +108,10 @@ export default class CodeBlockHighlight extends Node {
             return DecorationSet.create(instance.doc, content);
           },
           apply: (tr, set) => {
-            let { $head } = tr.curSelection;
-            if (!tr.docChanged || !$head.parent.type.spec.code) {
+            if (!tr.docChanged) {
               return set.map(tr.mapping, tr.doc);
             }
-
+            // TODO: add caching
             let content = getHighlightDecorations(
               tr.doc,
               hljs,
