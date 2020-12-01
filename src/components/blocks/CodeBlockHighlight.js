@@ -9,7 +9,6 @@ import { getHighlightDecorations } from "prosemirror-highlightjs";
 import hljs from "highlight.js/lib/core";
 
 import bash from "highlight.js/lib/languages/bash";
-import dockerfile from "highlight.js/lib/languages/dockerfile";
 import go from "highlight.js/lib/languages/go";
 import java from "highlight.js/lib/languages/java";
 import javascript from "highlight.js/lib/languages/javascript";
@@ -17,7 +16,6 @@ import json from "highlight.js/lib/languages/json";
 import php from "highlight.js/lib/languages/php";
 import python from "highlight.js/lib/languages/python";
 import ruby from "highlight.js/lib/languages/ruby";
-import scala from "highlight.js/lib/languages/scala";
 import scss from "highlight.js/lib/languages/scss";
 import css from "highlight.js/lib/languages/css";
 import sql from "highlight.js/lib/languages/sql";
@@ -25,7 +23,6 @@ import typescript from "highlight.js/lib/languages/typescript";
 import html from "highlight.js/lib/languages/xml";
 
 hljs.registerLanguage("bash", bash);
-hljs.registerLanguage("dockerfile", dockerfile);
 hljs.registerLanguage("go", go);
 hljs.registerLanguage("java", java);
 hljs.registerLanguage("javascript", javascript);
@@ -33,7 +30,6 @@ hljs.registerLanguage("json", json);
 hljs.registerLanguage("php", php);
 hljs.registerLanguage("python", python);
 hljs.registerLanguage("ruby", ruby);
-hljs.registerLanguage("scala", scala);
 hljs.registerLanguage("scss", scss);
 hljs.registerLanguage("css", css);
 hljs.registerLanguage("sql", sql);
@@ -80,6 +76,17 @@ export default class CodeBlockHighlight extends Node {
         }
         if (dispatch) {
           dispatch(state.tr.insertText("  ").scrollIntoView());
+        }
+
+        return true;
+      },
+      Enter: (state, dispatch) => {
+        let { $head } = state.selection;
+        if (!$head.parent.type.spec.code) {
+          return false;
+        }
+        if (dispatch) {
+          dispatch(state.tr.insertText("\n").scrollIntoView());
         }
 
         return true;
