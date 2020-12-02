@@ -185,6 +185,23 @@ export default {
           });
           this.onUpdatePost({ blocks: data, title });
         },
+        // a hack for codeBlock on firefox browser,
+        // check CodeBlockHighlight plugin for more detail
+        onTransaction: ({ transaction }) => {
+          if (
+            transaction.getMeta("resetSelectionHack") &&
+            typeof window !== undefined
+          ) {
+            const s = window.document.getSelection();
+            if (s) {
+              const r = s.getRangeAt(0);
+              if (r) {
+                s.removeAllRanges();
+                s.addRange(r);
+              }
+            }
+          }
+        },
         editorProps: {
           handleClick: () => {
             this.selectedEl = null;

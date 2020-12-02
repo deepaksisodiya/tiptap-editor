@@ -6,6 +6,7 @@ import {
 } from "tiptap-commands";
 import { DecorationSet } from "prosemirror-view";
 import { getHighlightDecorations } from "prosemirror-highlightjs";
+import browser from "../../utils/browser";
 import hljs from "highlight.js/lib/core";
 
 import bash from "highlight.js/lib/languages/bash";
@@ -80,13 +81,34 @@ export default class CodeBlockHighlight extends Node {
 
         return true;
       },
+      // manually doing Enter in case of firefox browser,
+      // https://github.com/ProseMirror/prosemirror/issues/1073
       Enter: (state, dispatch) => {
         let { $head } = state.selection;
-        if (!$head.parent.type.spec.code) {
+        if (!$head.parent.type.spec.code || !browser.gecko) {
           return false;
         }
         if (dispatch) {
-          dispatch(state.tr.insertText("\n").scrollIntoView());
+          dispatch(
+            state.tr
+              .insertText("\n")
+              .scrollIntoView()
+              .setMeta("resetSelectionHack", true)
+          );
+        }
+
+        return true;
+      },
+      // manually doing backspace in case of firefox browser,
+      // https://github.com/ProseMirror/prosemirror/issues/1073
+      Backspace: (state, dispatch) => {
+        let { $head } = state.selection;
+        if (!$head.parent.type.spec.code || !browser.gecko) {
+          return false;
+        }
+        const { $from } = state.selection;
+        if (dispatch) {
+          dispatch(state.tr.delete($from.pos - 1, $from.pos).scrollIntoView());
         }
 
         return true;
