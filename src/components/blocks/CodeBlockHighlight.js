@@ -106,9 +106,16 @@ export default class CodeBlockHighlight extends Node {
         if (!$head.parent.type.spec.code || !browser.gecko) {
           return false;
         }
-        const { $from } = state.selection;
+        const { $from, $to } = state.selection;
         if (dispatch) {
-          dispatch(state.tr.delete($from.pos - 1, $from.pos).scrollIntoView());
+          if ($from.pos === $to.pos) {
+            // no selection
+            dispatch(
+              state.tr.delete($from.pos - 1, $from.pos).scrollIntoView()
+            );
+          } else {
+            dispatch(state.tr.deleteSelection().scrollIntoView());
+          }
         }
 
         return true;
