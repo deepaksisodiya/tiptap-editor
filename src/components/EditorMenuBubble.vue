@@ -4,7 +4,8 @@
       v-if="!isInputActive"
       class="highlight-menu"
       :class="{
-        'is-active': menu.isActive && !isTitleSelected(),
+        'is-active':
+          menu.isActive && !isTitleSelected() && !isCodeBlockSelected(),
         ios
       }"
       :style="getStyle(menu)"
@@ -208,11 +209,15 @@ export default {
         if (this.ios) this.fixMenuEl();
       });
     },
-    isTitleSelected() {
+    isBlockSelected(name) {
       const { $from, $to } = this.editor.view.state.tr.selection;
-      return (
-        $from.parent.type.name === "title" && $to.parent.type.name === "title"
-      );
+      return $from.parent.type.name === name && $to.parent.type.name === name;
+    },
+    isTitleSelected() {
+      return this.isBlockSelected("title");
+    },
+    isCodeBlockSelected() {
+      return this.isBlockSelected("code_block");
     },
     fixMenuEl() {
       const menuUl = this.$refs.menuUl;

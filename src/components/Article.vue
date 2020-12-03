@@ -41,7 +41,8 @@ import {
   HorizontalRule,
   Header,
   Superscript,
-  Audio
+  Audio,
+  CodeBlockHighlight
 } from "./blocks";
 import Placeholder from "./../extensions/Placeholder";
 import browser from "../utils/browser";
@@ -160,7 +161,8 @@ export default {
             onSelection: this.onSelection
           }),
           new HorizontalRule(),
-          new Superscript()
+          new Superscript(),
+          new CodeBlockHighlight()
           // new Lock()
         ],
         onUpdate: ({ getJSON }) => {
@@ -182,6 +184,23 @@ export default {
             return true;
           });
           this.onUpdatePost({ blocks: data, title });
+        },
+        // a hack for codeBlock on firefox browser,
+        // check CodeBlockHighlight plugin for more detail
+        onTransaction: ({ transaction }) => {
+          if (
+            transaction.getMeta("resetSelectionHack") &&
+            typeof window !== undefined
+          ) {
+            const s = window.document.getSelection();
+            if (s) {
+              const r = s.getRangeAt(0);
+              if (r) {
+                s.removeAllRanges();
+                s.addRange(r);
+              }
+            }
+          }
         },
         editorProps: {
           handleClick: () => {

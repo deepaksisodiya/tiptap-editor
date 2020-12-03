@@ -51,6 +51,13 @@
         <i class="link-icon"></i>
       </li>
       <li
+        :class="{ 'is-active': isActive.code_block() }"
+        v-if="shouldShowMenu"
+        @click="onClickMenuItem(commands.code_block)"
+      >
+        <i class="code-icon"></i>
+      </li>
+      <li
         :class="{ 'is-active': isActive.horizontal_rule() }"
         v-if="shouldShowMenu"
         @click="onClickMenuItem(commands.horizontal_rule)"
