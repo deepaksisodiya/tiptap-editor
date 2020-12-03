@@ -59,7 +59,8 @@
         :class="{
           'embed-content':
             embeds.data.provider === 'Twitter' ||
-            embeds.data.provider === 'Instagram'
+            embeds.data.provider === 'Instagram' ||
+            embeds.data.provider === 'Github'
         }"
         v-html="embeds.data.html"
       ></div>
@@ -69,6 +70,7 @@
 
 <script>
 import { TextSelection } from "tiptap";
+import jsonp from "jsonp";
 
 import { getValidUrl } from "./../../../utils";
 
@@ -191,6 +193,22 @@ export default {
       script.src = url;
       document.getElementsByTagName("head")[0].appendChild(script);
     },
+    loadGithubGist(githubGistUrl) {
+      const url = new URL(githubGistUrl);
+      const file = url.searchParams.get("file");
+      const jsonUrl =
+        url.origin + url.pathname + ".json" + (file ? `?file=${file}` : "");
+
+      jsonp(jsonUrl, { timeout: 20000 }, (err, response) => {
+        if (err) {
+          // need to handle error case
+          return;
+        }
+        this.embeds.data.html =
+          `<link rel="stylesheet" href="${response.stylesheet}"></link>` +
+          response.div;
+      });
+    },
     loadEmbeds() {
       if (this.embeds.data.provider === "Twitter") {
         if (window.twttr) window.twttr.widgets.load();
@@ -209,6 +227,8 @@ export default {
           });
         }
       }
+      if (this.embeds.data.provider === "Github")
+        this.loadGithubGist(this.embeds.data.url);
     },
     async onClickAdd() {
       if (!this.url) return;
@@ -300,7 +320,8 @@ export default {
       }
     },
     disableLink() {
-      this.$el.querySelector("a").onclick = e => e.preventDefault();
+      const anchorTag = this.$el.querySelector("a");
+      if (anchorTag) anchorTag.onclick = e => e.preventDefault();
     },
     onClickEmbed() {
       this.editor.blur();
