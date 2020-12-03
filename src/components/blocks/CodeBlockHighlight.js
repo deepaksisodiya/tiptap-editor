@@ -59,7 +59,7 @@ export default class CodeBlockHighlight extends Node {
           preserveWhitespace: "full"
         }
       ],
-      toDOM: () => ["pre", ["code", { class: "hljs" }, 0]]
+      toDOM: () => ["pre", ["code", { class: "hljs", spellcheck: "false" }, 0]]
     };
   }
 
