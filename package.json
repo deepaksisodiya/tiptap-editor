@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "core-js": "^3.3.2",
+    "jsonp": "^0.2.1",
     "prosemirror-utils": "^0.9.6",
     "prosemirror-view": "^1.14.5",
     "scroll-vue-player": "github:scrolltech/scroll-vue-player",
