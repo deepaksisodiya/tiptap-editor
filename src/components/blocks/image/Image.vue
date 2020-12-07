@@ -129,12 +129,10 @@ export default {
         imageInputEl.files.length != 0
       ) {
         const file = imageInputEl.files[0];
-        const formData = new FormData();
-        formData.append("image", file);
 
         try {
           const response = await this.options.uploadImage(
-            formData,
+            file,
             this.onProgress
           );
           if (response && response.status === 200) {

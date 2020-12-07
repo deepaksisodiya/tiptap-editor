@@ -133,12 +133,10 @@ export default {
 
       if (this.data.includes("data:") && audioInputEl.files.length != 0) {
         const file = audioInputEl.files[0];
-        const formData = new FormData();
-        formData.append("audio", file);
 
         try {
           const response = await this.options.uploadAudio(
-            formData,
+            file,
             this.onProgress
           );
           if (response && response.status === 200) {
