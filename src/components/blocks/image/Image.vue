@@ -11,6 +11,7 @@
         v-show="!shouldHideProgress"
         :progress="upload.progress"
         :failed="upload.failed"
+        :retry="upload.retry"
       />
     </picture>
     <figcaption>
@@ -44,7 +45,8 @@ export default {
       upload: {
         progress: 0,
         failed: false,
-        complted: false
+        complted: false,
+        retry: true
       }
     };
   },
@@ -118,8 +120,10 @@ export default {
         this.shouldShowClose = !this.shouldShowClose;
       this.options.onSelection(this.shouldShowClose ? this.$el : "");
     },
-    onProgress(progress) {
-      this.upload.progress = progress;
+    setUploadStatus(status) {
+      Object.keys(status).forEach((key) => {
+        this.upload[key] = status[key];
+      })
     },
     async loaded() {
       const imageInputEl = document.getElementById("image-input");
@@ -133,7 +137,7 @@ export default {
         try {
           const response = await this.options.uploadImage(
             file,
-            this.onProgress
+            this.setUploadStatus
           );
           if (response && response.status === 200) {
             this.src = response.data;

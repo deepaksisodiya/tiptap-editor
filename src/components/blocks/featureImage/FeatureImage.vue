@@ -26,6 +26,7 @@
           v-show="!shouldHideProgress"
           :progress="upload.progress"
           :failed="upload.failed"
+          :retry="upload.retry"
         />
         <picture @click="onImageClick">
           <source v-if="data.image" :srcset="data.image" type="image" />
@@ -63,7 +64,8 @@ export default {
       upload: {
         progress: 0,
         failed: false,
-        complted: false
+        complted: false,
+        retry: true
       }
     };
   },
@@ -120,8 +122,10 @@ export default {
         event.preventDefault();
       }
     },
-    onProgress(progress) {
-      this.upload.progress = progress;
+    setUploadStatus(status) {
+      Object.keys(status).forEach((key) => {
+        this.upload[key] = status[key];
+      })
     },
     previewFiles() {
       const file = this.$refs.fileInput.files[0];
@@ -139,7 +143,7 @@ export default {
           try {
             const response = await this.options.uploadImage(
               formData,
-              this.onProgress
+              this.setUploadStatus
             );
             if (response && response.status === 200) {
               this.src = response.data;

@@ -8,7 +8,7 @@
   >
     <div v-if="failed" class="media-error-content">
       <span class="error-text">Upload failed</span>
-      <i class="icon retry-uploading-icon"></i>
+      <i v-if="retry" class="icon retry-uploading-icon"></i>
     </div>
     <div
       v-else
@@ -32,6 +32,10 @@ export default {
     },
     failed: {
       default: false,
+      type: Boolean
+    },
+    retry: {
+      default: true,
       type: Boolean
     }
   }
