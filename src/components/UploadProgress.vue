@@ -5,6 +5,7 @@
       'media-progress',
       failed ? 'media-progress-error' : ''
     ]"
+    @click="handleRetry"
   >
     <div v-if="failed" class="media-error-content">
       <span class="error-text">Upload failed</span>
@@ -37,6 +38,15 @@ export default {
     retry: {
       default: true,
       type: Boolean
+    },
+    onRetry: {
+      type: Function,
+      default: Function.prototype
+    }
+  },
+  methods: {
+    handleRetry() {
+      if (this.retry && typeof onRetry === "function") this.onRetry();
     }
   }
 };

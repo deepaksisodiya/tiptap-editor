@@ -12,6 +12,7 @@
         :progress="upload.progress"
         :failed="upload.failed"
         :retry="upload.retry"
+        :onRetry="loaded"
       />
     </picture>
     <figcaption>
@@ -87,6 +88,7 @@ export default {
       if (this.shouldShowClose && value !== this.$el)
         this.shouldShowClose = false;
     });
+    this.file = document.getElementById("audio-input").files[0];
   },
   methods: {
     handleKeydown(event) {
@@ -121,9 +123,9 @@ export default {
       this.options.onSelection(this.shouldShowClose ? this.$el : "");
     },
     setUploadStatus(status) {
-      Object.keys(status).forEach((key) => {
+      Object.keys(status).forEach(key => {
         this.upload[key] = status[key];
-      })
+      });
     },
     async loaded() {
       const imageInputEl = document.getElementById("image-input");
@@ -132,7 +134,7 @@ export default {
         this.data.fallback.includes("data:") &&
         imageInputEl.files.length != 0
       ) {
-        const file = imageInputEl.files[0];
+        const file = this.file || imageInputEl.files[0];
 
         try {
           const response = await this.options.uploadImage(

@@ -27,6 +27,7 @@
           :progress="upload.progress"
           :failed="upload.failed"
           :retry="upload.retry"
+          :onRetry="previewFiles"
         />
         <picture @click="onImageClick">
           <source v-if="data.image" :srcset="data.image" type="image" />
@@ -123,9 +124,9 @@ export default {
       }
     },
     setUploadStatus(status) {
-      Object.keys(status).forEach((key) => {
+      Object.keys(status).forEach(key => {
         this.upload[key] = status[key];
-      })
+      });
     },
     previewFiles() {
       const file = this.$refs.fileInput.files[0];
@@ -151,8 +152,10 @@ export default {
               this.upload.complted = false;
             }
           } catch {
-            this.src = "";
-            this.data = "";
+            const editorVm = this.getEditorVm();
+
+            editorVm.failedBlocks = editorVm.failedBlocks + 1;
+            this.upload.failed = true;
           }
         };
         reader.readAsDataURL(file);
