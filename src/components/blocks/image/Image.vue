@@ -11,6 +11,7 @@
         v-show="!shouldHideProgress"
         :progress="upload.progress"
         :failed="upload.failed"
+        :processing="upload.processing"
         :onRetry="loaded"
       />
     </picture>

@@ -7,7 +7,7 @@
       v-show="!shouldHideProgress"
       :progress="upload.progress"
       :failed="upload.failed"
-      :processing="upload.processsing"
+      :processing="upload.processing"
       :onRetry="onLoadedMetaData"
     />
     <audio-player

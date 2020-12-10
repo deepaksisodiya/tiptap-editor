@@ -22,16 +22,17 @@
         <div class="close-button" @click="removeImage">
           <i class="close-icon"></i>
         </div>
-        <upload-progress
-          v-show="!shouldHideProgress"
-          :progress="upload.progress"
-          :failed="upload.failed"
-          :onRetry="previewFiles"
-        />
         <picture @click="onImageClick">
           <source v-if="data.image" :srcset="data.image" type="image" />
           <source :srcset="data.fallback" type="image" />
           <img :src="data.fallback" @load="loaded" />
+          <upload-progress
+            v-show="!shouldHideProgress"
+            :progress="upload.progress"
+            :failed="upload.failed"
+            :processing="upload.processing"
+            :onRetry="previewFiles"
+          />
         </picture>
         <figcaption>
           <input
