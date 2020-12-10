@@ -145,6 +145,7 @@ export default {
         try {
           this.upload.processing = true;
           this.upload.failed = false;
+          this.upload.progress = 0;
           const response = await this.options.uploadAudio(
             file,
             this.onProgress
