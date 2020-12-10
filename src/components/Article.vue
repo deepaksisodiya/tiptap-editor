@@ -103,7 +103,7 @@ export default {
       type: Function,
       default: () => true
     },
-    setUploadsCount: {
+    setFailedBlocks: {
       type: Function,
       deafult: () => 0
     }
@@ -381,7 +381,7 @@ export default {
       });
     },
     failedBlocks() {
-      this.setUploadsCount(this.failedBlocks);
+      this.setFailedBlocks(this.failedBlocks);
     }
   }
 };
