@@ -46,7 +46,8 @@ export default {
         progress: 0,
         failed: false,
         completed: false,
-        retry: true
+        retry: true,
+        processing: false
       }
     };
   },
@@ -135,6 +136,7 @@ export default {
         const file = this.file || imageInputEl.files[0];
 
         try {
+          this.upload.processing = true;
           const response = await this.options.uploadImage(
             file,
             this.onProgress
@@ -154,6 +156,7 @@ export default {
           }
         } finally {
           imageInputEl.value = "";
+          this.upload.processing = false;
         }
       }
     }

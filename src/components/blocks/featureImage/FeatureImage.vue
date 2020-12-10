@@ -65,7 +65,8 @@ export default {
         progress: 0,
         failed: false,
         completed: false,
-        retry: true
+        retry: true,
+        processing: false
       }
     };
   },
@@ -137,6 +138,7 @@ export default {
           this.data = { fallback: img.src };
 
           try {
+            this.upload.processing = true;
             const response = await this.options.uploadImage(
               file,
               this.onProgress
@@ -154,6 +156,8 @@ export default {
               editorVm.failedBlocks = editorVm.failedBlocks + 1;
               this.upload.failed = true;
             }
+          } finally {
+            this.upload.processing = false;
           }
         };
         reader.readAsDataURL(file);

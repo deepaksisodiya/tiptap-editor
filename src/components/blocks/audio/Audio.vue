@@ -7,6 +7,7 @@
       v-show="!shouldHideProgress"
       :progress="upload.progress"
       :failed="upload.failed"
+      :processing="upload.processsing"
       :onRetry="onLoadedMetaData"
     />
     <audio-player
@@ -44,7 +45,8 @@ export default {
         progress: 0,
         failed: false,
         completed: false,
-        retry: true
+        retry: true,
+        processing: false
       }
     };
   },
@@ -141,6 +143,7 @@ export default {
         const file = this.file || audioInputEl.files[0];
 
         try {
+          this.upload.processing = true;
           const response = await this.options.uploadAudio(
             file,
             this.onProgress
@@ -161,6 +164,7 @@ export default {
           }
         } finally {
           audioInputEl.value = "";
+          this.upload.processing = false;
         }
       }
     },

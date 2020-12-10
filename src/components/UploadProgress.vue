@@ -3,7 +3,8 @@
     :class="[
       'progress',
       'media-progress',
-      failed ? 'media-progress-error' : ''
+      failed ? 'media-progress-error' : '',
+      progress === 100 && processing ? 'processing-progress-bar' : ''
     ]"
     @click="handleRetry"
   >
@@ -37,6 +38,10 @@ export default {
     },
     retry: {
       default: true,
+      type: Boolean
+    },
+    processing: {
+      default: false,
       type: Boolean
     },
     onRetry: {
