@@ -22,6 +22,7 @@ import {
   ListItem,
   OrderedList,
   Bold,
+  Code,
   Italic,
   Link,
   History,
@@ -125,6 +126,7 @@ export default {
         extensions: [
           new Doc(),
           new Bold(),
+          new Code(),
           new Blockquote(),
           new Italic(),
           new Title(),
