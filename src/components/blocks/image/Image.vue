@@ -145,7 +145,7 @@ export default {
             this.upload.completed = true;
           }
         } catch (error) {
-          if ([415, 413].includes(error.response.status)) {
+          if (error.response && [415, 413].includes(error.response.status)) {
             this.deleteNode();
           } else {
             const editorVm = this.getEditorVm();
