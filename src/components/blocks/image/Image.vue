@@ -12,7 +12,7 @@
         :progress="upload.progress"
         :failed="upload.failed"
         :processing="upload.processing"
-        :onRetry="loaded"
+        @click="loaded"
       />
     </picture>
     <figcaption>
@@ -89,7 +89,7 @@ export default {
       if (this.shouldShowClose && value !== this.$el)
         this.shouldShowClose = false;
     });
-    this.file = document.getElementById("audio-input").files[0];
+    this.file = document.getElementById("image-input").files[0];
   },
   methods: {
     handleKeydown(event) {
@@ -138,6 +138,7 @@ export default {
 
         try {
           this.upload.processing = true;
+          this.upload.failed = false;
           const response = await this.options.uploadImage(
             file,
             this.onProgress

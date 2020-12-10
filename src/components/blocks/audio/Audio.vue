@@ -8,7 +8,7 @@
       :progress="upload.progress"
       :failed="upload.failed"
       :processing="upload.processing"
-      :onRetry="onLoadedMetaData"
+      @click="onLoadedMetaData"
     />
     <audio-player
       :src="data"
@@ -144,6 +144,7 @@ export default {
 
         try {
           this.upload.processing = true;
+          this.upload.failed = false;
           const response = await this.options.uploadAudio(
             file,
             this.onProgress

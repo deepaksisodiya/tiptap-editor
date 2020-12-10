@@ -31,7 +31,7 @@
             :progress="upload.progress"
             :failed="upload.failed"
             :processing="upload.processing"
-            :onRetry="previewFiles"
+            @click="previewFiles"
           />
         </picture>
         <figcaption>
@@ -140,6 +140,7 @@ export default {
 
           try {
             this.upload.processing = true;
+            this.upload.failed = false;
             const response = await this.options.uploadImage(
               file,
               this.onProgress

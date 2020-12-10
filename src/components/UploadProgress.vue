@@ -43,15 +43,11 @@ export default {
     processing: {
       default: false,
       type: Boolean
-    },
-    onRetry: {
-      type: Function,
-      default: Function.prototype
     }
   },
   methods: {
-    handleRetry() {
-      if (this.retry && typeof onRetry === "function") this.onRetry();
+    handleRetry(e) {
+      if (this.retry) this.$emit("click", e);
     }
   }
 };
