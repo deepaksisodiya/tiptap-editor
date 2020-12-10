@@ -26,7 +26,6 @@
           v-show="!shouldHideProgress"
           :progress="upload.progress"
           :failed="upload.failed"
-          :retry="upload.retry"
           :onRetry="previewFiles"
         />
         <picture @click="onImageClick">
@@ -65,7 +64,7 @@ export default {
       upload: {
         progress: 0,
         failed: false,
-        complted: false,
+        completed: false,
         retry: true
       }
     };
@@ -99,7 +98,7 @@ export default {
     },
     shouldHideProgress() {
       return (
-        this.upload.complted || !isDataURL(this.data && this.data.fallback)
+        this.upload.completed || !isDataURL(this.data && this.data.fallback)
       );
     }
   },
@@ -123,10 +122,8 @@ export default {
         event.preventDefault();
       }
     },
-    setUploadStatus(status) {
-      Object.keys(status).forEach(key => {
-        this.upload[key] = status[key];
-      });
+    onProgress(progress) {
+      this.upload.progress = progress;
     },
     previewFiles() {
       const file = this.$refs.fileInput.files[0];
@@ -139,23 +136,24 @@ export default {
           img.src = reader.result;
           this.data = { fallback: img.src };
 
-          const formData = new FormData();
-          formData.append("image", file);
           try {
             const response = await this.options.uploadImage(
-              formData,
-              this.setUploadStatus
+              file,
+              this.onProgress
             );
             if (response && response.status === 200) {
               this.src = response.data;
               this.data = response.data;
-              this.upload.complted = false;
+              this.upload.completed = false;
             }
-          } catch {
-            const editorVm = this.getEditorVm();
-
-            editorVm.failedBlocks = editorVm.failedBlocks + 1;
-            this.upload.failed = true;
+          } catch (error) {
+            if ([415, 413].includes(error.response.status)) {
+              this.deleteNode();
+            } else {
+              const editorVm = this.getEditorVm();
+              editorVm.failedBlocks = editorVm.failedBlocks + 1;
+              this.upload.failed = true;
+            }
           }
         };
         reader.readAsDataURL(file);

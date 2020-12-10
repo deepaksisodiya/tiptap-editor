@@ -7,7 +7,6 @@
       v-show="!shouldHideProgress"
       :progress="upload.progress"
       :failed="upload.failed"
-      :retry="upload.retry"
       :onRetry="onLoadedMetaData"
     />
     <audio-player
@@ -44,7 +43,7 @@ export default {
       upload: {
         progress: 0,
         failed: false,
-        complted: false,
+        completed: false,
         retry: true
       }
     };
@@ -76,7 +75,7 @@ export default {
       }
     },
     shouldHideProgress() {
-      return this.upload.complted || !isDataURL(this.data);
+      return this.upload.completed || !isDataURL(this.data);
     },
     disabled() {
       return this.data.includes("data:");
@@ -129,21 +128,22 @@ export default {
         this.shouldShowClose = !this.shouldShowClose;
       this.options.onSelection(this.shouldShowClose ? this.$el : "");
     },
-    setUploadStatus(status) {
-      Object.keys(status).forEach(key => {
-        this.upload[key] = status[key];
-      });
+    onProgress(progress) {
+      this.upload.progress = progress;
     },
     async onLoadedMetaData() {
       const audioInputEl = document.getElementById("audio-input");
 
-      if (this.data.includes("data:") && audioInputEl.files.length != 0) {
+      if (
+        (this.data.includes("data:") && audioInputEl.files.length != 0) ||
+        this.file
+      ) {
         const file = this.file || audioInputEl.files[0];
 
         try {
           const response = await this.options.uploadAudio(
             file,
-            this.setUploadStatus
+            this.onProgress
           );
           if (response && response.status === 200) {
             const { audio: src, duration } = response.data;
@@ -152,10 +152,13 @@ export default {
             this.upload.completed = false;
           }
         } catch (error) {
-          const editorVm = this.getEditorVm();
-
-          editorVm.failedBlocks = editorVm.failedBlocks + 1;
-          this.upload.failed = true;
+          if ([415, 413].includes(error.response.status)) {
+            this.deleteNode();
+          } else {
+            const editorVm = this.getEditorVm();
+            editorVm.failedBlocks = editorVm.failedBlocks + 1;
+            this.upload.failed = true;
+          }
         } finally {
           audioInputEl.value = "";
         }

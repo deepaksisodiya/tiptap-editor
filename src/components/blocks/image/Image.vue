@@ -11,7 +11,6 @@
         v-show="!shouldHideProgress"
         :progress="upload.progress"
         :failed="upload.failed"
-        :retry="upload.retry"
         :onRetry="loaded"
       />
     </picture>
@@ -46,7 +45,7 @@ export default {
       upload: {
         progress: 0,
         failed: false,
-        complted: false,
+        completed: false,
         retry: true
       }
     };
@@ -75,7 +74,7 @@ export default {
     },
     shouldHideProgress() {
       return (
-        this.upload.complted || !isDataURL(this.data && this.data.fallback)
+        this.upload.completed || !isDataURL(this.data && this.data.fallback)
       );
     }
   },
@@ -122,35 +121,37 @@ export default {
         this.shouldShowClose = !this.shouldShowClose;
       this.options.onSelection(this.shouldShowClose ? this.$el : "");
     },
-    setUploadStatus(status) {
-      Object.keys(status).forEach(key => {
-        this.upload[key] = status[key];
-      });
+    onProgress(progress) {
+      this.upload.progress = progress;
     },
     async loaded() {
       const imageInputEl = document.getElementById("image-input");
 
       if (
-        this.data.fallback.includes("data:") &&
-        imageInputEl.files.length != 0
+        (this.data.fallback.includes("data:") &&
+          imageInputEl.files.length != 0) ||
+        this.file
       ) {
         const file = this.file || imageInputEl.files[0];
 
         try {
           const response = await this.options.uploadImage(
             file,
-            this.setUploadStatus
+            this.onProgress
           );
           if (response && response.status === 200) {
             this.src = response.data;
             this.data = response.data;
-            this.upload.complted = true;
+            this.upload.completed = true;
           }
-        } catch {
-          const editorVm = this.getEditorVm();
-
-          editorVm.failedBlocks = editorVm.failedBlocks + 1;
-          this.upload.failed = true;
+        } catch (error) {
+          if ([415, 413].includes(error.response.status)) {
+            this.deleteNode();
+          } else {
+            const editorVm = this.getEditorVm();
+            editorVm.failedBlocks = editorVm.failedBlocks + 1;
+            this.upload.failed = true;
+          }
         } finally {
           imageInputEl.value = "";
         }
