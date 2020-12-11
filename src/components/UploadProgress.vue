@@ -3,8 +3,7 @@
     :class="[
       'progress',
       'media-progress',
-      failed ? 'media-progress-error' : '',
-      progress === 100 && processing ? 'processing-progress-bar' : ''
+      failed ? 'media-progress-error' : ''
     ]"
     @click="handleRetry"
   >
@@ -14,7 +13,10 @@
     </div>
     <div
       v-else
-      class="progress-bar"
+      :class="[
+        'progress-bar',
+        progress === 100 && processing ? 'processing-progress-bar' : ''
+      ]"
       role="progressbar"
       :aria-valuenow="progress"
       aria-valuemin="0"
