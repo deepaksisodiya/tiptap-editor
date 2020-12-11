@@ -22,14 +22,13 @@ import {
   ListItem,
   OrderedList,
   Bold,
-  Code,
   Italic,
   Link,
   History,
   TrailingNode
 } from "tiptap-extensions";
 import { findChildren } from "prosemirror-utils";
-
+import Code from "../Marks/Code";
 import EditorFloatingMenu from "./EditorFloatingMenu.vue";
 import EditorMenuBubble from "./EditorMenuBubble.vue";
 import {
