@@ -54,7 +54,6 @@ export default class Code extends Mark {
       // otherwise at the edges it is impossible to add new text, because the cursor can't move.
       // https://bitbucket.org/atlassian/atlassian-frontend-mirror/src/master/editor/editor-core/src/plugins/text-formatting/commands/text-formatting.ts
       ArrowRight: (state, dispatch) => {
-        debugger;
         const { code } = state.schema.marks;
         const { empty, $cursor } = state.selection;
         if (!empty || !$cursor) {
