@@ -83,6 +83,15 @@ export default {
       return this.data.includes("data:");
     }
   },
+  watch: {
+    "upload.failed"(newValue, oldValue) {
+      if (newValue !== oldValue) {
+        const editorVm = this.getEditorVm();
+        if (newValue) editorVm.failedBlocks++;
+        else editorVm.failedBlocks--;
+      }
+    }
+  },
   mounted() {
     this.getEditorVm().$watch("selectedEl", value => {
       if (this.shouldShowClose && value !== this.$el)
@@ -137,8 +146,8 @@ export default {
       const audioInputEl = document.getElementById("audio-input");
 
       if (
-        (this.data.includes("data:") && audioInputEl.files.length != 0) ||
-        this.file
+        this.data.includes("data:") &&
+        (audioInputEl.files.length != 0 || this.file)
       ) {
         const file = this.file || audioInputEl.files[0];
 
@@ -160,8 +169,6 @@ export default {
           if (error.response && [415, 413].includes(error.response.status)) {
             this.deleteNode();
           } else {
-            const editorVm = this.getEditorVm();
-            editorVm.failedBlocks = editorVm.failedBlocks + 1;
             this.upload.failed = true;
           }
         } finally {

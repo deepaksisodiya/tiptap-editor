@@ -80,6 +80,15 @@ export default {
       );
     }
   },
+  watch: {
+    "upload.failed"(newValue, oldValue) {
+      if (newValue !== oldValue) {
+        const editorVm = this.getEditorVm();
+        if (newValue) editorVm.failedBlocks++;
+        else editorVm.failedBlocks--;
+      }
+    }
+  },
   mounted() {
     this.$nextTick(() => {
       this.view.focus();
@@ -130,9 +139,8 @@ export default {
       const imageInputEl = document.getElementById("image-input");
 
       if (
-        (this.data.fallback.includes("data:") &&
-          imageInputEl.files.length != 0) ||
-        this.file
+        this.data.fallback.includes("data:") &&
+        (imageInputEl.files.length != 0 || this.file)
       ) {
         const file = this.file || imageInputEl.files[0];
 
@@ -153,8 +161,6 @@ export default {
           if (error.response && [415, 413].includes(error.response.status)) {
             this.deleteNode();
           } else {
-            const editorVm = this.getEditorVm();
-            editorVm.failedBlocks = editorVm.failedBlocks + 1;
             this.upload.failed = true;
           }
         } finally {

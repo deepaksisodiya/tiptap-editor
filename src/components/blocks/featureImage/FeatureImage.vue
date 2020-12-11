@@ -75,6 +75,13 @@ export default {
   watch: {
     "node.attrs.src"(newValue) {
       if (!this.data.fallback) this.data = newValue;
+    },
+    "upload.failed"(newValue, oldValue) {
+      if (newValue !== oldValue) {
+        const editorVm = this.getEditorVm();
+        if (newValue) editorVm.failedBlocks++;
+        else editorVm.failedBlocks--;
+      }
     }
   },
   computed: {
@@ -128,7 +135,9 @@ export default {
       this.upload.progress = progress;
     },
     previewFiles() {
-      const file = this.$refs.fileInput.files[0];
+      const file =
+        (this.$refs.fileInput && this.$refs.fileInput.files[0]) || this.file;
+      this.file = file;
 
       const imageType = /image.*/;
       if (file.type.match(imageType)) {
@@ -155,8 +164,6 @@ export default {
             if (error.response && [415, 413].includes(error.response.status)) {
               this.deleteNode();
             } else {
-              const editorVm = this.getEditorVm();
-              editorVm.failedBlocks = editorVm.failedBlocks + 1;
               this.upload.failed = true;
             }
           } finally {
