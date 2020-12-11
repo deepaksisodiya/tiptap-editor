@@ -103,7 +103,6 @@ export default class Code extends Mark {
         return false;
       },
       ArrowLeft: (state, dispatch) => {
-        debugger;
         const { code } = state.schema.marks;
         const { empty, $cursor } = state.selection;
         if (!empty || !$cursor) {
