@@ -30,9 +30,6 @@ export default class Code extends Mark {
           preserveWhitespace: true,
           getAttrs: domNode => {
             let dom = domNode;
-            if (dom.style.whiteSpace === "pre") {
-              return {};
-            }
             if (
               dom.style.fontFamily &&
               dom.style.fontFamily.toLowerCase().indexOf("monospace") >= 0
