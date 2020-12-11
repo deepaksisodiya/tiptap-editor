@@ -118,7 +118,10 @@ export default class Code extends Mark {
           const nextNextPosHasCode = hasCode(state, $cursor.pos - 2);
 
           const exitingCode =
-            currentPosHasCode && !nextPosHasCode && Array.isArray(storedMarks);
+            currentPosHasCode &&
+            !nextPosHasCode &&
+            (storedMarks === null ||
+              (Array.isArray(storedMarks) && !!storedMarks.length));
           const atLeftEdge =
             nextPosHasCode &&
             !nextNextPosHasCode &&
@@ -169,13 +172,7 @@ export default class Code extends Mark {
             return true;
           }
 
-          // exiting code mark (or at the beginning of the line): don't move the cursor, just remove the mark
-          // upper two nodes are title and featureImage
-          const isFirstChild = $cursor.index($cursor.depth - 1) === 2;
-          if (
-            insideCode &&
-            (exitingCode || (!$cursor.nodeBefore && isFirstChild))
-          ) {
+          if (insideCode && exitingCode) {
             if (dispatch) {
               dispatch(state.tr.removeStoredMark(code));
             }
