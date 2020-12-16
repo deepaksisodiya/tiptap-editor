@@ -11,29 +11,38 @@
             {{ name }}
           </p>
           <div class="file-meta-container">
-            <small class="file-meta">
+            <small class="file-meta" v-if="!upload.failed">
               {{ size }}
             </small>
-            <div class="progress media-progress" v-if="isLoading">
-              <div
-                class="progress-bar"
-                role="progressbar"
-                aria-valuenow="45"
-                aria-valuemin="0"
-                aria-valuemax="100"
-                style="width:45%"
-              ></div>
-            </div>
+            <small class="file-meta" v-if="upload.failed">
+              <i class="icon file-upload-error-icon"></i>
+              Upload Failed
+            </small>
+            <upload-progress
+              v-show="!shouldHideProgress() && !upload.failed"
+              :progress="upload.progress"
+              :failed="upload.failed"
+              :processing="upload.processing"
+              @click="onLoaded"
+            />
           </div>
         </div>
       </div>
       <ul
         class="file-cta-container"
-        v-if="!isLoading && data"
+        v-if="shouldHideProgress() && data && !upload.failed"
         @click="download"
       >
         <li class="download-cta">
           Download
+        </li>
+      </ul>
+      <ul class="file-cta-container" v-if="upload.failed">
+        <li class="cancel-cta" @click="deleteNode">
+          Cancel
+        </li>
+        <li class="retry-cta" @click="onLoaded">
+          Retry
         </li>
       </ul>
     </div>
@@ -51,6 +60,7 @@
 <script>
 import { TextSelection } from "tiptap";
 import { returnFileSize, isDataURL } from "./../../../utils";
+import UploadProgress from "../../UploadProgress";
 
 export default {
   name: "Document",
@@ -58,15 +68,32 @@ export default {
   data() {
     return {
       data: this.node.attrs.src,
+      file: null,
       name: "",
       size: "",
       format: "",
       shouldShowClose: false,
-      isLoading: true,
-      loadingPercent: 0
+      upload: {
+        progress: 0,
+        failed: false,
+        completed: false,
+        processing: false
+      }
     };
   },
   inject: ["getEditorVm"],
+  components: {
+    UploadProgress
+  },
+  watch: {
+    "upload.failed"(newValue, oldValue) {
+      if (newValue !== oldValue) {
+        const editorVm = this.getEditorVm();
+        if (newValue) editorVm.failedBlocks++;
+        else editorVm.failedBlocks--;
+      }
+    }
+  },
   computed: {
     caption: {
       get() {
@@ -80,23 +107,36 @@ export default {
     }
   },
   mounted() {
-    this.onLoaded();
     this.getEditorVm().$watch("selectedEl", value => {
       if (this.shouldShowClose && value !== this.$el)
         this.shouldShowClose = false;
     });
+    const documentInputEl = document.getElementById("document-input");
+    this.file = documentInputEl.files[0];
+    documentInputEl.value = "";
+    this.onLoaded();
+  },
+  beforeDestroy() {
+    const editorVm = this.getEditorVm();
+    if (this.upload.failed) editorVm.failedBlocks = editorVm.failedBlocks - 1;
   },
   methods: {
     getIconClass() {
       return `${this.format}-icon`;
     },
+    shouldHideProgress() {
+      return this.upload.completed || !isDataURL(this.data);
+    },
     download() {
       window.open(this.data, "_blank");
     },
     onDocumentClick() {
-      if (isDataURL(this.data) === false)
+      if (!isDataURL(this.data) || this.upload.failed)
         this.shouldShowClose = !this.shouldShowClose;
       this.options.onSelection(this.shouldShowClose ? this.$el : "");
+    },
+    onProgress(progress) {
+      this.upload.progress = progress;
     },
     handleKeydown(event) {
       let {
@@ -122,20 +162,21 @@ export default {
       this.view.focus();
     },
     async onLoaded() {
-      const documentInputEl = document.getElementById("document-input");
-
-      if (this.data.includes("data:") && documentInputEl.files.length != 0) {
-        this.isLoading = true;
-        const file = documentInputEl.files[0];
+      if (this.data.includes("data:") && this.file) {
+        const file = this.file;
         this.name = file.name;
         this.size = returnFileSize(file.size);
         this.format =
           file.type.split("/").length > 1 && file.type.split("/")[1];
-        const formData = new FormData();
-        formData.append("document", file);
 
         try {
-          const response = await this.options.uploadDocument(formData);
+          this.upload.processing = true;
+          this.upload.failed = false;
+          this.upload.progress = 0;
+          const response = await this.options.uploadDocument(
+            file,
+            this.onProgress
+          );
           if (response && response.status === 200) {
             const { document: src, format } = response.data;
             this.updateAttrs({
@@ -145,12 +186,16 @@ export default {
               size: this.size
             });
             this.data = src;
+            this.upload.completed = true;
           }
         } catch (error) {
-          this.deleteNode();
+          if (error.response && [415, 413].includes(error.response.status)) {
+            this.deleteNode();
+          } else {
+            this.upload.failed = true;
+          }
         } finally {
-          this.isLoading = false;
-          documentInputEl.value = "";
+          this.upload.processing = false;
         }
       }
     }

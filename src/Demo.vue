@@ -59,9 +59,9 @@ export default {
       // return promise with upload image url
       alert(formData);
     },
-    async uploadDocument(formData) {
+    async uploadDocument() {
       // return promise with upload document url
-      await this.delay(1000);
+      await this.delay(5000);
       return Promise.resolve({
         status: 200,
         data: {
@@ -74,7 +74,7 @@ export default {
       // return promise with upload Audio
       alert(formData);
     },
-    getEmbeds(url) {
+    getEmbeds() {
       // Should return promise with embed URL data
       return Promise.resolve({
         status: 200,
