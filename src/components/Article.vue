@@ -34,6 +34,7 @@ import EditorMenuBubble from "./EditorMenuBubble.vue";
 import {
   Embed,
   Image,
+  Document,
   FeatureImage,
   // Lock,
   Doc,
@@ -84,6 +85,10 @@ export default {
       required: false
     },
     uploadImage: {
+      type: Function,
+      required: true
+    },
+    uploadDocument: {
       type: Function,
       required: true
     },
@@ -152,6 +157,10 @@ export default {
             uploadImage: this.uploadImage,
             onSelection: this.onSelection
           }),
+          new Document({
+            uploadDocument: this.uploadDocument,
+            onSelection: this.onSelection
+          }),
           new Audio({
             uploadAudio: this.uploadAudio,
             handleError: this.handleError,
@@ -181,6 +190,9 @@ export default {
                 block.attrs.src &&
                 block.attrs.src.fallback.includes("data:")) ||
               (block.type === "audio" &&
+                block.attrs.src &&
+                block.attrs.src.includes("data:")) ||
+              (block.type === "document" &&
                 block.attrs.src &&
                 block.attrs.src.includes("data:"))
             ) {
