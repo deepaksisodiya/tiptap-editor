@@ -60,7 +60,7 @@ export default {
       alert(formData);
     },
     async uploadDocument(formData) {
-      console.log(formData);
+      // return promise with upload document url
       await this.delay(1000);
       return Promise.resolve({
         status: 200,
@@ -76,8 +76,6 @@ export default {
     },
     getEmbeds(url) {
       // Should return promise with embed URL data
-      // alert(url);
-      console.log(url);
       return Promise.resolve({
         status: 200,
         data: {
