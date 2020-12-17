@@ -69,9 +69,9 @@ export default {
     return {
       data: this.node.attrs.src,
       file: null,
-      name: "",
-      size: "",
-      format: "",
+      name: this.node.attrs.name,
+      size: this.node.attrs.size,
+      format: this.node.attrs.format,
       shouldShowClose: false,
       upload: {
         progress: 0,

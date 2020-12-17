@@ -8,6 +8,7 @@
         :uploadAudio="uploadAudio"
         :getEmbeds="getEmbeds"
         :content="getContent()"
+        :setFailedBlocks="failedBlocks"
         delayUpdateBy="300"
       />
     </div>
@@ -35,6 +36,16 @@ const defaultContent = {
       }
     },
     {
+      type: "document",
+      attrs: {
+        src: "http://www.africau.edu/images/default/sample.pdf",
+        caption: "",
+        name: "01 ScrollStack_Tax Declaration Form FY 202021 (1).pdf",
+        size: "128.5KB",
+        format: "pdf"
+      }
+    },
+    {
       type: "paragraph"
     }
   ]
@@ -55,13 +66,23 @@ export default {
     delay(ms) {
       return new Promise(res => setTimeout(res, ms));
     },
-    uploadImage(formData) {
+    async uploadImage() {
       // return promise with upload image url
-      alert(formData);
+      await this.delay(3000);
+      return Promise.resolve({
+        status: 200,
+        data: {
+          image:
+            "https://dev-bucket.nyc3.cdn.digitaloceanspaces.com/sites/74/posts/2327/juuuydyvgt1608178680.webp",
+          fallback:
+            "https://dev-bucket.nyc3.cdn.digitaloceanspaces.com/sites/74/posts/2327/juuuydyvgt1608178680.png"
+        }
+      });
     },
+    failedBlocks() {},
     async uploadDocument() {
       // return promise with upload document url
-      await this.delay(5000);
+      await this.delay(3000);
       return Promise.resolve({
         status: 200,
         data: {
@@ -69,6 +90,7 @@ export default {
           format: "pdf"
         }
       });
+      // return Promise.reject({});
     },
     uploadAudio(formData) {
       // return promise with upload Audio
