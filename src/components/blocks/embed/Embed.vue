@@ -2,10 +2,10 @@
   <div>
     <ul v-if="!embeds.data.url" class="kitchensink embed-input-open">
       <li @click="deleteNode">
-        <i class="add-icon close-icon"></i>
+        <i class="icon add-icon close-icon"></i>
       </li>
       <li class="embed-input" v-if="embeds.isLoading === true">
-        <i class="loading-icon"></i>
+        <i class="icon loading-icon"></i>
         <span>{{ loadingText }}</span>
       </li>
       <li v-if="embeds.isLoading === false" class="embed-input">

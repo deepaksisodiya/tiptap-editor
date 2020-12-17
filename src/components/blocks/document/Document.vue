@@ -164,7 +164,8 @@ export default {
     async onLoaded() {
       if (this.data.includes("data:") && this.file) {
         const file = this.file;
-        this.name = file.name;
+        // removing extension from the name
+        this.name = file.name.substring(0, file.name.lastIndexOf("."));
         this.size = returnFileSize(file.size);
         this.format =
           file.type.split("/").length > 1 && file.type.split("/")[1];
