@@ -49,7 +49,7 @@
     <figcaption>
       <input
         v-model="caption"
-        placeholder="Type caption for Audio (optional)"
+        placeholder="Add a caption (optional)"
         @keydown="handleKeydown"
         @paste.stop
       />
