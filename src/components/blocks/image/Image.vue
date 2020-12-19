@@ -12,7 +12,7 @@
         :progress="upload.progress"
         :failed="upload.failed"
         :processing="upload.processing"
-        @click="loaded"
+        @click="uploadFile"
       />
     </picture>
     <figcaption>
@@ -135,38 +135,40 @@ export default {
     onProgress(progress) {
       this.upload.progress = progress;
     },
-    async loaded() {
+    async uploadFile() {
+      try {
+        this.upload.processing = true;
+        this.upload.failed = false;
+        this.upload.progress = 0;
+        const response = await this.options.uploadImage(
+          this.file,
+          this.onProgress
+        );
+        if (response && response.status === 200) {
+          this.src = response.data;
+          this.data = response.data;
+          this.upload.completed = true;
+        }
+      } catch (e) {
+        if (e && e.response && [415, 413].includes(e.response.status)) {
+          this.deleteNode();
+        } else {
+          this.upload.failed = true;
+        }
+      } finally {
+        this.upload.processing = false;
+      }
+    },
+    loaded() {
       const imageInputEl = document.getElementById("image-input");
 
       if (
         this.data.fallback.includes("data:") &&
-        (imageInputEl.files.length != 0 || this.file)
+        imageInputEl.files.length != 0
       ) {
-        const file = this.file || imageInputEl.files[0];
-
-        try {
-          this.upload.processing = true;
-          this.upload.failed = false;
-          this.upload.progress = 0;
-          const response = await this.options.uploadImage(
-            file,
-            this.onProgress
-          );
-          if (response && response.status === 200) {
-            this.src = response.data;
-            this.data = response.data;
-            this.upload.completed = true;
-          }
-        } catch (error) {
-          if (error.response && [415, 413].includes(error.response.status)) {
-            this.deleteNode();
-          } else {
-            this.upload.failed = true;
-          }
-        } finally {
-          imageInputEl.value = "";
-          this.upload.processing = false;
-        }
+        this.file = imageInputEl.files[0];
+        imageInputEl.value = "";
+        this.uploadFile();
       }
     }
   },

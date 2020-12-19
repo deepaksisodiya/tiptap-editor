@@ -8,7 +8,7 @@
       :progress="upload.progress"
       :failed="upload.failed"
       :processing="upload.processing"
-      @click="onLoadedMetaData"
+      @click="uploadFile"
     />
     <audio-player
       :src="data"
@@ -142,39 +142,38 @@ export default {
     onProgress(progress) {
       this.upload.progress = progress;
     },
-    async onLoadedMetaData() {
+    async uploadFile() {
+      try {
+        this.upload.processing = true;
+        this.upload.failed = false;
+        this.upload.progress = 0;
+        const response = await this.options.uploadAudio(
+          this.file,
+          this.onProgress
+        );
+        if (response && response.status === 200) {
+          const { audio: src, duration } = response.data;
+          this.updateAttrs({ src, duration });
+          this.data = src;
+          this.upload.completed = true;
+        }
+      } catch (e) {
+        if (e && e.response && [415, 413].includes(e.response.status)) {
+          this.deleteNode();
+        } else {
+          this.upload.failed = true;
+        }
+      } finally {
+        this.upload.processing = false;
+      }
+    },
+    onLoadedMetaData() {
       const audioInputEl = document.getElementById("audio-input");
 
-      if (
-        this.data.includes("data:") &&
-        (audioInputEl.files.length != 0 || this.file)
-      ) {
-        const file = this.file || audioInputEl.files[0];
-
-        try {
-          this.upload.processing = true;
-          this.upload.failed = false;
-          this.upload.progress = 0;
-          const response = await this.options.uploadAudio(
-            file,
-            this.onProgress
-          );
-          if (response && response.status === 200) {
-            const { audio: src, duration } = response.data;
-            this.updateAttrs({ src, duration });
-            this.data = src;
-            this.upload.completed = false;
-          }
-        } catch (error) {
-          if (error.response && [415, 413].includes(error.response.status)) {
-            this.deleteNode();
-          } else {
-            this.upload.failed = true;
-          }
-        } finally {
-          audioInputEl.value = "";
-          this.upload.processing = false;
-        }
+      if (this.data.includes("data:") && audioInputEl.files.length != 0) {
+        this.file = audioInputEl.files[0];
+        audioInputEl.value = "";
+        this.uploadFile();
       }
     },
     setCursorBelowBlock() {

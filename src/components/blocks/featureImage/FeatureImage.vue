@@ -31,7 +31,7 @@
             :progress="upload.progress"
             :failed="upload.failed"
             :processing="upload.processing"
-            @click="previewFiles"
+            @click="uploadFile"
           />
         </picture>
         <figcaption>
@@ -134,43 +134,40 @@ export default {
     onProgress(progress) {
       this.upload.progress = progress;
     },
+    async uploadFile() {
+      try {
+        this.upload.processing = true;
+        this.upload.failed = false;
+        this.upload.progress = 0;
+        const response = await this.options.uploadImage(
+          this.file,
+          this.onProgress
+        );
+        if (response && response.status === 200) {
+          this.src = response.data;
+          this.data = response.data;
+          this.upload.completed = true;
+        }
+      } catch (e) {
+        if (e && e.response && [415, 413].includes(e.response.status)) {
+          this.deleteNode();
+        } else {
+          this.upload.failed = true;
+        }
+      } finally {
+        this.upload.processing = false;
+      }
+    },
     previewFiles() {
-      const file =
-        (this.$refs.fileInput && this.$refs.fileInput.files[0]) || this.file;
-      this.file = file;
-
+      this.file = this.$refs.fileInput && this.$refs.fileInput.files[0];
       const imageType = /image.*/;
-      if (file.type.match(imageType)) {
+      if (this.file.type.match(imageType)) {
         const reader = new FileReader();
         reader.onload = async () => {
-          const img = new Image();
-          img.src = reader.result;
-          this.data = { fallback: img.src };
-
-          try {
-            this.upload.processing = true;
-            this.upload.failed = false;
-            this.upload.progress = 0;
-            const response = await this.options.uploadImage(
-              file,
-              this.onProgress
-            );
-            if (response && response.status === 200) {
-              this.src = response.data;
-              this.data = response.data;
-              this.upload.completed = false;
-            }
-          } catch (error) {
-            if (error.response && [415, 413].includes(error.response.status)) {
-              this.deleteNode();
-            } else {
-              this.upload.failed = true;
-            }
-          } finally {
-            this.upload.processing = false;
-          }
+          this.data = { fallback: reader.result };
+          this.uploadFile();
         };
-        reader.readAsDataURL(file);
+        reader.readAsDataURL(this.file);
       }
     },
     loaded() {
