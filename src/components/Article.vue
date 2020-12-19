@@ -105,7 +105,7 @@ export default {
     },
     setFailedBlocks: {
       type: Function,
-      deafult: () => 0
+      default: () => 0
     }
   },
   components: {
