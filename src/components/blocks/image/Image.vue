@@ -98,7 +98,6 @@ export default {
       if (this.shouldShowClose && value !== this.$el)
         this.shouldShowClose = false;
     });
-    this.file = document.getElementById("image-input").files[0];
   },
   methods: {
     handleKeydown(event) {
