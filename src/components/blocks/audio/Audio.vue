@@ -97,7 +97,6 @@ export default {
       if (this.shouldShowClose && value !== this.$el)
         this.shouldShowClose = false;
     });
-    this.file = document.getElementById("audio-input").files[0];
   },
   beforeDestroy() {
     const editorVm = this.getEditorVm();
