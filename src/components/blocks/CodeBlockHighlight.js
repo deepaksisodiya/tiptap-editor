@@ -37,6 +37,52 @@ hljs.registerLanguage("sql", sql);
 hljs.registerLanguage("typescript", typescript);
 hljs.registerLanguage("html", html);
 
+class DecorationCache {
+  constructor(cache) {
+    this.cache = { ...cache };
+  }
+
+  get(pos) {
+    return this.cache[pos] || null;
+  }
+
+  set(pos, node, decorations) {
+    this.cache[pos] = { node, decorations };
+  }
+
+  replace(oldPos, newPos, node, decorations) {
+    this.remove(oldPos);
+    this.set(newPos, node, decorations);
+  }
+
+  remove(pos) {
+    delete this.cache[pos];
+  }
+
+  invalidate(tr) {
+    const returnCache = new DecorationCache(this.cache);
+    const mapping = tr.mapping;
+    Object.keys(this.cache).forEach(k => {
+      const pos = +k;
+      const result = mapping.mapResult(pos);
+      const mappedNode = tr.doc.nodeAt(result.pos);
+      const { node, decorations } = this.get(pos);
+
+      if (result.deleted || !mappedNode?.eq(node)) {
+        returnCache.remove(pos);
+      } else if (pos !== result.pos) {
+        // update the decorations' from/to values to match the new node position
+        const updatedDecorations = decorations
+          .map(d => d.map(mapping, 0, 0))
+          .filter(d => d !== null);
+        returnCache.replace(pos, result.pos, mappedNode, updatedDecorations);
+      }
+    });
+
+    return returnCache;
+  }
+}
+
 export default class CodeBlockHighlight extends Node {
   get name() {
     return "code_block";
@@ -133,21 +179,19 @@ export default class CodeBlockHighlight extends Node {
         name: new PluginKey("highlight"),
         state: {
           init: (config, instance) => {
-            let content = getHighlightDecorations(
-              instance.doc,
-              hljs,
-              ["code_block"],
-              function() {
-                return "";
-              }
-            );
-            return DecorationSet.create(instance.doc, content);
+            return {
+              cache: new DecorationCache({}),
+              decorations: DecorationSet.create(instance.doc, [])
+            };
           },
-          apply: (tr, set) => {
+          apply: (tr, data) => {
+            const updatedCache = data.cache.invalidate(tr);
             if (!tr.docChanged) {
-              return set.map(tr.mapping, tr.doc);
+              return {
+                cache: updatedCache,
+                decorations: data.decorations.map(tr.mapping, tr.doc)
+              };
             }
-            // TODO: add caching
             let content = getHighlightDecorations(
               tr.doc,
               hljs,
@@ -156,6 +200,11 @@ export default class CodeBlockHighlight extends Node {
                 return "";
               },
               {
+                preRenderer: (_, pos) =>
+                  updatedCache.get(pos) && updatedCache.get(pos).decorations,
+                postRenderer: (b, pos, decorations) => {
+                  updatedCache.set(pos, b, decorations);
+                },
                 autohighlightCallback: (node, pos, language) => {
                   const attrs = node.attrs || {};
                   attrs["language"] = language || "";
@@ -164,12 +213,15 @@ export default class CodeBlockHighlight extends Node {
                 }
               }
             );
-            return DecorationSet.create(tr.doc, content);
+            return {
+              cache: updatedCache,
+              decorations: DecorationSet.create(tr.doc, content)
+            };
           }
         },
         props: {
           decorations(state) {
-            return this.getState(state);
+            return this.getState(state).decorations;
           }
         }
       })
