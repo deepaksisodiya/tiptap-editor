@@ -26,6 +26,13 @@
           <source v-if="data.image" :srcset="data.image" type="image" />
           <source :srcset="data.fallback" type="image" />
           <img :src="data.fallback" @load="loaded" />
+          <upload-progress
+            v-show="!shouldHideProgress"
+            :progress="upload.progress"
+            :failed="upload.failed"
+            :processing="upload.processing"
+            @click="uploadFile"
+          />
         </picture>
         <figcaption>
           <input
@@ -43,20 +50,38 @@
 <script>
 import { TextSelection } from "tiptap";
 import { isDataURL } from "./../../../utils";
+import UploadProgress from "../../UploadProgress";
 
 export default {
   name: "FeatureImage",
   props: ["node", "updateAttrs", "view", "getPos", "options"],
+  components: {
+    UploadProgress
+  },
   data() {
     return {
       data: this.node.attrs.src,
-      shouldShowClose: false
+      shouldShowClose: false,
+      upload: {
+        progress: 0,
+        failed: false,
+        completed: false,
+        retry: true,
+        processing: false
+      }
     };
   },
   inject: ["getEditorVm"],
   watch: {
     "node.attrs.src"(newValue) {
       if (!this.data.fallback) this.data = newValue;
+    },
+    "upload.failed"(newValue, oldValue) {
+      if (newValue !== oldValue) {
+        const editorVm = this.getEditorVm();
+        if (newValue) editorVm.failedBlocks++;
+        else editorVm.failedBlocks--;
+      }
     }
   },
   computed: {
@@ -79,6 +104,11 @@ export default {
           caption
         });
       }
+    },
+    shouldHideProgress() {
+      return (
+        this.upload.completed || !isDataURL(this.data && this.data.fallback)
+      );
     }
   },
   mounted() {
@@ -101,31 +131,43 @@ export default {
         event.preventDefault();
       }
     },
+    onProgress(progress) {
+      this.upload.progress = progress;
+    },
+    async uploadFile() {
+      try {
+        this.upload.processing = true;
+        this.upload.failed = false;
+        this.upload.progress = 0;
+        const response = await this.options.uploadImage(
+          this.file,
+          this.onProgress
+        );
+        if (response && response.status === 200) {
+          this.src = response.data;
+          this.data = response.data;
+          this.upload.completed = true;
+        }
+      } catch (e) {
+        if (e && e.response && [415, 413].includes(e.response.status)) {
+          this.deleteNode();
+        } else {
+          this.upload.failed = true;
+        }
+      } finally {
+        this.upload.processing = false;
+      }
+    },
     previewFiles() {
-      const file = this.$refs.fileInput.files[0];
-
+      this.file = this.$refs.fileInput && this.$refs.fileInput.files[0];
       const imageType = /image.*/;
-      if (file.type.match(imageType)) {
+      if (this.file.type.match(imageType)) {
         const reader = new FileReader();
         reader.onload = async () => {
-          const img = new Image();
-          img.src = reader.result;
-          this.data = { fallback: img.src };
-
-          const formData = new FormData();
-          formData.append("image", file);
-          try {
-            const response = await this.options.uploadImage(formData);
-            if (response && response.status === 200) {
-              this.src = response.data;
-              this.data = response.data;
-            }
-          } catch {
-            this.src = "";
-            this.data = "";
-          }
+          this.data = { fallback: reader.result };
+          this.uploadFile();
         };
-        reader.readAsDataURL(file);
+        reader.readAsDataURL(this.file);
       }
     },
     loaded() {

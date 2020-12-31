@@ -102,6 +102,10 @@ export default {
     beforeUpload: {
       type: Function,
       default: () => true
+    },
+    setFailedBlocks: {
+      type: Function,
+      default: () => 0
     }
   },
   components: {
@@ -296,7 +300,8 @@ export default {
             }
           }
         }
-      })
+      }),
+      failedBlocks: 0
     };
   },
   provide() {
@@ -375,6 +380,9 @@ export default {
       this.editor.setOptions({
         editable: this.editable
       });
+    },
+    failedBlocks() {
+      this.setFailedBlocks(this.failedBlocks);
     }
   }
 };
