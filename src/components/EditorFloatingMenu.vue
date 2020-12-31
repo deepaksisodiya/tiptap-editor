@@ -19,50 +19,89 @@
       v-show="false"
       @change="previewAudio(commands.audio)"
     />
+    <!-- limiting document block to pdf for now by adding accept attribute -->
+    <input
+      type="file"
+      accept=".pdf"
+      id="document-input"
+      ref="documentInput"
+      v-show="false"
+      @change="previewDocument(commands.document)"
+    />
     <ul class="kitchensink">
       <li @click="toggleMenu">
-        <i class="add-icon" :class="{ 'close-icon': shouldShowMenu }"></i>
+        <i class="icon add-icon" :class="{ 'close-icon': shouldShowMenu }"></i>
       </li>
       <li @click="onClickImage()" v-if="shouldShowMenu">
-        <i class="image-icon"></i>
+        <i class="icon image-icon"></i>
       </li>
       <li
         :class="{ 'is-active': isActive.embed() }"
         v-if="shouldShowMenu"
         @click="onClickEmbed(commands.embed, 'video')"
       >
-        <i class="video-icon"></i>
+        <i class="icon video-icon"></i>
       </li>
-      <li @click="onClickAudio()" v-if="shouldShowMenu">
-        <i class="audio-icon"></i>
+      <li
+        :class="{ 'has-menu-popover': showAttachmentOptions }"
+        v-if="shouldShowMenu"
+        @click="onClickAttachment"
+      >
+        <i class="icon attachment-icon"></i>
+        <div
+          class="overlay dark-overlay clear-overlay mobile-overlay"
+          v-if="showAttachmentOptions"
+        ></div>
+        <div
+          class="menu-popover kitchensink-menu-popover"
+          v-if="showAttachmentOptions"
+        >
+          <ul class="menu-popover-items-container">
+            <li class="menu-popover-item">
+              <a href="#" @click="onClickAudio">
+                <i class="icon audio-attachment-icon"></i>
+                <span>Audio</span>
+              </a>
+            </li>
+            <li class="menu-popover-item">
+              <a href="#" @click="onClickPdf">
+                <i class="icon pdf-attachment-icon"></i>
+                <span>PDF</span>
+              </a>
+            </li>
+          </ul>
+          <button class="light-button" @click="onClickAttachment">
+            <span>Cancel</span>
+          </button>
+        </div>
       </li>
       <li
         v-if="shouldShowMenu"
         :class="{ 'is-active': isActive.ordered_list() }"
         @click="onClickMenuItem(commands.ordered_list)"
       >
-        <i class="list-icon"></i>
+        <i class="icon list-icon"></i>
       </li>
       <li
         :class="{ 'is-active': isActive.embed() }"
         v-if="shouldShowMenu"
         @click="onClickEmbed(commands.embed, 'link')"
       >
-        <i class="link-icon"></i>
+        <i class="icon link-icon"></i>
       </li>
       <li
         :class="{ 'is-active': isActive.code_block() }"
         v-if="shouldShowMenu"
         @click="onClickMenuItem(commands.code_block)"
       >
-        <i class="code-icon"></i>
+        <i class="icon code-icon"></i>
       </li>
       <li
         :class="{ 'is-active': isActive.horizontal_rule() }"
         v-if="shouldShowMenu"
         @click="onClickMenuItem(commands.horizontal_rule)"
       >
-        <i class="separator-icon"></i>
+        <i class="icon separator-icon"></i>
       </li>
       <li v-if="shouldShowMenu" style="display:none">
         <i class="kitchensink-divider"></i>
@@ -108,7 +147,9 @@ export default {
       },
       addImageAt: null,
       addAudioAt: null,
-      shouldShowMenu: false
+      addDocumentAt: null,
+      shouldShowMenu: false,
+      showAttachmentOptions: false
     };
   },
   computed: {
@@ -188,10 +229,22 @@ export default {
       this.$refs.imageInput.click();
       this.hideFloatingMenu();
     },
-    onClickAudio() {
+    onClickAudio(e) {
+      e.preventDefault();
       this.addAudioAt = this.editor.view.state.tr.selection.head;
       this.$refs.audioInput.click();
       this.hideFloatingMenu();
+    },
+    onClickPdf(e) {
+      e.preventDefault();
+      this.addDocumentAt = this.editor.view.state.tr.selection.head;
+      this.$refs.documentInput.click();
+      this.hideFloatingMenu();
+    },
+    onClickAttachment(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      this.showAttachmentOptions = !this.showAttachmentOptions;
     },
     previewFiles(command) {
       const { imageInput } = this.$refs;
@@ -235,6 +288,26 @@ export default {
         reader.readAsDataURL(audioFile);
       }
     },
+    previewDocument(command) {
+      const { documentInput } = this.$refs;
+      const documentFile = documentInput.files[0];
+
+      if (documentFile && !this.beforeUpload(documentFile, "document")) {
+        documentFile.value = "";
+        return;
+      }
+
+      if (documentFile) {
+        const reader = new FileReader();
+        reader.onload = () => {
+          command({
+            src: reader.result,
+            addDocumentAt: this.addDocumentAt
+          });
+        };
+        reader.readAsDataURL(documentFile);
+      }
+    },
     toggleMenu(e) {
       if (!this.shouldShowMenu) {
         const nodePos = this.editor.view.posAtCoords({
@@ -244,6 +317,7 @@ export default {
         this.editor.setSelection(nodePos.pos, nodePos.pos);
       }
       this.shouldShowMenu = !this.shouldShowMenu;
+      this.showAttachmentOptions = false;
       this.editor.setOptions({});
     },
     onClickEmbed(command, type) {
@@ -256,6 +330,7 @@ export default {
     },
     hideFloatingMenu() {
       this.shouldShowMenu = false;
+      this.showAttachmentOptions = false;
     }
   }
 };

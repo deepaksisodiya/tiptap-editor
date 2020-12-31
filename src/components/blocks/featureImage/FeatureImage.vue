@@ -5,7 +5,7 @@
       style="position: relative;"
     >
       <template v-if="!data.fallback">
-        <i class="upload-icon"></i>
+        <i class="icon upload-icon"></i>
         <span>Upload feature image (optional)</span>
         <input
           type="file"
