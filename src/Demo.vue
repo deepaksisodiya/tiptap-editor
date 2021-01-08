@@ -7,6 +7,7 @@
         :uploadDocument="uploadDocument"
         :uploadAudio="uploadAudio"
         :getEmbeds="getEmbeds"
+        :handleError="handleError"
         :content="getContent()"
         :setFailedBlocks="failedBlocks"
         delayUpdateBy="300"
@@ -78,6 +79,9 @@ export default {
             "https://dev-bucket.nyc3.cdn.digitaloceanspaces.com/sites/74/posts/2327/juuuydyvgt1608178680.png"
         }
       });
+    },
+    handleError(error, type) {
+      alert(error, type);
     },
     failedBlocks() {},
     async uploadDocument() {

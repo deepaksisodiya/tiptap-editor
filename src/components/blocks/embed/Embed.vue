@@ -72,7 +72,7 @@
 import { TextSelection } from "tiptap";
 import jsonp from "jsonp";
 
-import { getValidUrl } from "./../../../utils";
+import { getValidUrl, loadScript } from "./../../../utils";
 
 export default {
   name: "Embed",
@@ -83,7 +83,6 @@ export default {
       shouldShowClose: false,
       embeds: {
         isLoading: false,
-        isError: false,
         data: {
           title: "",
           description: "",
@@ -169,30 +168,6 @@ export default {
     }
   },
   methods: {
-    loadScript(url, callback) {
-      var script = document.createElement("script");
-      script.type = "text/javascript";
-      if (script.readyState) {
-        // only required for IE <9
-        script.onreadystatechange = () => {
-          if (
-            script.readyState === "loaded" ||
-            script.readyState === "complete"
-          ) {
-            script.onreadystatechange = null;
-            callback();
-          }
-        };
-      } else {
-        //Others
-        script.onload = () => {
-          callback();
-        };
-      }
-
-      script.src = url;
-      document.getElementsByTagName("head")[0].appendChild(script);
-    },
     loadGithubGist(githubGistUrl) {
       const url = new URL(githubGistUrl);
       const file = url.searchParams.get("file");
@@ -213,7 +188,7 @@ export default {
       if (this.embeds.data.provider === "Twitter") {
         if (window.twttr) window.twttr.widgets.load();
         else {
-          this.loadScript("https://platform.twitter.com/widgets.js", () => {
+          loadScript("https://platform.twitter.com/widgets.js", () => {
             window.twttr.widgets.load();
           });
         }
@@ -222,7 +197,7 @@ export default {
       if (this.embeds.data.provider === "Instagram") {
         if (window.instgrm) window.instgrm.Embeds.process();
         else {
-          this.loadScript("https://www.instagram.com/embed.js", () => {
+          loadScript("https://www.instagram.com/embed.js", () => {
             window.instgrm.Embeds.process();
           });
         }
@@ -231,23 +206,23 @@ export default {
         this.loadGithubGist(this.embeds.data.url);
     },
     async onClickAdd() {
-      if (!this.url) return;
-
-      // move cursor to new paragraph
-      let tr = this.view.state.tr;
-      const pos = this.getPos();
-      let textSelection = TextSelection.create(tr.doc, pos + 1, pos + 1);
-      tr = tr.setSelection(textSelection);
-      this.view.dispatch(tr);
-
-      const validURL = getValidUrl(this.url);
-      this.updateAttrs({
-        url: validURL
-      });
-
-      this.embeds.isLoading = true;
-      this.embeds.isError = false;
       try {
+        if (!this.url) throw "nullURL";
+
+        // move cursor to new paragraph
+        let tr = this.view.state.tr;
+        const pos = this.getPos();
+        let textSelection = TextSelection.create(tr.doc, pos + 1, pos + 1);
+        tr = tr.setSelection(textSelection);
+        this.view.dispatch(tr);
+
+        const validURL = getValidUrl(this.url);
+        this.updateAttrs({
+          url: validURL
+        });
+
+        this.embeds.isLoading = true;
+
         const url = encodeURIComponent(validURL.trim());
         const response = await this.options.getEmbeds(url);
         this.embeds.data = this.getEmbedsData(response.data.attrs);
@@ -261,45 +236,10 @@ export default {
           });
         }
       } catch (error) {
-        this.embeds.isError = true;
+        this.options.handleError(error, "embed");
       } finally {
         this.embeds.isLoading = false;
       }
-    },
-    createAndMovetoNextParagraph() {
-      let {
-        state: { tr, schema }
-      } = this.view;
-      const pos = this.getPos();
-      // replce embeds with paragraph
-      let textSelection = TextSelection.create(tr.doc, pos, pos + 1);
-      tr = tr.setSelection(textSelection).insertText(this.url);
-
-      // create new paragraph
-      const type = schema.nodes["paragraph"];
-      tr = tr.insert(pos + this.url.length + 2, type.create());
-      // move cursor to new paragraph
-      textSelection = TextSelection.create(
-        tr.doc,
-        pos + this.url.length + 2,
-        pos + this.url.length + 2
-      );
-      tr = tr.setSelection(textSelection);
-      this.view.dispatch(tr);
-      // focus the editor
-      this.view.focus();
-    },
-    validURL(str) {
-      var pattern = new RegExp(
-        "^(https?:\\/\\/)?" + // protocol
-        "((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|" + // domain name
-        "((\\d{1,3}\\.){3}\\d{1,3}))" + // OR ip (v4) address
-        "(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*" + // port and path
-        "(\\?[;&a-z\\d%_.~+=-]*)?" + // query string
-          "(\\#[-a-z\\d_]*)?$",
-        "i"
-      ); // fragment locator
-      return !!pattern.test(str);
     },
     handleKeydown(event) {
       let {
@@ -307,11 +247,7 @@ export default {
       } = this.view;
       const pos = this.getPos();
       if (event.key === "Backspace" && !this.caption) {
-        let textSelection = TextSelection.create(tr.doc, pos, pos + 1);
-        this.view.dispatch(
-          tr.setSelection(textSelection).deleteSelection(this.url)
-        );
-        this.view.focus();
+        this.deleteNode();
       } else if (event.key === "Enter") {
         let textSelection = TextSelection.create(tr.doc, pos + 2, pos + 2);
         this.view.dispatch(tr.setSelection(textSelection));
@@ -335,7 +271,7 @@ export default {
       const pos = this.getPos();
       let textSelection = TextSelection.create(tr.doc, pos, pos + 1);
       this.view.dispatch(
-        tr.setSelection(textSelection).deleteSelection(this.src)
+        tr.setSelection(textSelection).deleteSelection(this.url)
       );
       this.view.focus();
     },

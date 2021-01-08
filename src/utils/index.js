@@ -28,3 +28,25 @@ export const returnFileSize = (number = 0) => {
     return (number / 1048576).toFixed(1) + "MB";
   }
 };
+
+export const loadScript = (url, callback) => {
+  var script = document.createElement("script");
+  script.type = "text/javascript";
+  if (script.readyState) {
+    // only required for IE <9
+    script.onreadystatechange = () => {
+      if (script.readyState === "loaded" || script.readyState === "complete") {
+        script.onreadystatechange = null;
+        callback();
+      }
+    };
+  } else {
+    //Others
+    script.onload = () => {
+      callback();
+    };
+  }
+
+  script.src = url;
+  document.getElementsByTagName("head")[0].appendChild(script);
+};

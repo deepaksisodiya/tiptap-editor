@@ -172,6 +172,7 @@ export default {
           }),
           new Embed({
             getEmbeds: this.getEmbeds,
+            handleError: this.handleError,
             onSelection: this.onSelection
           }),
           new HorizontalRule(),
