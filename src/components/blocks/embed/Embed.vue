@@ -60,7 +60,8 @@
           'embed-content':
             embeds.data.provider === 'Twitter' ||
             embeds.data.provider === 'Instagram' ||
-            embeds.data.provider === 'Github'
+            embeds.data.provider === 'Github' ||
+            embeds.data.provider === 'Apple'
         }"
         v-html="embeds.data.html"
       ></div>
