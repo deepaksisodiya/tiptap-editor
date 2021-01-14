@@ -15,6 +15,12 @@ export default class ImageNode extends TiptapImage {
         },
         caption: {
           default: ""
+        },
+        height: {
+          default: ""
+        },
+        width: {
+          default: ""
         }
       },
       group: "block",
@@ -26,7 +32,9 @@ export default class ImageNode extends TiptapImage {
             return {
               src: JSON.parse(dom.getAttribute("data-src")),
               alt: dom.getAttribute("alt"),
-              caption: dom.getAttribute("caption")
+              caption: dom.getAttribute("caption"),
+              height: dom.getAttribute("height"),
+              width: dom.getAttribute("width")
             };
           }
         }
@@ -39,7 +47,9 @@ export default class ImageNode extends TiptapImage {
             ...node.attrs,
             src: node.attrs.src && node.attrs.src.fallback,
             "data-src": JSON.stringify(node.attrs.src),
-            "data-featured-image": false
+            "data-featured-image": false,
+            height: node.attrs.height,
+            width: node.attrs.width
           }
         ];
       }

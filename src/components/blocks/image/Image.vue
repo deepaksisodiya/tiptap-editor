@@ -6,7 +6,12 @@
     <picture @click="onImageClick">
       <source v-if="data.image" :srcset="data.image" type="image" />
       <source :srcset="data.fallback" type="image" />
-      <img :src="data.fallback" @load="loaded" />
+      <img
+        :src="data.fallback"
+        @load="loaded"
+        :height="height"
+        :width="width"
+      />
       <upload-progress
         v-show="!shouldHideProgress"
         :progress="upload.progress"
@@ -39,8 +44,6 @@ export default {
   },
   data() {
     return {
-      height: "",
-      width: "",
       data: this.node.attrs.src,
       shouldShowClose: false,
       upload: {
@@ -61,6 +64,26 @@ export default {
       set(src) {
         this.updateAttrs({
           src
+        });
+      }
+    },
+    height: {
+      get() {
+        return this.node.attrs.height;
+      },
+      set(height) {
+        this.updateAttrs({
+          height
+        });
+      }
+    },
+    width: {
+      get() {
+        return this.node.attrs.width;
+      },
+      set(width) {
+        this.updateAttrs({
+          width
         });
       }
     },
@@ -144,8 +167,14 @@ export default {
           this.onProgress
         );
         if (response && response.status === 200) {
-          this.src = response.data;
-          this.data = response.data;
+          const imgObj = {
+            image: response.data.image.src,
+            fallback: response.data.fallback.src
+          };
+          this.src = imgObj;
+          this.data = imgObj;
+          this.height = response.data.image.attrs[0];
+          this.width = response.data.image.attrs[1];
           this.upload.completed = true;
         }
       } catch (e) {

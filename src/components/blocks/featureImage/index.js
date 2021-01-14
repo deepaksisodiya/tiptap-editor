@@ -19,6 +19,12 @@ export default class ImageNode extends TiptapImage {
         },
         caption: {
           default: ""
+        },
+        height: {
+          default: ""
+        },
+        width: {
+          default: ""
         }
       },
       group: "block",
