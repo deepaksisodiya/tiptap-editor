@@ -61,7 +61,8 @@
             embeds.data.provider === 'Twitter' ||
             embeds.data.provider === 'Instagram' ||
             embeds.data.provider === 'Github' ||
-            embeds.data.provider === 'Apple'
+            embeds.data.provider === 'Apple' ||
+            embeds.data.provider === 'Spotify'
         }"
         v-html="embeds.data.html"
       ></div>
