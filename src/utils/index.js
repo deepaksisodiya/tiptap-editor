@@ -9,7 +9,10 @@ export const isDataURL = (data = "") => {
 export const getValidUrl = (url = "") => {
   let newUrl = window.decodeURIComponent(url);
   newUrl = newUrl.trim().replace(/\s/g, "");
-
+  // Do not append http/https in case of spotify URI
+  if (/^(spotify:)(\b(episode|show|playlist|track)\b:)(.*)/.test(newUrl)) {
+    return newUrl;
+  }
   if (/^(:\/\/)/.test(newUrl)) {
     return `https${newUrl}`;
   }
