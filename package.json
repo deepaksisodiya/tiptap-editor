@@ -2,8 +2,8 @@
   "name": "tiptap-editor",
   "version": "0.1.0",
   "private": true,
-  "main": "./src/components/plugin-entry.js",
-  "module": "./src/components/plugin-entry.js",
+  "main": "./src/plugin-entry.js",
+  "module": "./src/plugin-entry.js",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
