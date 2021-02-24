@@ -170,13 +170,13 @@ export default {
         );
         if (response && response.status === 200) {
           const imgObj = {
-            image: response.data.image.src,
-            fallback: response.data.fallback.src
+            image: response.data.image,
+            fallback: response.data.fallback
           };
           this.src = imgObj;
           this.data = imgObj;
-          this.height = response.data.image.attrs[0];
-          this.width = response.data.image.attrs[1];
+          this.height = response.data.meta.height;
+          this.width = response.data.meta.width;
           this.upload.completed = true;
         }
       } catch (e) {

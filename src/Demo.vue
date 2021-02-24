@@ -74,15 +74,11 @@ export default {
       return Promise.resolve({
         status: 200,
         data: {
-          image: {
-            src:
-              "https://dev-bucket.nyc3.cdn.digitaloceanspaces.com/sites/74/posts/2327/juuuydyvgt1608178680.webp",
-            attrs: [400, 400]
-          },
-          fallback: {
-            src:
-              "https://dev-bucket.nyc3.cdn.digitaloceanspaces.com/sites/74/posts/2327/juuuydyvgt1608178680.png",
-            attrs: [400, 400]
+          image: "https://dev-bucket.nyc3.cdn.digitaloceanspaces.com/sites/74/posts/2327/juuuydyvgt1608178680.webp",
+          fallback: "https://dev-bucket.nyc3.cdn.digitaloceanspaces.com/sites/74/posts/2327/juuuydyvgt1608178680.png",
+          meta: {
+            height: 400,
+            width: 400
           }
         }
       });
