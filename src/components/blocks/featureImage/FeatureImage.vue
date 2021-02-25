@@ -175,8 +175,10 @@ export default {
           };
           this.src = imgObj;
           this.data = imgObj;
-          this.height = response.data.meta.height;
-          this.width = response.data.meta.width;
+          if (response.data.meta) {
+            this.height = response.data.meta.height;
+            this.width = response.data.meta.width;
+          }
           this.upload.completed = true;
         }
       } catch (e) {

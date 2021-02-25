@@ -74,8 +74,10 @@ export default {
       return Promise.resolve({
         status: 200,
         data: {
-          image: "https://dev-bucket.nyc3.cdn.digitaloceanspaces.com/sites/74/posts/2327/juuuydyvgt1608178680.webp",
-          fallback: "https://dev-bucket.nyc3.cdn.digitaloceanspaces.com/sites/74/posts/2327/juuuydyvgt1608178680.png",
+          image:
+            "https://dev-bucket.nyc3.cdn.digitaloceanspaces.com/sites/74/posts/2327/juuuydyvgt1608178680.webp",
+          fallback:
+            "https://dev-bucket.nyc3.cdn.digitaloceanspaces.com/sites/74/posts/2327/juuuydyvgt1608178680.png",
           meta: {
             height: 400,
             width: 400
