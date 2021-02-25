@@ -33,7 +33,9 @@ const defaultContent = {
       attrs: {
         src: "",
         caption: "",
-        alt: ""
+        alt: "",
+        height: "",
+        width: ""
       }
     },
     {
@@ -76,7 +78,11 @@ export default {
           image:
             "https://dev-bucket.nyc3.cdn.digitaloceanspaces.com/sites/74/posts/2327/juuuydyvgt1608178680.webp",
           fallback:
-            "https://dev-bucket.nyc3.cdn.digitaloceanspaces.com/sites/74/posts/2327/juuuydyvgt1608178680.png"
+            "https://dev-bucket.nyc3.cdn.digitaloceanspaces.com/sites/74/posts/2327/juuuydyvgt1608178680.png",
+          meta: {
+            height: 400,
+            width: 400
+          }
         }
       });
     },
