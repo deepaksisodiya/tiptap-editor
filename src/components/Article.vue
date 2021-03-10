@@ -14,38 +14,40 @@
 </template>
 
 <script>
-import { Editor, EditorContent, TextSelection } from "tiptap";
-import {
-  Blockquote,
-  HardBreak,
-  Heading,
-  ListItem,
-  OrderedList,
-  Bold,
-  Italic,
-  Link,
-  History,
-  TrailingNode
-} from "tiptap-extensions";
+import { Editor, EditorContent } from "@tiptap/vue-3";
+import { TextSelection } from "prosemirror-view";
+import { defaultExtensions } from "@tiptap/starter-kit";
+// import {
+//   Blockquote,
+//   HardBreak,
+//   Heading,
+//   ListItem,
+//   OrderedList,
+//   Bold,
+//   Italic,
+//   Link,
+//   History,
+//   TrailingNode
+// } from "tiptap-extensions";
 import { findChildren } from "prosemirror-utils";
-import Code from "../Marks/Code";
+// import Code from "../Marks/Code";
 import EditorFloatingMenu from "./EditorFloatingMenu.vue";
 import EditorMenuBubble from "./EditorMenuBubble.vue";
-import {
-  Embed,
-  Image,
-  Document,
-  FeatureImage,
-  // Lock,
-  Doc,
-  Title,
-  HorizontalRule,
-  Header,
-  Superscript,
-  Audio,
-  CodeBlockHighlight
-} from "./blocks";
-import Placeholder from "./../extensions/Placeholder";
+// import {
+//   Embed,
+//   Image,
+//   Document,
+//   FeatureImage,
+//   // Lock,
+//   Doc,
+//   Title,
+//   HorizontalRule,
+//   Header,
+//   Superscript,
+//   Audio,
+//   CodeBlockHighlight
+// } from "./blocks";
+// import Placeholder from "./../extensions/Placeholder";
 import browser from "../utils/browser";
 import { keyEvent } from "../utils/dom";
 
@@ -131,55 +133,7 @@ export default {
       editor: new Editor({
         autoFocus: false,
         editable: true,
-        extensions: [
-          new Doc(),
-          new Bold(),
-          new Code(),
-          new Blockquote(),
-          new Italic(),
-          new Title(),
-          new Header(),
-          new Placeholder({
-            showOnlyCurrent: false,
-            emptyNodeText: this.emptyNodeText
-          }),
-          new HardBreak(),
-          new Heading({ levels: [3, 5] }),
-          new ListItem(),
-          new OrderedList(),
-          new Link(),
-          new History(),
-          new TrailingNode({
-            node: "paragraph",
-            notAfter: ["paragraph"]
-          }),
-          new Image({
-            uploadImage: this.uploadImage,
-            onSelection: this.onSelection
-          }),
-          new Document({
-            uploadDocument: this.uploadDocument,
-            onSelection: this.onSelection
-          }),
-          new Audio({
-            uploadAudio: this.uploadAudio,
-            handleError: this.handleError,
-            onSelection: this.onSelection
-          }),
-          new FeatureImage({
-            uploadImage: this.uploadImage,
-            onSelection: this.onSelection
-          }),
-          new Embed({
-            getEmbeds: this.getEmbeds,
-            handleError: this.handleError,
-            onSelection: this.onSelection
-          }),
-          new HorizontalRule(),
-          new Superscript(),
-          new CodeBlockHighlight()
-          // new Lock()
-        ],
+        extensions: defaultExtensions,
         onUpdate: ({ getJSON }) => {
           const data = getJSON();
           const title = this.editor.state.doc.firstChild.textContent;
