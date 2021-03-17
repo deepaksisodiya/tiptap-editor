@@ -1,25 +1,33 @@
-import { Mark } from "tiptap";
-import { toggleMark } from "tiptap-commands";
+import { Mark } from "@tiptap/core";
 
-export default class Superscript extends Mark {
-  get name() {
-    return "sup";
-  }
+export const Superscript = Mark.create({
+  name: "image",
 
-  get schema() {
+  draggable: true,
+
+  parseHTML() {
+    return [
+      {
+        tag: "sup",
+      },
+    ];
+  },
+
+  renderHTML() {
+    return ["sup", 0];
+  },
+
+  addCommands() {
     return {
-      parseDOM: [
-        {
-          tag: "sup"
-        }
-      ],
-      toDOM: () => ["sup", 0]
+      toggleSup: () => ({ commands }) => {
+        return commands.toggleMark("sup");
+      },
     };
-  }
+  },
 
-  keys({ type }) {
+  addKeyboardShortcuts() {
     return {
-      "Ctrl-Shift-6": toggleMark(type)
+      "Ctrl-Shift-6": () => this.editor.commands.toggleSup(),
     };
-  }
-}
+  },
+});

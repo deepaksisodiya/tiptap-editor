@@ -2,7 +2,7 @@
   <div>
     <div
       :class="{ 'upload-picture-block': !data.fallback }"
-      style="position: relative;"
+      style="position: relative"
     >
       <template v-if="!data.fallback">
         <i class="icon upload-icon"></i>
@@ -10,7 +10,16 @@
         <input
           type="file"
           ref="fileInput"
-          style="position: absolute; opacity: 0; top: 0px; left: 0px; height: 100%; width: 100%; margin-top: 0px; margin-bottom: 0px"
+          style="
+            position: absolute;
+            opacity: 0;
+            top: 0px;
+            left: 0px;
+            height: 100%;
+            width: 100%;
+            margin-top: 0px;
+            margin-bottom: 0px;
+          "
           @change="previewFiles()"
         />
       </template>
@@ -56,7 +65,7 @@ export default {
   name: "FeatureImage",
   props: ["node", "updateAttrs", "view", "getPos", "options"],
   components: {
-    UploadProgress
+    UploadProgress,
   },
   data() {
     return {
@@ -67,8 +76,8 @@ export default {
         failed: false,
         completed: false,
         retry: true,
-        processing: false
-      }
+        processing: false,
+      },
     };
   },
   inject: ["getEditorVm"],
@@ -82,7 +91,7 @@ export default {
         if (newValue) editorVm.failedBlocks++;
         else editorVm.failedBlocks--;
       }
-    }
+    },
   },
   computed: {
     src: {
@@ -91,9 +100,9 @@ export default {
       },
       set(src) {
         this.updateAttrs({
-          src
+          src,
         });
-      }
+      },
     },
     caption: {
       get() {
@@ -101,19 +110,19 @@ export default {
       },
       set(caption) {
         this.updateAttrs({
-          caption
+          caption,
         });
-      }
+      },
     },
     shouldHideProgress() {
       return (
         this.upload.completed || !isDataURL(this.data && this.data.fallback)
       );
-    }
+    },
   },
   mounted() {
-    this.view.featureImageInstance = this;
-    this.getEditorVm().$watch("selectedEl", value => {
+    this.view.featureImageInstance = this;  // eslint-disable-line
+    this.getEditorVm().$watch("selectedEl", (value) => {
       if (this.shouldShowClose && value !== this.$el)
         this.shouldShowClose = false;
     });
@@ -121,7 +130,7 @@ export default {
   methods: {
     handleKeydown(event) {
       let {
-        state: { tr }
+        state: { tr },
       } = this.view;
       const pos = this.getPos();
       if (event.key === "Enter") {
@@ -185,7 +194,7 @@ export default {
       if (isDataURL(this.data && this.data.fallback) === false)
         this.shouldShowClose = !this.shouldShowClose;
       this.options.onSelection(this.shouldShowClose ? this.$el : "");
-    }
-  }
+    },
+  },
 };
 </script>

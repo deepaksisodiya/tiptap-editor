@@ -1,8 +1,14 @@
 <template>
   <div class="editor">
     <article>
-      <editor-menu-bubble :editor="editor" />
+      <editor-menu-bubble
+        v-if="editor"
+        :menu="bubblemenu"
+        ref="menububble"
+        :editor="editor"
+      />
       <editor-floating-menu
+        v-if="editor"
         :editor="editor"
         ref="floatingMenu"
         :before-upload="beforeUpload"
@@ -15,24 +21,14 @@
 
 <script>
 import { Editor, EditorContent } from "@tiptap/vue-3";
-import { TextSelection } from "prosemirror-view";
+import { TextSelection } from "prosemirror-state";
 import { defaultExtensions } from "@tiptap/starter-kit";
-// import {
-//   Blockquote,
-//   HardBreak,
-//   Heading,
-//   ListItem,
-//   OrderedList,
-//   Bold,
-//   Italic,
-//   Link,
-//   History,
-//   TrailingNode
-// } from "tiptap-extensions";
 import { findChildren } from "prosemirror-utils";
 // import Code from "../Marks/Code";
 import EditorFloatingMenu from "./EditorFloatingMenu.vue";
 import EditorMenuBubble from "./EditorMenuBubble.vue";
+import MenuBubbleExtension from "../extensions/MenuBubble.js";
+import FloatingMenuExtension from "../extensions/FloatingMenu.js";
 // import {
 //   Embed,
 //   Image,
@@ -59,232 +55,254 @@ const defaultContent = {
       attrs: {
         src: "",
         caption: "",
-        alt: ""
-      }
+        alt: "",
+      },
     },
     {
-      type: "paragraph"
-    }
-  ]
+      type: "paragraph",
+    },
+  ],
 };
+const extensions = defaultExtensions();
+
+console.log(extensions);
 
 export default {
   name: "Article",
   props: {
     onUpdatePost: {
       type: Function,
-      required: true
+      required: true,
     },
     content: {
       type: Object,
-      default: function() {
+      default: function () {
         return defaultContent;
       },
-      required: true
+      required: true,
     },
     title: {
       type: String,
-      required: false
+      required: false,
     },
     uploadImage: {
       type: Function,
-      required: true
+      required: true,
     },
     uploadDocument: {
       type: Function,
-      required: true
+      required: true,
     },
     uploadAudio: {
       type: Function,
-      required: true
+      required: true,
     },
     getEmbeds: {
       type: Function,
-      required: true
+      required: true,
     },
     handleError: {
       type: Function,
-      default: () => {}
+      default: () => {},
     },
     beforeUpload: {
       type: Function,
-      default: () => true
+      default: () => true,
     },
     setFailedBlocks: {
       type: Function,
-      default: () => 0
-    }
+      default: () => 0,
+    },
   },
   components: {
     EditorContent,
+    EditorMenuBubble,
     EditorFloatingMenu,
-    EditorMenuBubble
   },
   data() {
     return {
       error: {
         occurred: false,
         message: "",
-        name: ""
+        name: "",
       },
       data: this.content,
       editable: true,
       selectedEl: undefined,
-      editor: new Editor({
-        autoFocus: false,
-        editable: true,
-        extensions: defaultExtensions,
-        onUpdate: ({ getJSON }) => {
-          const data = getJSON();
-          const title = this.editor.state.doc.firstChild.textContent;
-
-          data.content.shift();
-          data.content = data.content.filter(block => {
-            if (
-              (block.type === "image" &&
-                block.attrs.src &&
-                block.attrs.src.fallback.includes("data:")) ||
-              (block.type === "audio" &&
-                block.attrs.src &&
-                block.attrs.src.includes("data:")) ||
-              (block.type === "document" &&
-                block.attrs.src &&
-                block.attrs.src.includes("data:"))
-            ) {
-              return false;
-            }
-            return true;
-          });
-          this.onUpdatePost({ blocks: data, title });
-        },
-        // a hack for codeBlock on firefox browser,
-        // check CodeBlockHighlight plugin for more detail
-        onTransaction: ({ transaction }) => {
-          if (
-            transaction.getMeta("resetSelectionHack") &&
-            typeof window !== undefined
-          ) {
-            const s = window.document.getSelection();
-            if (s) {
-              const r = s.getRangeAt(0);
-              if (r) {
-                s.removeAllRanges();
-                s.addRange(r);
-              }
-            }
-          }
-        },
-        editorProps: {
-          handleClick: () => {
-            this.selectedEl = null;
-          },
-          handlePaste: (view, event, slice) => {
-            const singleNode =
-              slice.openStart == 0 &&
-              slice.openEnd == 0 &&
-              slice.content.childCount == 1
-                ? slice.content.firstChild
-                : null;
-            let tr = singleNode
-              ? view.state.tr.replaceSelectionWith(singleNode, view.shiftKey)
-              : view.state.tr.replaceSelection(slice);
-            // current cursor position
-            const anchor = tr.selection.anchor;
-            // find featured image blocks
-            const nodes = findChildren(
-              tr.doc,
-              child => child.type.name === "featuredimage",
-              false
-            );
-            // if multiple featured image blocks
-            if (nodes.length > 1) {
-              let textSelection = TextSelection.create(
-                tr.doc,
-                nodes[1].pos,
-                nodes[1].pos + 1
-              );
-              // select and delete block
-              tr = tr.setSelection(textSelection).deleteSelection();
-              // keep cursor and last anchor positoin
-              textSelection = TextSelection.create(tr.doc, anchor, anchor);
-              tr = tr.setSelection(textSelection);
-            }
-            view.dispatch(
-              tr
-                .scrollIntoView()
-                .setMeta("paste", true)
-                .setMeta("uiEvent", "paste")
-            );
-            this.handleAfterPaste(view);
-            return true;
-          },
-          handleDOMEvents: {
-            beforeinput: (view, event) => {
-              // We should probably do more with beforeinput events, but support
-              // is so spotty that I'm still waiting to see where they are going.
-
-              // Very specific hack to deal with backspace sometimes failing on
-              // Chrome Android when after an uneditable node.
-              if (
-                browser.chrome &&
-                browser.android &&
-                event.inputType == "deleteContentBackward"
-              ) {
-                const cursorBeforeDelete = view.state.selection.$cursor;
-                let { domChangeCount } = view;
-                setTimeout(() => {
-                  if (view.domChangeCount != domChangeCount) return; // Event already had some effect
-                  // This bug tends to close the virtual keyboard, so we refocus
-                  let { $cursor } = view.state.selection;
-                  view.dom.blur();
-                  cursorBeforeDelete.pos !== $cursor.pos
-                    ? this.editor.focus(
-                        cursorBeforeDelete.pos,
-                        cursorBeforeDelete.pos
-                      )
-                    : this.editor.focus();
-                  if (
-                    view.someProp("handleKeyDown", f =>
-                      f(view, keyEvent(8, "Backspace"))
-                    )
-                  )
-                    return;
-                  // Crude approximation of backspace behavior when no command handled it
-                  if ($cursor && $cursor.pos > 0)
-                    view.dispatch(
-                      view.state.tr
-                        .delete($cursor.pos - 1, $cursor.pos)
-                        .scrollIntoView()
-                    );
-                }, 50);
-              }
-              return true;
-            },
-            keydown: (view, event) => {
-              if (event.keyCode === 13)
-                view.selectionAtEnterKeydown = view.state.selection;
-              return false;
-            }
-          }
-        }
-      }),
-      failedBlocks: 0
+      editor: null,
+      failedBlocks: 0,
+      bubblemenu: {
+        isActive: false,
+        left: 0,
+        bottom: 0,
+      },
     };
   },
   provide() {
     return {
       getEditorVm: () => {
         return this;
-      }
+      },
     };
   },
   mounted() {
+    this.editor = new Editor({
+      autofocus: false,
+      editable: true,
+      extensions: [
+        ...extensions,
+        MenuBubbleExtension.configure({
+          article: this,
+          onUpdate: (menu) =>
+            this.editor && this.$refs.menububble.handler(menu),
+        }),
+        FloatingMenuExtension.configure({
+          article: this,
+          onUpdate: (menu) =>
+            this.editor && this.$refs.floatingMenu.handler(menu),
+        }),
+      ],
+      onUpdate: () => {
+        const data = this.editor.getJSON();
+        const title = this.editor.state.doc.firstChild.textContent;
+
+        data.content.shift();
+        data.content = data.content.filter((block) => {
+          if (
+            (block.type === "image" &&
+              block.attrs.src &&
+              block.attrs.src.fallback.includes("data:")) ||
+            (block.type === "audio" &&
+              block.attrs.src &&
+              block.attrs.src.includes("data:")) ||
+            (block.type === "document" &&
+              block.attrs.src &&
+              block.attrs.src.includes("data:"))
+          ) {
+            return false;
+          }
+          return true;
+        });
+        this.onUpdatePost({ blocks: data, title });
+      },
+      // a hack for codeBlock on firefox browser,
+      // check CodeBlockHighlight plugin for more detail
+      onTransaction: ({ transaction }) => {
+        if (
+          transaction.getMeta("resetSelectionHack") &&
+          typeof window !== undefined
+        ) {
+          const s = window.document.getSelection();
+          if (s) {
+            const r = s.getRangeAt(0);
+            if (r) {
+              s.removeAllRanges();
+              s.addRange(r);
+            }
+          }
+        }
+      },
+      editorProps: {
+        handleClick: () => {
+          this.selectedEl = null;
+        },
+        handlePaste: (view, event, slice) => {
+          const singleNode =
+            slice.openStart == 0 &&
+            slice.openEnd == 0 &&
+            slice.content.childCount == 1
+              ? slice.content.firstChild
+              : null;
+          let tr = singleNode
+            ? view.state.tr.replaceSelectionWith(singleNode, view.shiftKey)
+            : view.state.tr.replaceSelection(slice);
+          // current cursor position
+          const anchor = tr.selection.anchor;
+          // find featured image blocks
+          const nodes = findChildren(
+            tr.doc,
+            (child) => child.type.name === "featuredimage",
+            false
+          );
+          // if multiple featured image blocks
+          if (nodes.length > 1) {
+            let textSelection = TextSelection.create(
+              tr.doc,
+              nodes[1].pos,
+              nodes[1].pos + 1
+            );
+            // select and delete block
+            tr = tr.setSelection(textSelection).deleteSelection();
+            // keep cursor and last anchor positoin
+            textSelection = TextSelection.create(tr.doc, anchor, anchor);
+            tr = tr.setSelection(textSelection);
+          }
+          view.dispatch(
+            tr
+              .scrollIntoView()
+              .setMeta("paste", true)
+              .setMeta("uiEvent", "paste")
+          );
+          this.handleAfterPaste(view);
+          return true;
+        },
+        handleDOMEvents: {
+          beforeinput: (view, event) => {
+            // We should probably do more with beforeinput events, but support
+            // is so spotty that I'm still waiting to see where they are going.
+
+            // Very specific hack to deal with backspace sometimes failing on
+            // Chrome Android when after an uneditable node.
+            if (
+              browser.chrome &&
+              browser.android &&
+              event.inputType == "deleteContentBackward"
+            ) {
+              const cursorBeforeDelete = view.state.selection.$cursor;
+              let { domChangeCount } = view;
+              setTimeout(() => {
+                if (view.domChangeCount != domChangeCount) return; // Event already had some effect
+                // This bug tends to close the virtual keyboard, so we refocus
+                let { $cursor } = view.state.selection;
+                view.dom.blur();
+                cursorBeforeDelete.pos !== $cursor.pos
+                  ? this.editor.focus(
+                      cursorBeforeDelete.pos,
+                      cursorBeforeDelete.pos
+                    )
+                  : this.editor.focus();
+                if (
+                  view.someProp("handleKeyDown", (f) =>
+                    f(view, keyEvent(8, "Backspace"))
+                  )
+                )
+                  return;
+                // Crude approximation of backspace behavior when no command handled it
+                if ($cursor && $cursor.pos > 0)
+                  view.dispatch(
+                    view.state.tr
+                      .delete($cursor.pos - 1, $cursor.pos)
+                      .scrollIntoView()
+                  );
+              }, 50);
+            }
+            return true;
+          },
+          keydown: (view, event) => {
+            if (event.keyCode === 13)
+              view.selectionAtEnterKeydown = view.state.selection;
+            return false;
+          },
+        },
+      },
+    });
+
     // init data
-    const newContent = this.addTitle(
-      this.content || defaultContent,
-      this.title
-    );
-    this.editor.setContent(newContent, false);
+    // const newContent = this.addTitle(
+    //   this.content || defaultContent,
+    //   this.title
+    // );
+    // this.editor.setContent(newContent, false);
   },
   methods: {
     addTitle(data, title) {
@@ -296,11 +314,11 @@ export default {
           content: [
             {
               type: "title",
-              content: title ? [{ type: "text", text: title }] : []
-            }
-          ]
+              content: title ? [{ type: "text", text: title }] : [],
+            },
+          ],
         },
-        ...newData.content
+        ...newData.content,
       ];
       return newData;
     },
@@ -340,18 +358,18 @@ export default {
     },
     onSelection(el) {
       this.selectedEl = el;
-    }
+    },
   },
   watch: {
     editable() {
       this.editor.setOptions({
-        editable: this.editable
+        editable: this.editable,
       });
     },
     failedBlocks() {
       this.setFailedBlocks(this.failedBlocks);
-    }
-  }
+    },
+  },
 };
 </script>
 

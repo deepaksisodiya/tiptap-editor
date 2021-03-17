@@ -1,9 +1,7 @@
-import { Doc } from "tiptap";
+import { Node } from "@tiptap/core";
 
-export default class CustomDoc extends Doc {
-  get schema() {
-    return {
-      content: "header featuredimage block+"
-    };
-  }
-}
+export default Node.create({
+  name: "doc",
+  topNode: true,
+  content: "header featuredimage block+",
+});

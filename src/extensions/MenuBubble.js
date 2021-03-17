@@ -1,4 +1,5 @@
-import { Plugin, PluginKey } from "tiptap";
+import { Extension } from "@tiptap/core";
+import { Plugin, PluginKey } from "prosemirror-state";
 
 function textRange(node, from, to) {
   const range = document.createRange();
@@ -48,7 +49,7 @@ function coordsAtPos(view, pos, end = false) {
     top: rect.top,
     bottom: rect.bottom,
     left: x,
-    right: x
+    right: x,
   };
 }
 
@@ -58,9 +59,9 @@ class Menu {
       ...{
         element: null,
         keepInBounds: true,
-        onUpdate: () => false
+        onUpdate: () => false,
       },
-      ...options
+      ...options,
     };
     this.editorView = editorView;
     this.isActive = false;
@@ -68,27 +69,6 @@ class Menu {
     this.bottom = 0;
     this.top = 0;
     this.preventHide = false;
-
-    // the mousedown event is fired before blur so we can prevent it
-    this.mousedownHandler = this.handleClick.bind(this);
-    this.options.element.addEventListener("mousedown", this.mousedownHandler, {
-      capture: true
-    });
-
-    this.focusHandler = ({ view }) => {
-      this.update(view);
-    };
-    this.options.editor.on("focus", this.focusHandler);
-
-    this.blurHandler = ({ event }) => {
-      if (this.preventHide) {
-        this.preventHide = false;
-        return;
-      }
-
-      this.hide(event);
-    };
-    this.options.editor.on("blur", this.blurHandler);
   }
 
   handleClick() {
@@ -96,9 +76,36 @@ class Menu {
   }
 
   update(view, lastState) {
+    if (!view) return;
     const { state } = view;
+    if (!this.options.element && this.options.article.$refs.menububble) {
+      // the mousedown event is fired before blur so we can prevent it
+      this.options.element = this.options.article.$refs.menububble.$el;
+      this.mousedownHandler = this.handleClick.bind(this);
+      this.options.element.addEventListener(
+        "mousedown",
+        this.mousedownHandler,
+        {
+          capture: true,
+        }
+      );
 
-    if (view.composing) {
+      this.focusHandler = ({ view }) => {
+        this.update(view);
+      };
+      this.options.article.editor.on("focus", this.focusHandler);
+
+      this.blurHandler = ({ event }) => {
+        if (this.preventHide) {
+          this.preventHide = false;
+          return;
+        }
+
+        this.hide(event);
+      };
+      this.options.article.editor.on("blur", this.blurHandler);
+    }
+    if (view.composing || !this.options.element) {
       return;
     }
 
@@ -158,7 +165,7 @@ class Menu {
       isActive: this.isActive,
       left: this.left,
       bottom: this.bottom,
-      top: this.top
+      top: this.top,
     });
   }
 
@@ -186,11 +193,21 @@ class Menu {
   }
 }
 
-export default function(options) {
+const createMenumbubbblePlugin = (options) => {
   return new Plugin({
     key: new PluginKey("menu_bubble"),
     view(editorView) {
       return new Menu({ editorView, options });
-    }
+    },
   });
-}
+};
+
+export default Extension.create({
+  name: "menuBubble",
+
+  addProseMirrorPlugins() {
+    return this.options.onUpdate
+      ? [createMenumbubbblePlugin(this.options)]
+      : [];
+  },
+});

@@ -10,14 +10,14 @@
       ref="imageInput"
       v-show="false"
       accept="image/*"
-      @change="previewFiles(commands.image)"
+      @change="previewFiles()"
     />
     <input
       type="file"
       id="audio-input"
       ref="audioInput"
       v-show="false"
-      @change="previewAudio(commands.audio)"
+      @change="previewAudio()"
     />
     <!-- limiting document block to pdf for now by adding accept attribute -->
     <input
@@ -26,7 +26,7 @@
       id="document-input"
       ref="documentInput"
       v-show="false"
-      @change="previewDocument(commands.document)"
+      @change="previewDocument()"
     />
     <ul class="kitchensink">
       <li @click="toggleMenu">
@@ -36,9 +36,9 @@
         <i class="icon image-icon"></i>
       </li>
       <li
-        :class="{ 'is-active': isActive.embed() }"
+        :class="{ 'is-active': isActive('embed') }"
         v-if="shouldShowMenu"
-        @click="onClickEmbed(commands.embed, 'video')"
+        @click="onClickEmbed('video')"
       >
         <i class="icon video-icon"></i>
       </li>
@@ -77,33 +77,33 @@
       </li>
       <li
         v-if="shouldShowMenu"
-        :class="{ 'is-active': isActive.ordered_list() }"
-        @click="onClickMenuItem(commands.ordered_list)"
+        :class="{ 'is-active': isActive('orderList') }"
+        @click="onClickMenuItem(editor.chain().toggleOrderedList())"
       >
         <i class="icon list-icon"></i>
       </li>
       <li
-        :class="{ 'is-active': isActive.embed() }"
+        :class="{ 'is-active': isActive('embed') }"
         v-if="shouldShowMenu"
-        @click="onClickEmbed(commands.embed, 'link')"
+        @click="onClickEmbed('link')"
       >
         <i class="icon link-icon"></i>
       </li>
       <li
-        :class="{ 'is-active': isActive.code_block() }"
+        :class="{ 'is-active': isActive('codeBlock') }"
         v-if="shouldShowMenu"
-        @click="onClickMenuItem(commands.code_block)"
+        @click="onClickMenuItem(editor.chain().toggleCodeBlock())"
       >
         <i class="icon code-icon"></i>
       </li>
       <li
-        :class="{ 'is-active': isActive.horizontal_rule() }"
+        :class="{ 'is-active': isActive('horizontalRule') }"
         v-if="shouldShowMenu"
-        @click="onClickMenuItem(commands.horizontal_rule)"
+        @click="onClickMenuItem(editor.chain().setHorizontalRule())"
       >
         <i class="icon separator-icon"></i>
       </li>
-      <li v-if="shouldShowMenu" style="display:none">
+      <li v-if="shouldShowMenu" style="display: none">
         <i class="kitchensink-divider"></i>
       </li>
       <!--
@@ -124,53 +124,44 @@
 </template>
 
 <script>
-import FloatingMenu from "./../extensions/FloatingMenu";
 import { contains } from "prosemirror-utils";
 
 export default {
   props: {
     editor: {
       default: null,
-      type: Object
+      type: Object,
     },
     beforeUpload: {
       type: Function,
-      default: () => true
-    }
+      default: () => true,
+    },
   },
   data() {
     return {
       menu: {
         isActive: false,
         left: 0,
-        bottom: 0
+        bottom: 0,
       },
       addImageAt: null,
       addAudioAt: null,
       addDocumentAt: null,
       shouldShowMenu: false,
-      showAttachmentOptions: false
+      showAttachmentOptions: false,
     };
   },
   computed: {
-    focused() {
-      return this.editor.view.focused;
-    },
-    focus() {
-      return this.editor.focus;
-    },
-    commands() {
-      return this.editor.commands;
-    },
     isActive() {
-      return this.editor.isActive;
+      return this.editor.isActive.bind(this.editor);
     },
-    getMarkAttrs() {
-      return this.editor.getMarkAttrs.bind(this.editor);
+    getMarkAttributes() {
+      return this.editor.getMarkAttributes.bind(this.editor);
     },
-    getNodeAttrs() {
+    getNodeAttributes() {
       return (
-        this.editor.getNodeAttrs && this.editor.getNodeAttrs.bind(this.editor)
+        this.editor.getNodeAttributes &&
+        this.editor.getNodeAttributes.bind(this.editor)
       );
     },
     hasLock() {
@@ -178,47 +169,21 @@ export default {
         this.editor.view.state.doc,
         this.editor.schema.nodes.lock
       );
-    }
+    },
   },
   watch: {
-    editor: {
-      immediate: true,
-      handler(editor) {
-        if (editor) {
-          if (editor) {
-            this.$nextTick(() => {
-              editor.registerPlugin(
-                FloatingMenu({
-                  editor,
-                  element: this.$el,
-                  onUpdate: menu => {
-                    // the second check ensures event is fired only once
-                    if (menu.isActive && this.menu.isActive === false) {
-                      this.$emit("show", menu);
-                    } else if (!menu.isActive && this.menu.isActive === true) {
-                      this.$emit("hide", menu);
-                    }
-                    this.menu = menu;
-                  }
-                })
-              );
-            });
-          }
-        }
-      }
-    },
     shouldShowMenu() {
       const {
         state: {
           doc: {
-            content: { content }
-          }
-        }
+            content: { content },
+          },
+        },
       } = this.editor;
       if (content.length === 2) {
         this.editor.setOptions({});
       }
-    }
+    },
   },
   beforeDestroy() {
     this.editor.unregisterPlugin("floating_menu");
@@ -246,7 +211,7 @@ export default {
       e.stopPropagation();
       this.showAttachmentOptions = !this.showAttachmentOptions;
     },
-    previewFiles(command) {
+    previewFiles() {
       const { imageInput } = this.$refs;
       const imageFile = imageInput.files[0];
 
@@ -260,10 +225,13 @@ export default {
         reader.onload = () => {
           const img = new Image();
           img.src = reader.result;
-          command({
-            src: { fallback: img.src },
-            addImageAt: this.addImageAt
-          });
+          this.editor
+            .chain()
+            .setImage({
+              src: { fallback: img.src },
+              addImageAt: this.addImageAt,
+            })
+            .run();
         };
         reader.readAsDataURL(imageFile);
       }
@@ -282,7 +250,7 @@ export default {
         reader.onload = () => {
           command({
             src: reader.result,
-            addAudioAt: this.addAudioAt
+            addAudioAt: this.addAudioAt,
           });
         };
         reader.readAsDataURL(audioFile);
@@ -302,7 +270,7 @@ export default {
         reader.onload = () => {
           command({
             src: reader.result,
-            addDocumentAt: this.addDocumentAt
+            addDocumentAt: this.addDocumentAt,
           });
         };
         reader.readAsDataURL(documentFile);
@@ -312,26 +280,35 @@ export default {
       if (!this.shouldShowMenu) {
         const nodePos = this.editor.view.posAtCoords({
           left: e.clientX + 100,
-          top: e.clientY
+          top: e.clientY,
         });
-        this.editor.setSelection(nodePos.pos, nodePos.pos);
+        this.editor.chain().focus(nodePos.pos).run();
       }
       this.shouldShowMenu = !this.shouldShowMenu;
       this.showAttachmentOptions = false;
       this.editor.setOptions({});
     },
-    onClickEmbed(command, type) {
-      command({ type });
+    onClickEmbed(type) {
+      this.editor.chain().setEmbed({ type }).run();
       this.hideFloatingMenu();
     },
     onClickMenuItem(command) {
-      command();
+      command.run();
       this.hideFloatingMenu();
     },
     hideFloatingMenu() {
       this.shouldShowMenu = false;
       this.showAttachmentOptions = false;
-    }
-  }
+    },
+    handler(menu) {
+      // the second check ensures event is fired only once
+      if (menu.isActive && this.menu.isActive === false) {
+        this.$emit("show", menu);
+      } else if (!menu.isActive && this.menu.isActive === true) {
+        this.$emit("hide", menu);
+      }
+      this.menu = menu;
+    },
+  },
 };
 </script>

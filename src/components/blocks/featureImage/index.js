@@ -1,60 +1,58 @@
-import { Image as TiptapImage } from "tiptap-extensions";
-import { TextSelection } from "tiptap";
+import { TextSelection } from "prosemirror-state";
 
 import ImageComponent from "./FeatureImage.vue";
+import { VueNodeViewRenderer } from "@tiptap/vue-2";
+import { Node, mergeAttributes } from "@tiptap/core";
 
-export default class ImageNode extends TiptapImage {
-  get name() {
-    return "featuredimage";
-  }
+export const Image = Node.create({
+  name: "image",
 
-  get schema() {
+  group() {
+    return "block";
+  },
+
+  draggable: true,
+
+  addAttributes() {
     return {
-      attrs: {
-        src: {
-          default: ""
-        },
-        alt: {
-          default: ""
-        },
-        caption: {
-          default: ""
-        }
+      src: {
+        default: null,
       },
-      group: "block",
-      selectable: false,
-      toDOM: node => ["img", { ...node.attrs, "data-featured-image": true }]
+      alt: {
+        default: null,
+      },
+      title: {
+        default: null,
+      },
     };
-  }
+  },
 
-  commands({ type }) {
-    return ({ src, addImageAt }) => (state, dispatch) => {
-      let { tr, schema } = state;
-      if (tr.doc.content.size - addImageAt === 1)
-        tr = tr.insert(tr.doc.content.size, schema.nodes["paragraph"].create());
-      let textSelection = TextSelection.create(tr.doc, addImageAt, addImageAt);
-      tr = tr
-        .setSelection(textSelection)
-        .replaceSelectionWith(type.create({ src }));
-      return dispatch(tr);
-    };
-  }
+  renderHTML({ HTMLAttributes }) {
+    return ["img", { ...HTMLAttributes, "data-featured-image": true }];
+  },
 
-  get view() {
+  addCommands() {
     return {
-      props: ["node", "updateAttrs", "view", "getPos", "options"],
-      components: {
-        ImageComponent
+      setImage: ({ src, addImageAt }) => ({ tr, dispatch }) => {
+        if (tr.doc.content.size - addImageAt === 1)
+          tr = tr.insert(
+            tr.doc.content.size,
+            schema.nodes["paragraph"].create()
+          );
+        let textSelection = TextSelection.create(
+          tr.doc,
+          addImageAt,
+          addImageAt
+        );
+        tr = tr
+          .setSelection(textSelection)
+          .replaceSelectionWith(this.type.create({ src }));
+        return dispatch(tr);
       },
-      template: `
-        <ImageComponent
-          :node='this.node'
-          :updateAttrs='this.updateAttrs'
-          :view='this.view'
-          :getPos='this.getPos'
-          :options='this.options'
-        ></ImageComponent>
-      `
     };
-  }
-}
+  },
+
+  addNodeView() {
+    return VueNodeViewRenderer(FeatureImageComponent);
+  },
+});

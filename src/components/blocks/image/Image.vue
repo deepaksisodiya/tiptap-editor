@@ -1,41 +1,45 @@
 <template>
-  <figure :class="{ selected: shouldShowClose }">
-    <div class="close-button" @click="deleteNode">
-      <i class="close-icon"></i>
-    </div>
-    <picture @click="onImageClick">
-      <source v-if="data.image" :srcset="data.image" type="image" />
-      <source :srcset="data.fallback" type="image" />
-      <img :src="data.fallback" @load="loaded" />
-      <upload-progress
-        v-show="!shouldHideProgress"
-        :progress="upload.progress"
-        :failed="upload.failed"
-        :processing="upload.processing"
-        @click="uploadFile"
-      />
-    </picture>
-    <figcaption>
-      <input
-        v-model="caption"
-        placeholder="Type caption for image (optional)"
-        @keydown="handleKeydown"
-        @paste.stop
-      />
-    </figcaption>
-  </figure>
+  <node-view-wrapper>
+    <figure :class="{ selected: shouldShowClose }">
+      <div class="close-button" @click="deleteNode">
+        <i class="close-icon"></i>
+      </div>
+      <picture @click="onImageClick">
+        <source v-if="data.image" :srcset="data.image" type="image" />
+        <source :srcset="data.fallback" type="image" />
+        <img :src="data.fallback" @load="loaded" />
+        <upload-progress
+          v-show="!shouldHideProgress"
+          :progress="upload.progress"
+          :failed="upload.failed"
+          :processing="upload.processing"
+          @click="uploadFile"
+        />
+      </picture>
+      <figcaption>
+        <input
+          v-model="caption"
+          placeholder="Type caption for image (optional)"
+          @keydown="handleKeydown"
+          @paste.stop
+        />
+      </figcaption>
+    </figure>
+  </node-view-wrapper>
 </template>
 
 <script>
 import { TextSelection } from "tiptap";
 import { isDataURL } from "./../../../utils";
 import UploadProgress from "../../UploadProgress";
+import { NodeViewWrapper } from "@tiptap/vue-2";
 
 export default {
   name: "ImageBlock",
   props: ["node", "updateAttrs", "view", "getPos", "options"],
   components: {
-    UploadProgress
+    NodeViewWrapper,
+    UploadProgress,
   },
   data() {
     return {
@@ -48,8 +52,8 @@ export default {
         failed: false,
         completed: false,
         retry: true,
-        processing: false
-      }
+        processing: false,
+      },
     };
   },
   inject: ["getEditorVm"],
@@ -60,9 +64,9 @@ export default {
       },
       set(src) {
         this.updateAttrs({
-          src
+          src,
         });
-      }
+      },
     },
     caption: {
       get() {
@@ -70,15 +74,15 @@ export default {
       },
       set(caption) {
         this.updateAttrs({
-          caption
+          caption,
         });
-      }
+      },
     },
     shouldHideProgress() {
       return (
         this.upload.completed || !isDataURL(this.data && this.data.fallback)
       );
-    }
+    },
   },
   watch: {
     "upload.failed"(newValue, oldValue) {
@@ -87,14 +91,14 @@ export default {
         if (newValue) editorVm.failedBlocks++;
         else editorVm.failedBlocks--;
       }
-    }
+    },
   },
   mounted() {
     this.$nextTick(() => {
       this.view.focus();
       this.$el.scrollIntoView(true);
     });
-    this.getEditorVm().$watch("selectedEl", value => {
+    this.getEditorVm().$watch("selectedEl", (value) => {
       if (this.shouldShowClose && value !== this.$el)
         this.shouldShowClose = false;
     });
@@ -102,7 +106,7 @@ export default {
   methods: {
     handleKeydown(event) {
       let {
-        state: { tr }
+        state: { tr },
       } = this.view;
       const pos = this.getPos();
       if (event.key === "Enter") {
@@ -114,7 +118,7 @@ export default {
     },
     deleteNode() {
       let {
-        state: { tr }
+        state: { tr },
       } = this.view;
       const pos = this.getPos();
       let textSelection = TextSelection.create(tr.doc, pos, pos + 1);
@@ -169,12 +173,12 @@ export default {
         imageInputEl.value = "";
         this.uploadFile();
       }
-    }
+    },
   },
   beforeDestroy() {
     const editorVm = this.getEditorVm();
 
     if (this.upload.failed) editorVm.failedBlocks = editorVm.failedBlocks - 1;
-  }
+  },
 };
 </script>

@@ -6,28 +6,28 @@
       :class="{
         'is-active':
           menu.isActive && !isTitleSelected() && !isCodeBlockSelected(),
-        ios
+        ios,
       }"
       :style="getStyle(menu)"
       ref="menuUl"
     >
-      <li @click="commands.bold">
+      <li @click="editor.chain().toggleBold().run()">
         <button>
-          <i class="bold-icon" :class="{ 'is-active': isActive.bold() }"></i>
+          <i class="bold-icon" :class="{ 'is-active': isActive('bold') }"></i>
         </button>
       </li>
 
-      <li @click="commands.italic">
+      <li @click="editor.chain().toggleItalic().run()">
         <button>
           <i
             class="italic-icon"
-            :class="{ 'is-active': isActive.italic() }"
+            :class="{ 'is-active': isActive('italic') }"
           ></i>
         </button>
       </li>
-      <li @click="showInput(getMarkAttrs('link'))">
+      <li @click="showInput(getMarkAttributes('link'))">
         <button>
-          <i class="link-icon" :class="{ 'is-active': isActive.link() }"></i>
+          <i class="link-icon" :class="{ 'is-active': isActive('link') }"></i>
         </button>
       </li>
 
@@ -37,29 +37,29 @@
         </button>
       </li>
 
-      <li @click="commands.heading({ level: 3 })">
+      <li @click="editor.chain().toggleHeading({ level: 3 }).run()">
         <button>
           <i
             class="large-heading-icon"
-            :class="{ 'is-active': isActive.heading({ level: 3 }) }"
+            :class="{ 'is-active': isActive('heading', { level: 3 }) }"
           ></i>
         </button>
       </li>
 
-      <li @click="commands.heading({ level: 5 })">
+      <li @click="editor.chain().toggleHeading({ level: 5 }).run()">
         <button>
           <i
             class="small-heading-icon"
-            :class="{ 'is-active': isActive.heading({ level: 5 }) }"
+            :class="{ 'is-active': isActive('heading', { level: 5 }) }"
           ></i>
         </button>
       </li>
 
-      <li @click="commands.blockquote">
+      <li @click="editor.chain().toggleBlockquote().run()">
         <button>
           <i
             class="quote-icon"
-            :class="{ 'is-active': isActive.blockquote() }"
+            :class="{ 'is-active': isActive('blockquote') }"
           ></i>
         </button>
       </li>
@@ -74,13 +74,10 @@
         type="url"
         v-model="href"
         placeholder="Paste or type a link"
-        @keydown.enter.prevent="addAnchor(editor.commands.link, href)"
+        @keydown.enter.prevent="addAnchor(href)"
         @keydown.esc="hideInput"
       />
-      <i
-        class="toolbar-close-icon"
-        @click="addAnchor(editor.commands.link, href)"
-      ></i>
+      <i class="toolbar-close-icon" @click="addAnchor(href)"></i>
     </div>
   </div>
 </template>
@@ -94,8 +91,8 @@ export default {
   props: {
     editor: {
       default: null,
-      type: Object
-    }
+      type: Object,
+    },
   },
   data() {
     return {
@@ -105,64 +102,28 @@ export default {
       menu: {
         isActive: false,
         left: 0,
-        bottom: 0
-      }
+        bottom: 0,
+      },
     };
   },
   computed: {
-    focused() {
-      return this.editor.view.focused;
-    },
-    focus() {
-      return this.editor.focus;
-    },
-    commands() {
-      return this.editor.commands;
-    },
     isActive() {
-      return this.editor.isActive;
+      return this.editor.isActive.bind(this.editor);
     },
-    getMarkAttrs() {
-      return this.editor.getMarkAttrs.bind(this.editor);
+    getMarkAttributes() {
+      return this.editor.getMarkAttributes.bind(this.editor);
     },
-    getNodeAttrs() {
+    getNodeAttributes() {
       return (
-        this.editor.getNodeAttrs && this.editor.getNodeAttrs.bind(this.editor)
+        this.editor.getNodeAttributes &&
+        this.editor.getNodeAttributes.bind(this.editor)
       );
-    }
+    },
   },
   watch: {
-    editor: {
-      immediate: true,
-      handler(editor) {
-        if (editor) {
-          this.$nextTick(() => {
-            editor.registerPlugin(
-              MenuBubble({
-                editor,
-                element: this.$el,
-                keepInBounds: true,
-                onUpdate: menu => {
-                  // the second check ensures event is fired only once
-                  if (menu.isActive && this.menu.isActive === false) {
-                    if (this.ios) {
-                      this.fixMenuEl();
-                    }
-                    this.$emit("show", menu);
-                  } else if (!menu.isActive && this.menu.isActive === true) {
-                    this.$emit("hide", menu);
-                  }
-                  this.menu = menu;
-                }
-              })
-            );
-          });
-        }
-      }
-    },
     "menu.isActive"(newValue) {
       if (!newValue) this.isInputActive = false;
-    }
+    },
   },
   mounted() {
     if (this.ios) {
@@ -172,7 +133,7 @@ export default {
       window.visualViewport.addEventListener("resize", this.fixMenuEl);
     }
   },
-  beforeDestroy() {
+  beforeUnmount() {
     if (this.ios) {
       window.removeEventListener("scroll", this.fixMenuEl);
       window.removeEventListener("resize", this.fixMenuEl);
@@ -195,10 +156,10 @@ export default {
         this.$refs.linkDiv.querySelector("input").focus();
       });
     },
-    addAnchor(command, url) {
+    addAnchor(url) {
       let validUrl;
       if (url) validUrl = getValidUrl(url);
-      command({ href: validUrl });
+      this.editor.chain().setLink(validUrl).run();
       this.hideInput();
       this.menu.isActive = true;
     },
@@ -227,7 +188,19 @@ export default {
 
       if (linkDiv) linkDiv.style.top = `${pageTop - article.offsetTop}px`;
       if (menuUl) menuUl.style.top = `${pageTop - article.offsetTop}px`;
-    }
-  }
+    },
+    handler(menu) {
+      // the second check ensures event is fired only once
+      if (menu.isActive && this.menu.isActive === false) {
+        if (this.ios) {
+          this.fixMenuEl();
+        }
+        this.$emit("show", menu);
+      } else if (!menu.isActive && this.menu.isActive === true) {
+        this.$emit("hide", menu);
+      }
+      this.menu = menu;
+    },
+  },
 };
 </script>

@@ -1,20 +1,17 @@
-import { Node } from "tiptap";
+import { Node } from "@tiptap/core";
 
-export default class Title extends Node {
-  get name() {
-    return "header";
-  }
-
-  get schema() {
-    return {
-      content: "title",
-      selectable: false,
-      parseDOM: [
-        {
-          tag: "header"
-        }
-      ],
-      toDOM: () => ["header", 0]
-    };
-  }
-}
+export const Header = Node.create({
+  name: "header",
+  content: "title",
+  selectable: false,
+  parseHTML() {
+    return [
+      {
+        tag: "header",
+      },
+    ];
+  },
+  renderHTML() {
+    return ["header", 0];
+  },
+});

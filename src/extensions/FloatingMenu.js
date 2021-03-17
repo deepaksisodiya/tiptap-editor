@@ -1,4 +1,5 @@
-import { Plugin, PluginKey } from "tiptap";
+import { Extension } from "@tiptap/core";
+import { Plugin, PluginKey } from "prosemirror-state";
 
 function flattenV(rect, left) {
   if (rect.width == 0) return rect;
@@ -12,46 +13,14 @@ class Menu {
       ...{
         resizeObserver: true,
         element: null,
-        onUpdate: () => false
+        onUpdate: () => false,
       },
-      ...options
+      ...options,
     };
     this.preventHide = false;
     this.editorView = editorView;
     this.isActive = false;
     this.top = 0;
-
-    // the mousedown event is fired before blur so we can prevent it
-    this.mousedownHandler = this.handleClick.bind(this);
-    this.options.element.addEventListener("mousedown", this.mousedownHandler, {
-      capture: true
-    });
-
-    this.focusHandler = ({ view }) => {
-      this.update(view);
-    };
-    this.options.editor.on("focus", this.focusHandler);
-
-    this.blurHandler = ({ event }) => {
-      if (this.preventHide) {
-        this.preventHide = false;
-        return;
-      }
-
-      this.hide(event);
-    };
-    this.options.editor.on("blur", this.blurHandler);
-
-    // sometimes we have to update the position
-    // because of a loaded images for example
-    if (this.options.resizeObserver && window.ResizeObserver) {
-      this.resizeObserver = new ResizeObserver(() => {
-        if (this.isActive) {
-          this.update(this.editorView);
-        }
-      });
-      this.resizeObserver.observe(this.editorView.dom);
-    }
   }
 
   handleClick() {
@@ -59,6 +28,48 @@ class Menu {
   }
 
   update(view, lastState) {
+    if (!view) return;
+    if (!this.options.element && this.options.article.$refs.floatingMenu) {
+      // the mousedown event is fired before blur so we can prevent it
+      this.options.element = this.options.article.$refs.floatingMenu.$el;
+      this.mousedownHandler = this.handleClick.bind(this);
+      this.options.element.addEventListener(
+        "mousedown",
+        this.mousedownHandler,
+        {
+          capture: true,
+        }
+      );
+
+      this.focusHandler = ({ view }) => {
+        this.update(view);
+      };
+      this.options.article.editor.on("focus", this.focusHandler);
+
+      this.blurHandler = ({ event }) => {
+        if (this.preventHide) {
+          this.preventHide = false;
+          return;
+        }
+
+        this.hide(event);
+      };
+      this.options.article.editor.on("blur", this.blurHandler);
+
+      // sometimes we have to update the position
+      // because of a loaded images for example
+      if (this.options.resizeObserver && window.ResizeObserver) {
+        this.resizeObserver = new ResizeObserver(() => {
+          if (this.isActive) {
+            this.update(this.editorView);
+          }
+        });
+        this.resizeObserver.observe(this.editorView.dom);
+      }
+    }
+    if (!this.options.element) {
+      return;
+    }
     const { state, dom } = view;
     const length = state.doc.content.content.length;
     const isEmpty = length === 3 && !dom.children[2].textContent;
@@ -125,7 +136,7 @@ class Menu {
   sendUpdate() {
     this.options.onUpdate({
       isActive: this.isActive,
-      top: this.top
+      top: this.top,
     });
   }
 
@@ -158,11 +169,21 @@ class Menu {
   }
 }
 
-export default function(options) {
+const createFloatingMenuPlugin = (options) => {
   return new Plugin({
     key: new PluginKey("floating_menu"),
     view(editorView) {
       return new Menu({ editorView, options });
-    }
+    },
   });
-}
+};
+
+export default Extension.create({
+  name: "floatingMenu",
+
+  addProseMirrorPlugins() {
+    return this.options.onUpdate
+      ? [createFloatingMenuPlugin(this.options)]
+      : [];
+  },
+});

@@ -1,33 +1,35 @@
-import { Node } from "tiptap";
-import { TextSelection } from "tiptap";
 import browser from "../../utils/browser";
 
-export default class Title extends Node {
-  get name() {
-    return "title";
-  }
+import { Node } from "@tiptap/core";
 
-  get schema() {
-    return {
-      content: "inline*",
-      parseDOM: [
+export const Image = Node.create({
+  name: "title",
+
+  content: "inline*",
+
+  parseHTML() {
+    return [
+      [
         {
-          tag: "h1"
-        }
+          tag: "h1",
+        },
       ],
-      toDOM: () => ["h1", 0],
-      marks: ""
-    };
-  }
-  keys() {
+    ];
+  },
+
+  renderHTML() {
+    return ["h1", 0];
+  },
+
+  addCommands() {
     return {
-      Enter: (state, dispatch, view) => {
+      handleEnter: () => ({ state, dispatch, view }) => {
         let {
           tr,
           selection: { anchor: anchorAfterEnterKeydown },
           schema: {
-            nodes: { paragraph }
-          }
+            nodes: { paragraph },
+          },
         } = state;
         let anchor = anchorAfterEnterKeydown;
         let anchorAtEnterKeydown = view.selectionAtEnterKeydown.anchor;
@@ -60,10 +62,10 @@ export default class Title extends Node {
         dispatch(tr);
         return true;
       },
-      Backspace: (state, dispatch, { featureImageInstance }) => {
+      handleBackspace: () => ({ state, dispatch }) => {
         let {
           tr,
-          selection: { anchor, empty }
+          selection: { anchor, empty },
         } = state;
         const currentNode = tr.doc.resolve(anchor).parent.type.name;
 
@@ -93,7 +95,14 @@ export default class Title extends Node {
           return true;
         }
         return false;
-      }
+      },
     };
-  }
-}
+  },
+
+  addKeyboardShortcuts() {
+    return {
+      Enter: () => this.editor.commands.handleEnter(),
+      Backspace: () => this.editor.commands.handleBackspace(),
+    };
+  },
+});
